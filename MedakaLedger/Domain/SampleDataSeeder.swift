@@ -48,7 +48,7 @@ enum SampleDataSeeder {
         context.insert(miyuki)
 
         let yokihiAdults = CohortOperations.createCohort(
-            strain: yokihi, tank: tanks[0], count: 12, maleCount: 5, femaleCount: 7, stage: .adult,
+            strain: yokihi, tank: tanks[0], count: 12, stage: .adult,
             acquiredAt: daysAgo(200), label: "親魚候補", date: daysAgo(200), isSample: true, in: context
         )
         try CohortOperations.changeCount(yokihiAdults, change: .decrease(1, reason: .death), date: daysAgo(120), in: context)

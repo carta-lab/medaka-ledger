@@ -16,6 +16,11 @@ enum Theme {
 /// 主要な操作のボタン。高さ48pt以上（CLAUDE.md UIの決まり）。
 struct LargeButtonStyle: ButtonStyle {
     var prominent = true
+    @Environment(\.isEnabled) private var isEnabled
+
+    init(prominent: Bool = true) {
+        self.prominent = prominent
+    }
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -24,7 +29,7 @@ struct LargeButtonStyle: ButtonStyle {
             .padding(.horizontal, 8)
             .foregroundStyle(prominent ? Color.white : Theme.accent)
             .background(prominent ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.fill.tertiary), in: .rect(cornerRadius: Theme.cornerRadius))
-            .opacity(configuration.isPressed ? 0.7 : 1)
+            .opacity(isEnabled ? (configuration.isPressed ? 0.7 : 1) : 0.4)
     }
 }
 
