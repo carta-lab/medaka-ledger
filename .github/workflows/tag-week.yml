@@ -1,0 +1,35 @@
+name: Tag week
+
+# 「第N週: …」のPRがmainにマージされたら、マージのコミットにタグ wN を打つ（DECISIONS H）
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    if: ${{ github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$PR_TITLE" =~ ^第([0-9]+)週 ]]; then
+            echo "タイトルが「第N週」で始まらないのでタグは打ちません: $PR_TITLE"
+            exit 0
+          fi
+          TAG="w${BASH_REMATCH[1]}"
+          if gh api "repos/$REPO/git/ref/tags/$TAG" >/dev/null 2>&1; then
+            echo "タグ $TAG は既にあります。何もしません"
+            exit 0
+          fi
+          gh api "repos/$REPO/git/refs" -f ref="refs/tags/$TAG" -f sha="$MERGE_SHA" >/dev/null
+          echo "タグ $TAG を $MERGE_SHA に打ちました"
