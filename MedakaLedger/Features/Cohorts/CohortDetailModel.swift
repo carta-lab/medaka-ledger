@@ -6,7 +6,7 @@ import SwiftData
 @Observable
 final class CohortDetailModel {
     enum Sheet: String, Identifiable {
-        case move, split, count, selection, stage, merge, edit
+        case move, split, count, selection, sale, stage, merge, edit
         var id: String { rawValue }
     }
 
@@ -21,7 +21,8 @@ final class CohortDetailModel {
     private var countBeforeSheet: Int?
 
     func open(_ sheet: Sheet, cohort: Cohort) {
-        countBeforeSheet = cohort.count
+        // 販売のシートは、匹数が0になったときの確認を自分で出す。閉じたあとにもう一度聞かない
+        countBeforeSheet = sheet == .sale ? 0 : cohort.count
         activeSheet = sheet
     }
 

@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 // 群詳細（SCREENS.md 5.1）。見出し、要約、操作ボタン、タイムライン。
-// 第1週の操作は移動、分割、増減、段階の変更、統合、出来事の削除、群の削除。
+// 操作は移動、分割、増減、選別、販売、段階の変更、統合、出来事の削除、群の削除。
 
 struct CohortDetailView: View {
     @Environment(\.modelContext) private var modelContext
@@ -83,6 +83,7 @@ struct CohortDetailView: View {
             case .split: SplitCohortSheet(cohort: cohort)
             case .count: CountChangeSheet(cohort: cohort)
             case .selection: SelectionSheet(cohort: cohort)
+            case .sale: SaleSheet(cohort: cohort)
             case .stage: StageChangeSheet(cohort: cohort)
             case .merge: MergeCohortSheet(cohort: cohort)
             case .edit: CohortEditView(cohort: cohort)
@@ -191,6 +192,7 @@ struct CohortDetailView: View {
                     actionButton("増減", systemImage: "plusminus", sheet: .count)
                     actionButton("選別", systemImage: "line.3.horizontal.decrease.circle", sheet: .selection)
                 }
+                actionButton("販売", systemImage: "yensign.circle", sheet: .sale)
             }
             .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
         }

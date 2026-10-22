@@ -1,6 +1,6 @@
 import SwiftUI
 
-// 群のタイムライン（SCREENS.md 5.1）。出来事、選別、採卵からの孵化を新しい順に出す。
+// 群のタイムライン（SCREENS.md 5.1）。出来事、選別、販売、採卵からの孵化を新しい順に出す。
 // 最新の出来事と、選別の記録は左にスワイプして削除できる。
 
 struct CohortTimelineSection: View {
@@ -27,6 +27,8 @@ struct CohortTimelineSection: View {
                                 model.askToDelete(selection)
                             }
                         }
+                case let .sale(sale):
+                    SaleTimelineRow(sale: sale)
                 case let .origin(batch):
                     OriginRow(batch: batch)
                 }
@@ -99,6 +101,32 @@ private struct OriginRow: View {
             }
             Spacer(minLength: 0)
             Text(verbatim: CohortText.date(batch.collectedAt))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 2)
+    }
+}
+
+private struct SaleTimelineRow: View {
+    let sale: Sale
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "yensign.circle")
+                .foregroundStyle(Theme.accent)
+                .frame(width: 24)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("販売")
+                    .font(.subheadline.bold())
+                Text(verbatim: "\(SaleText.quantity(unit: sale.unit, quantity: sale.quantity))・\(SaleText.yen(sale.totalPrice))")
+                    .font(.subheadline)
+                Text(verbatim: "\(sale.channel.label)・\(sale.status.label)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+            Text(verbatim: CohortText.date(sale.date))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

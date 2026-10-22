@@ -258,6 +258,12 @@ extension SchemaV1.Sale {
         return "\(breedNameSnapshot) \(CohortText.generation(generation))"
     }
 
+    static var recentDescriptor: FetchDescriptor<Sale> {
+        var descriptor = FetchDescriptor<Sale>(sortBy: [SortDescriptor(\Sale.date, order: .reverse)])
+        descriptor.fetchLimit = 5
+        return descriptor
+    }
+
     static var listedPredicate: Predicate<Sale> {
         let listed = SaleStatus.listed.rawValue
         return #Predicate<Sale> { $0.statusRaw == listed }

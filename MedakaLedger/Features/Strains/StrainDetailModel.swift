@@ -7,13 +7,14 @@ import SwiftUI
 @Observable
 final class StrainDetailModel {
     enum Tab: String, CaseIterable, Identifiable {
-        case cohorts, lineage, photos
+        case cohorts, lineage, photos, sales
         var id: String { rawValue }
         var title: LocalizedStringKey {
             switch self {
             case .cohorts: "群"
             case .lineage: "血統図"
             case .photos: "写真"
+            case .sales: "販売"
             }
         }
     }
@@ -21,6 +22,7 @@ final class StrainDetailModel {
     var tab: Tab = .cohorts
     var isEditing = false
     var isAddingCohort = false
+    var editingSale: Sale?
     var isConfirmingArchive = false
     var showsEndedCohorts = false
     var error: UserFacingError?
