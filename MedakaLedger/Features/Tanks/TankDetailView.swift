@@ -57,19 +57,10 @@ struct TankDetailView: View {
                     Text("作業記録はまだありません")
                         .foregroundStyle(.secondary)
                 }
-                ForEach(logs.prefix(10)) { log in
-                    HStack {
-                        Text(verbatim: log.summary)
-                        if !log.note.isEmpty {
-                            Text(verbatim: log.note)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                        }
-                        Spacer()
-                        Text(verbatim: CohortText.date(log.date))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                MaintenanceLogRows(logs: Array(logs.prefix(10)))
+                if logs.count > 10 {
+                    NavigationLink(value: Route.tankLogs(tank)) {
+                        Text("すべて見る")
                     }
                 }
                 Button {

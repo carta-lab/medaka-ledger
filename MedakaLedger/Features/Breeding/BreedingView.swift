@@ -19,7 +19,7 @@ struct BreedingView: View {
                     Text("まず親魚セットを組みましょう")
                 } actions: {
                     Button("親魚セットを組む") { model.isCreating = true }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(LargeButtonStyle())
                         .accessibilityIdentifier("createBreedingSetButton")
                 }
             } else {

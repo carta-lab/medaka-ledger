@@ -49,6 +49,8 @@ final class BreedingSetEditModel {
             try context.save()
             return true
         } catch {
+            // 親の群を1つだけ移した状態などを残さない
+            context.rollback()
             self.error = UserFacingError(error)
             return false
         }

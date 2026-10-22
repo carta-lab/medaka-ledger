@@ -19,7 +19,7 @@ struct TankListView: View {
                     Text("まず容器を登録しましょう")
                 } actions: {
                     Button("容器を登録する") { model.isCreating = true }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(LargeButtonStyle())
                 }
             } else if sections.isEmpty {
                 ContentUnavailableView.search(text: model.searchText)
@@ -129,10 +129,7 @@ struct TankCard: View {
                         .foregroundStyle(.secondary)
                 }
             }
-        }
-        .padding(.bottom, 20)
-        .frame(maxWidth: .infinity, minHeight: 88, alignment: .topLeading)
-        .overlay(alignment: .bottomLeading) {
+            Spacer(minLength: 4)
             Label {
                 Text(verbatim: water.text)
             } icon: {
@@ -142,6 +139,7 @@ struct TankCard: View {
             .foregroundStyle(water.isOverdue ? Theme.warning : .secondary)
             .fontWeight(water.isOverdue ? .bold : .regular)
         }
+        .frame(maxWidth: .infinity, minHeight: 88, alignment: .topLeading)
         .cardBackground()
         .contentShape(.rect)
     }

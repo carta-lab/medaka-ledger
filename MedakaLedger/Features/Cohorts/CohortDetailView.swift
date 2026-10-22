@@ -53,10 +53,20 @@ struct CohortDetailView: View {
                         Label("編集", systemImage: "pencil")
                     }
                     Divider()
-                    Button(role: .destructive) {
-                        model.isConfirmingCohortDeletion = true
-                    } label: {
-                        Label("群を削除", systemImage: "trash")
+                    if CohortOperations.isUsedByBreedingSet(cohort) {
+                        // 親魚セットに使われた群は削除できず、アーカイブだけ（DECISIONS.md C）
+                        Button {
+                            model.end(cohort, as: .archived, in: modelContext)
+                        } label: {
+                            Label("アーカイブ", systemImage: "archivebox")
+                        }
+                        .disabled(cohort.status == .archived)
+                    } else {
+                        Button(role: .destructive) {
+                            model.isConfirmingCohortDeletion = true
+                        } label: {
+                            Label("群を削除", systemImage: "trash")
+                        }
                     }
                 } label: {
                     Label("メニュー", systemImage: "ellipsis.circle")
@@ -97,8 +107,9 @@ struct CohortDetailView: View {
         }
         .alert("この群を削除しますか", isPresented: $model.isConfirmingCohortDeletion) {
             Button("削除", role: .destructive) {
-                model.deleteCohort(cohort, in: modelContext)
-                dismiss()
+                if model.deleteCohort(cohort, in: modelContext) {
+                    dismiss()
+                }
             }
             Button("キャンセル", role: .cancel) {}
         } message: {

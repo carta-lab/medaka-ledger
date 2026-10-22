@@ -13,6 +13,8 @@ final class NotificationScheduler {
     private let settings: AppSettings
     private let center: UNUserNotificationCenter
     private(set) var status: UNAuthorizationStatus = .notDetermined
+    /// 予約の作り直しを1件ずつ順に行うための、直前の作り直し。
+    @ObservationIgnored private var previous: Task<Void, Never>?
 
     init(settings: AppSettings, center: UNUserNotificationCenter = .current()) {
         self.settings = settings
@@ -34,7 +36,18 @@ final class NotificationScheduler {
     }
 
     /// 起動時、フォアグラウンド復帰時、採卵ロット、水温記録、設定値の変更時に呼ぶ。
+    /// 重なって呼ばれても、直前の作り直しが終わってから計画するので、古い計画の通知は残らない。
     func reschedule(in context: ModelContext, now: Date = .now, calendar: Calendar = .current) async {
+        let earlier = previous
+        let task = Task {
+            await earlier?.value
+            await performReschedule(in: context, now: now, calendar: calendar)
+        }
+        previous = task
+        await task.value
+    }
+
+    private func performReschedule(in context: ModelContext, now: Date, calendar: Calendar) async {
         await refreshStatus()
         center.removeAllPendingNotificationRequests()
         guard status == .authorized || status == .provisional else { return }

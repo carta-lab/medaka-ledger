@@ -68,6 +68,7 @@ final class HatchModel {
             try context.save()
             return true
         } catch {
+            context.rollback()
             self.error = UserFacingError(error)
             return false
         }

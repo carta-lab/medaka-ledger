@@ -44,6 +44,10 @@ struct BreedingSetDetailView: View {
                 }
             } header: {
                 Text("採卵ロット")
+            } footer: {
+                if breedingSet.sortedBatches.contains(where: { $0.status == .hatched }) {
+                    Text("孵化済みのロットをタップすると、遅れて孵った分を記録できます。")
+                }
             }
 
             if breedingSet.isActive {
@@ -106,9 +110,11 @@ struct BreedingSetDetailView: View {
         }
     }
 
+    /// 育卵中と孵化済みのロットは孵化シートを開ける（孵化済みは、遅れて孵った分を足すため）。
     @ViewBuilder
     private func batchRow(_ batch: EggBatch, info: BatchPredictionInfo) -> some View {
-        if batch.status == .incubating {
+        switch batch.status {
+        case .incubating:
             Button {
                 model.hatchingBatch = batch
             } label: {
@@ -118,7 +124,14 @@ struct BreedingSetDetailView: View {
             .swipeActions(edge: .trailing) {
                 Button("廃棄", role: .destructive) { model.askToDiscard(batch) }
             }
-        } else {
+        case .hatched:
+            Button {
+                model.hatchingBatch = batch
+            } label: {
+                EggBatchRow(batch: batch, info: info)
+            }
+            .buttonStyle(.plain)
+        case .discarded:
             EggBatchRow(batch: batch, info: info)
         }
     }

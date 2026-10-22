@@ -82,10 +82,10 @@ struct MaintenanceSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("保存") {
                         if model.save(in: modelContext) {
-                            Task {
-                                await scheduler.reschedule(in: modelContext)
-                                dismiss()
-                            }
+                            // 先に閉じて、二重に保存されないようにする。通知の計画し直しは閉じた後で行う
+                            let context = modelContext
+                            dismiss()
+                            Task { await scheduler.reschedule(in: context) }
                         }
                     }
                     .disabled(!model.canSave)

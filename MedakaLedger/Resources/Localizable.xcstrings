@@ -19,6 +19,9 @@
     "%@のロットが今日孵化予定です": {
       "extractionState": "manual"
     },
+    "%@の作業記録": {
+      "extractionState": "manual"
+    },
     "%@の群から%@を分けて登録": {
       "extractionState": "manual"
     },
@@ -134,6 +137,9 @@
       "extractionState": "manual"
     },
     "すべてのデータを削除しますか": {
+      "extractionState": "manual"
+    },
+    "すべての系統": {
       "extractionState": "manual"
     },
     "すべて見る": {
@@ -373,6 +379,9 @@
     "分割": {
       "extractionState": "manual"
     },
+    "分割元の群が削除されているため、この記録は削除できません。": {
+      "extractionState": "manual"
+    },
     "別容器": {
       "extractionState": "manual"
     },
@@ -433,9 +442,6 @@
     "同じ群どうしは統合できません。": {
       "extractionState": "manual"
     },
-    "同じ群を雄と雌の両方に選べます。": {
-      "extractionState": "manual"
-    },
     "同じ親魚セットから生まれた群どうし、または入手個体どうしだけ統合できます。": {
       "extractionState": "manual"
     },
@@ -449,6 +455,9 @@
       "extractionState": "manual"
     },
     "品種名を入れてください。": {
+      "extractionState": "manual"
+    },
+    "品種名を入れると保存できます。系統名は「〇〇めだか2026春購入」のように、同じ品種の中で見分ける呼び名です。": {
       "extractionState": "manual"
     },
     "品種名（例 楊貴妃）": {
@@ -512,6 +521,9 @@
       "extractionState": "manual"
     },
     "孵化日": {
+      "extractionState": "manual"
+    },
+    "孵化済みのロットをタップすると、遅れて孵った分を記録できます。": {
       "extractionState": "manual"
     },
     "完了": {
@@ -646,6 +658,9 @@
     "最終水換え": {
       "extractionState": "manual"
     },
+    "最終水換えの日と、孵化予定日の計算に反映されます。": {
+      "extractionState": "manual"
+    },
     "最近の記録": {
       "extractionState": "manual"
     },
@@ -704,6 +719,9 @@
       "extractionState": "manual"
     },
     "水温の記録": {
+      "extractionState": "manual"
+    },
+    "水温は数字で入れてください。": {
       "extractionState": "manual"
     },
     "水温を入れてください。": {
@@ -811,6 +829,9 @@
     "系統がありません": {
       "extractionState": "manual"
     },
+    "系統で絞り込む": {
+      "extractionState": "manual"
+    },
     "系統を登録": {
       "extractionState": "manual"
     },
@@ -818,9 +839,6 @@
       "extractionState": "manual"
     },
     "系統を編集": {
-      "extractionState": "manual"
-    },
-    "系統名は「〇〇めだか2026春購入」のように、同じ品種の中で見分ける呼び名です。": {
       "extractionState": "manual"
     },
     "系統名・呼び名（任意）": {
@@ -937,6 +955,9 @@
     "親魚セットがありません": {
       "extractionState": "manual"
     },
+    "親魚セットに使われている群は削除できません。アーカイブしてください。": {
+      "extractionState": "manual"
+    },
     "親魚セットを組みましょう": {
       "extractionState": "manual"
     },
@@ -988,6 +1009,9 @@
     "針子の容器": {
       "extractionState": "manual"
     },
+    "針子の容器を選ぶと保存できます。": {
+      "extractionState": "manual"
+    },
     "針子の容器を選んでください。": {
       "extractionState": "manual"
     },
@@ -1016,6 +1040,9 @@
       "extractionState": "manual"
     },
     "雄の群": {
+      "extractionState": "manual"
+    },
+    "雄の群と雌の群を選ぶと保存できます。同じ群を雄と雌の両方に選べます。": {
       "extractionState": "manual"
     },
     "雄雌の匹数": {

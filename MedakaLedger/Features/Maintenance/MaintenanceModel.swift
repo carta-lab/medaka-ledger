@@ -28,7 +28,7 @@ final class MaintenanceModel {
     var canSave: Bool {
         guard !selectedIDs.isEmpty else { return false }
         if kind == .temperature { return NumberParsing.double(from: waterTempText) != nil }
-        return true
+        return NumberParsing.isValidOptional(waterTempText)
     }
 
     func isSelected(_ tank: Tank) -> Bool { selectedIDs.contains(tank.id) }
@@ -45,6 +45,10 @@ final class MaintenanceModel {
     /// 保存できたら true。
     func save(in context: ModelContext) -> Bool {
         let tanks = selectedIDs.compactMap { knownTanks[$0] }.sorted { $0.sortOrder < $1.sortOrder }
+        guard NumberParsing.isValidOptional(waterTempText) else {
+            error = UserFacingError(message: String(localized: "水温は数字で入れてください。"))
+            return false
+        }
         do {
             try MaintenanceOperations.record(
                 on: tanks,
@@ -58,6 +62,7 @@ final class MaintenanceModel {
             try context.save()
             return true
         } catch {
+            context.rollback()
             self.error = UserFacingError(error)
             return false
         }

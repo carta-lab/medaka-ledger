@@ -25,7 +25,7 @@ struct StrainEditView: View {
                     TextField("系統名・呼び名（任意）", text: $model.lineName)
                     TextField("入手元・作出者", text: $model.source)
                 } footer: {
-                    Text("系統名は「〇〇めだか2026春購入」のように、同じ品種の中で見分ける呼び名です。")
+                    Text("品種名を入れると保存できます。系統名は「〇〇めだか2026春購入」のように、同じ品種の中で見分ける呼び名です。")
                 }
 
                 Section {
@@ -74,6 +74,7 @@ struct StrainEditView: View {
                 dismiss()
             }
         } catch {
+            modelContext.rollback()
             model.error = UserFacingError(error)
         }
     }

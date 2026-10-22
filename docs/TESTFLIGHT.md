@@ -34,13 +34,19 @@
 | `ASC_KEY_P8_BASE64` | `.p8` をBase64にした文字列（Macなら `base64 -i AuthKey_XXXX.p8 \| pbcopy`） |
 | `APPLE_TEAM_ID` | チームID（Developerサイトの Membership に出る10文字） |
 
+## 4.5 安全のために（おすすめ）
+
+ワークフローは、書き込み権限のある人が選んだブランチで実行でき、そのブランチの手順にAPIキーが渡る。
+Secretsはリポジトリではなく、GitHubの Environment（名前は `testflight`）に入れ、「mainブランチだけ」「承認が要る」と設定すると、他のブランチで書き換えた手順に鍵が渡らない。
+Environmentを使う場合は、`testflight.yml` のジョブに `environment: testflight` を足す。
+
 ## 5. 配信する
 
 1. GitHubの Actions → TestFlight → Run workflow。
 2. 成功すると、数分から数十分後にTestFlightにビルドが現れる（Appleの処理待ち）。
 3. TestFlightアプリで自分のApple IDを内部テスターに追加し、iPhoneに入れる。
 
-ビルド番号はワークフローの実行番号（`github.run_number`）になるので、実行のたびに増える。
+ビルド番号は「実行番号×100＋再実行の回数」になるので、実行のたびに増え、同じ実行を再実行しても拒否されない。
 
 ## 困ったとき
 

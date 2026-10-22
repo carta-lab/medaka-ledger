@@ -44,7 +44,7 @@ struct HatchSheet: View {
                 }
 
                 if model.addTo == nil {
-                    Section("針子の容器") {
+                    Section {
                         Picker("容器", selection: $model.tank) {
                             Text("選んでください").tag(Tank?.none)
                             ForEach(tanks) { tank in
@@ -53,6 +53,10 @@ struct HatchSheet: View {
                         }
                         .accessibilityIdentifier("hatchTankPicker")
                         TextField("ラベル（任意）", text: $model.label)
+                    } header: {
+                        Text("針子の容器")
+                    } footer: {
+                        Text("針子の容器を選ぶと保存できます。")
                     }
                 }
 
@@ -70,10 +74,10 @@ struct HatchSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("保存") {
                         if model.save(in: modelContext) {
-                            Task {
-                                await scheduler.reschedule(in: modelContext)
-                                dismiss()
-                            }
+                            // 先に閉じて、二重に保存されないようにする。通知の計画し直しは閉じた後で行う
+                            let context = modelContext
+                            dismiss()
+                            Task { await scheduler.reschedule(in: context) }
                         }
                     }
                     .disabled(!model.canSave)

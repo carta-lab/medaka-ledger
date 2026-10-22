@@ -17,7 +17,7 @@ struct StrainListView: View {
                     Text("まず系統を登録しましょう")
                 } actions: {
                     Button("系統を登録する") { model.isCreating = true }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(LargeButtonStyle())
                 }
             } else {
                 List {

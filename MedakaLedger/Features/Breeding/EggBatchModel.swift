@@ -28,6 +28,10 @@ final class EggBatchModel {
     /// 保存して、孵化予定日を知らせる。許可を求める前には理由を一行で示す（CLAUDE.md）。
     func save(in context: ModelContext, settings: AppSettings, needsAuthorization: Bool) {
         guard let set = targetSet else { return }
+        guard NumberParsing.isValidOptional(waterTempText) else {
+            error = UserFacingError(message: String(localized: "水温は数字で入れてください。"))
+            return
+        }
         do {
             let batch = try BreedingOperations.recordEggBatch(
                 in: set,
@@ -48,6 +52,7 @@ final class EggBatchModel {
             resultMessage = message
             isShowingResult = true
         } catch {
+            context.rollback()
             self.error = UserFacingError(error)
         }
     }

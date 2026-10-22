@@ -13,6 +13,7 @@ final class Router {
 /// 画面の遷移先。各タブの NavigationStack で routeDestinations() を付けて使う。
 enum Route: Hashable {
     case tank(Tank)
+    case tankLogs(Tank)
     case strain(Strain)
     case cohort(Cohort)
     case breedingSet(BreedingSet)
@@ -34,6 +35,7 @@ private struct RouteDestination: View {
     var body: some View {
         switch route {
         case let .tank(tank): TankDetailView(tank: tank)
+        case let .tankLogs(tank): TankLogsView(tank: tank)
         case let .strain(strain): StrainDetailView(strain: strain)
         case let .cohort(cohort): CohortDetailView(cohort: cohort)
         case let .breedingSet(set): BreedingSetDetailView(breedingSet: set)

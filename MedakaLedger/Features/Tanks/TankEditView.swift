@@ -86,6 +86,7 @@ struct TankEditView: View {
                 dismiss()
             }
         } catch {
+            modelContext.rollback()
             model.error = UserFacingError(error)
         }
     }

@@ -307,4 +307,83 @@ struct BreedingOperationsTests {
         try MaintenanceOperations.record(on: [tank], kind: .waterChange, date: day, percent: 50, waterTempC: nil, note: "", in: context)
         #expect(tank.lastWaterChange == day)
     }
+
+    // MARK: レビュー指摘の修正
+
+    @Test func cohortUsedAsParentCannotBeDeleted() throws {
+        let strain = makeStrain("楊貴妃")
+        let parent = makeCohort(strain: strain, tank: makeTank("A-1"))
+        let other = makeCohort(strain: strain, tank: makeTank("A-2"))
+        _ = try makeSet(sire: parent, dam: parent)
+        #expect(CohortOperations.isUsedByBreedingSet(parent))
+        #expect(!CohortOperations.isUsedByBreedingSet(other))
+        #expect(throws: CohortOperations.OperationError.usedByBreedingSet) {
+            try CohortOperations.deleteCohort(parent, in: context)
+        }
+        try CohortOperations.deleteCohort(other, in: context)
+        try context.save()
+        #expect(try context.fetch(FetchDescriptor<Cohort>()).count == 1)
+    }
+
+    @Test func archivedParentStillAllowsHatch() throws {
+        let parent = makeCohort(strain: makeStrain("楊貴妃"), tank: makeTank("A-1"))
+        let batch = try recordBatch(try makeSet(sire: parent, dam: parent))
+        try CohortOperations.changeStatus(parent, to: .archived, date: day, in: context)
+        let child = try BreedingOperations.recordHatch(of: batch, hatchInput(tank: makeTank("針子1")), in: context)
+        #expect(child.generation == 1)
+        #expect(parent.status == .archived)
+    }
+
+    @Test func splitUndoIsBlockedWhenTheChildIsAParent() throws {
+        let strain = makeStrain("楊貴妃")
+        let source = makeCohort(strain: strain, tank: makeTank("A-1"), count: 30)
+        let child = try CohortOperations.split(source, amount: 10, to: makeTank("B-1"), date: day, in: context)
+        _ = try makeSet(sire: child, dam: child)
+        try context.save()
+
+        let childSplit = try #require(child.timeline.first)
+        #expect(throws: CohortOperations.OperationError.usedByBreedingSet) {
+            try CohortOperations.deleteEvent(childSplit, in: context)
+        }
+        #expect(source.count == 20)
+        #expect(child.count == 10)
+    }
+
+    @Test func splitUndoFromTheChildSideIsBlockedWhenTheSourceWasDeleted() throws {
+        let strain = makeStrain("楊貴妃")
+        let source = makeCohort(strain: strain, tank: makeTank("A-1"), count: 30)
+        let child = try CohortOperations.split(source, amount: 10, to: makeTank("B-1"), date: day, in: context)
+        try CohortOperations.deleteCohort(source, in: context)
+        try context.save()
+
+        let childSplit = try #require(child.timeline.first)
+        #expect(throws: CohortOperations.OperationError.partnerMissing) {
+            try CohortOperations.deleteEvent(childSplit, in: context)
+        }
+        #expect(child.count == 10)
+        #expect(child.events?.count == 1)
+    }
+
+    @Test func deletingAMaintenanceLogUpdatesTheLastWaterChange() throws {
+        let tank = makeTank("A-1")
+        let older = day.addingTimeInterval(-86_400 * 10)
+        try MaintenanceOperations.record(on: [tank], kind: .waterChange, date: older, percent: 30, waterTempC: nil, note: "", in: context)
+        try MaintenanceOperations.record(on: [tank], kind: .waterChange, date: day, percent: 50, waterTempC: nil, note: "誤り", in: context)
+        try context.save()
+        #expect(tank.lastWaterChange == day)
+
+        let wrong = try #require(tank.recentLogs.first)
+        context.delete(wrong)
+        try context.save()
+        #expect(tank.lastWaterChange == older)
+    }
+
+    @Test func optionalNumberValidation() {
+        #expect(NumberParsing.isValidOptional(""))
+        #expect(NumberParsing.isValidOptional("  "))
+        #expect(NumberParsing.isValidOptional("24.5"))
+        #expect(NumberParsing.isValidOptional("２４"))
+        #expect(!NumberParsing.isValidOptional("abc"))
+        #expect(!NumberParsing.isValidOptional("24℃"))
+    }
 }

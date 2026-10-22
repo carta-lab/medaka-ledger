@@ -45,14 +45,21 @@ def interpolation_to_format(text: str) -> str:
     return "".join(result)
 
 
-def collect() -> set[str]:
+ESCAPE = re.compile(r'\\[ntr"\\]')
+
+
+def collect(problems: list[str]) -> set[str]:
     keys: set[str] = set()
     for path in sorted(SOURCE_DIR.rglob("*.swift")):
         if any(path == ex or ex in path.parents for ex in EXCLUDED):
             continue
-        for line in path.read_text(encoding="utf-8").splitlines():
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
             stripped = line.strip()
             if stripped.startswith("//"):
+                continue
+            # 複数行リテラルは解釈しない。日本語の文言のある行で使われたら失敗させる
+            if JAPANESE.search(line) and '"""' in line:
+                problems.append(f"{path.relative_to(ROOT)}:{number}: 複数行の文字列には対応していません: {stripped}")
                 continue
             code = line.split("//")[0] if '"' not in line.split("//")[0] or line.count('"') % 2 == 0 else line
             for match in LITERAL.finditer(code):
@@ -61,12 +68,21 @@ def collect() -> set[str]:
                     continue
                 if SKIP_BEFORE.search(code[: match.start()]):
                     continue
+                # エスケープは解釈しない。キーが実際の文字列と合わなくなるので失敗させる
+                if ESCAPE.search(literal):
+                    problems.append(f"{path.relative_to(ROOT)}:{number}: エスケープを含む文言には対応していません: {stripped}")
+                    continue
                 keys.add(interpolation_to_format(literal))
     return keys
 
 
 def main() -> int:
-    keys = collect()
+    problems: list[str] = []
+    keys = collect(problems)
+    if problems:
+        print("\n".join(problems), file=sys.stderr)
+        print("Localizable.xcstrings を作れません。文言の書き方を直してください。", file=sys.stderr)
+        return 1
     catalog = {
         "sourceLanguage": "ja",
         "strings": {key: {"extractionState": "manual"} for key in sorted(keys)},

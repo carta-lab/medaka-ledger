@@ -10,15 +10,22 @@ struct BreedingSetEditView: View {
     @Query(filter: Cohort.activePredicate, sort: \Cohort.createdAt) private var cohorts: [Cohort]
     @Query(filter: Tank.unarchivedPredicate, sort: Tank.listSort) private var tanks: [Tank]
     @State private var model = BreedingSetEditModel()
+    @State private var strainFilter: Strain? = nil
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
+                    Picker("系統で絞り込む", selection: $strainFilter) {
+                        Text("すべての系統").tag(Strain?.none)
+                        ForEach(strainsOfCohorts) { strain in
+                            Text(verbatim: strain.displayName).tag(Optional(strain))
+                        }
+                    }
                     cohortPicker("雄の群", selection: $model.sire)
                     cohortPicker("雌の群", selection: $model.dam)
                 } footer: {
-                    Text("同じ群を雄と雌の両方に選べます。")
+                    Text("雄の群と雌の群を選ぶと保存できます。同じ群を雄と雌の両方に選べます。")
                 }
 
                 Section("匹数") {
@@ -70,10 +77,22 @@ struct BreedingSetEditView: View {
         }
     }
 
+    /// 飼育中の群がいる系統（重複なし）。
+    private var strainsOfCohorts: [Strain] {
+        var seen = Set<UUID>()
+        return cohorts.compactMap(\.strain).filter { seen.insert($0.id).inserted }
+    }
+
+    /// 系統で絞り込んだ群。選択済みの群は、絞り込みの外でも選択肢に残す。
+    private func visibleCohorts(keeping selected: Cohort?) -> [Cohort] {
+        guard let strainFilter else { return cohorts }
+        return cohorts.filter { $0.strain?.id == strainFilter.id || $0.id == selected?.id }
+    }
+
     private func cohortPicker(_ title: LocalizedStringKey, selection: Binding<Cohort?>) -> some View {
         Picker(title, selection: selection) {
             Text("選んでください").tag(Cohort?.none)
-            ForEach(cohorts) { cohort in
+            ForEach(visibleCohorts(keeping: selection.wrappedValue)) { cohort in
                 Text(verbatim: "\(cohort.strainName) \(cohort.generationLabel)・\(cohort.tankName)・\(cohort.countText)")
                     .tag(Optional(cohort))
             }
