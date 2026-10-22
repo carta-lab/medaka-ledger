@@ -1,0 +1,95 @@
+name: MedakaLedger
+
+options:
+  bundleIdPrefix: com.meldcarta
+  deploymentTarget:
+    iOS: "18.0"
+  developmentLanguage: ja
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+fileGroups:
+  - MedakaLedger.storekit
+  - docs
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_DEFAULT_ACTOR_ISOLATION: nonisolated
+    TARGETED_DEVICE_FAMILY: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+    DEAD_CODE_STRIPPING: YES
+
+targets:
+  MedakaLedger:
+    type: application
+    platform: iOS
+    sources:
+      - path: MedakaLedger
+    entitlements:
+      path: MedakaLedger/MedakaLedger.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.meldcarta.medakaledger
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.meldcarta.medakaledger
+        PRODUCT_NAME: MedakaLedger
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: めだか台帳
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.lifestyle
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Automatic
+
+  MedakaLedgerTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: MedakaLedgerTests
+    dependencies:
+      - target: MedakaLedger
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.meldcarta.medakaledger.tests
+        GENERATE_INFOPLIST_FILE: YES
+
+  MedakaLedgerUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: MedakaLedgerUITests
+    dependencies:
+      - target: MedakaLedger
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.meldcarta.medakaledger.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: MedakaLedger
+
+schemes:
+  MedakaLedger:
+    build:
+      targets:
+        MedakaLedger: all
+        MedakaLedgerTests: [test]
+        MedakaLedgerUITests: [test]
+    run:
+      config: Debug
+      storeKitConfiguration: MedakaLedger.storekit
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - MedakaLedgerTests
+        - MedakaLedgerUITests
+    archive:
+      config: Release

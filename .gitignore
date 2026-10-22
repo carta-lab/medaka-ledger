@@ -1,0 +1,18 @@
+# XcodeGenで生成する（DECISIONS A）
+*.xcodeproj/
+*.xcworkspace/
+
+# Xcode
+build/
+DerivedData/
+xcuserdata/
+*.xcresult
+
+# CI
+screenshots/
+
+# macOS
+.DS_Store
+
+# Linuxでのロジック検証（scripts/linux-check.sh）
+.linux-check/
