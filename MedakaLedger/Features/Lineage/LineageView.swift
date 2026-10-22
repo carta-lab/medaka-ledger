@@ -9,7 +9,10 @@ struct LineageView: View {
     /// TODO(要確認): Proの権利は第5週のProStoreで決まる。それまではFreeの上限（2世代）で表示する。
     private let isPro = false
     @State private var scale: CGFloat = 1
+    @State private var contentSize: CGSize = .zero
     @GestureState private var pinch: CGFloat = 1
+
+    private static let scaleRange: ClosedRange<CGFloat> = 0.4...3
 
     var body: some View {
         let maxDepth = LineageResolver.depthLimit(isPro: isPro)
@@ -17,17 +20,18 @@ struct LineageView: View {
         let cohorts = LineageSource.cohorts(from: cohort, maxDepth: maxDepth)
         Group {
             if let tree {
-                ScrollView([.horizontal, .vertical]) {
-                    LineageBranch(node: tree, cohorts: cohorts, rootID: cohort.id)
-                        .padding(Theme.screenPadding)
-                        .scaleEffect(min(max(scale * pinch, 0.4), 3), anchor: .center)
-                        .frame(maxWidth: .infinity)
+                GeometryReader { viewport in
+                    ScrollView([.horizontal, .vertical]) {
+                        diagram(tree: tree, cohorts: cohorts)
+                            // 木が画面より小さいときは、選んだ群を画面の下の中央に置く。大きいときはスクロールする
+                            .frame(minWidth: viewport.size.width, minHeight: viewport.size.height, alignment: .bottom)
+                    }
+                    .gesture(
+                        MagnifyGesture()
+                            .updating($pinch) { value, state, _ in state = value.magnification }
+                            .onEnded { value in scale = clamp(scale * value.magnification) }
+                    )
                 }
-                .gesture(
-                    MagnifyGesture()
-                        .updating($pinch) { value, state, _ in state = value.magnification }
-                        .onEnded { value in scale = min(max(scale * value.magnification, 0.4), 3) }
-                )
                 .safeAreaInset(edge: .top) {
                     if tree.hasTruncation {
                         Label("Proで全世代を表示", systemImage: "lock")
@@ -44,6 +48,25 @@ struct LineageView: View {
         .navigationTitle("血統図")
         .navigationBarTitleDisplayMode(.inline)
     }
+
+    /// 拡大縮小した大きさの枠に木を入れる。scaleEffect は配置の大きさを変えないので、枠を倍率に合わせて、全体までスクロールできるようにする。
+    private func diagram(tree: LineageNode, cohorts: [UUID: Cohort]) -> some View {
+        let factor = clamp(scale * pinch)
+        return LineageBranch(node: tree, cohorts: cohorts, rootID: cohort.id)
+            .fixedSize()
+            .onGeometryChange(for: CGSize.self) { $0.size } action: { contentSize = $0 }
+            .scaleEffect(factor, anchor: .topLeading)
+            .frame(
+                width: contentSize == .zero ? nil : contentSize.width * factor,
+                height: contentSize == .zero ? nil : contentSize.height * factor,
+                alignment: .topLeading
+            )
+            .padding(Theme.screenPadding)
+    }
+
+    private func clamp(_ value: CGFloat) -> CGFloat {
+        min(max(value, Self.scaleRange.lowerBound), Self.scaleRange.upperBound)
+    }
 }
 
 /// 木の一部（ノードと、その上に並ぶ雄側と雌側の親）。自分自身を呼んで祖先へ続ける。
@@ -55,7 +78,7 @@ private struct LineageBranch: View {
     var body: some View {
         VStack(spacing: 6) {
             if node.sire != nil || node.dam != nil {
-                HStack(alignment: .bottom, spacing: 16) {
+                HStack(alignment: .bottom, spacing: 8) {
                     parent(node.sire, role: "雄")
                     parent(node.dam, role: "雌")
                 }
@@ -88,21 +111,22 @@ private struct LineageNodeCard: View {
     let isRoot: Bool
 
     var body: some View {
-        let card = HStack(spacing: 8) {
+        // 狭い画面でも横に並べられるよう、縦に積んだ細いノードにする
+        let card = VStack(spacing: 4) {
             if let photo = cohort?.coverPhoto {
                 PhotoThumbnail(photo: photo, size: 40)
             }
-            VStack(alignment: .leading, spacing: 2) {
-                Text(verbatim: node.info.strainName)
-                    .font(.subheadline.bold())
-                    .lineLimit(2)
-                Text(verbatim: detail)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+            Text(verbatim: node.info.strainName)
+                .font(.caption.bold())
+                .multilineTextAlignment(.center)
+                .lineLimit(4)
+            Text(verbatim: detail)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
         }
-        .padding(10)
-        .frame(minWidth: 120, maxWidth: 200, alignment: .leading)
+        .padding(8)
+        .frame(minWidth: 84, maxWidth: 132)
         .background(.fill.quaternary, in: .rect(cornerRadius: Theme.cornerRadius))
         .overlay {
             RoundedRectangle(cornerRadius: Theme.cornerRadius)
@@ -118,11 +142,11 @@ private struct LineageNodeCard: View {
     }
 
     private var detail: String {
-        var parts = [CohortText.generation(node.info.generation)]
+        var lines = [CohortText.generation(node.info.generation)]
         if let hatchedAt = node.info.hatchedAt {
-            parts.append(String(localized: "孵化 \(CohortText.shortDate(hatchedAt))"))
+            lines.append(String(localized: "孵化 \(CohortText.shortDate(hatchedAt))"))
         }
-        if node.isCycle { parts.append(String(localized: "（循環）")) }
-        return parts.joined(separator: "・")
+        if node.isCycle { lines.append(String(localized: "（循環）")) }
+        return lines.joined(separator: "\n")
     }
 }
