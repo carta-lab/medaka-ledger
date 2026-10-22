@@ -145,6 +145,8 @@ enum MaintenanceKind: String { case waterChange, topUp, cleaning, medication, te
     var previousCount: Int?               // 削除で元に戻すための値
     var previousStageRaw: String = ""
     var previousStatusRaw: String = ""
+    var statusRaw: String = ""            // statusChange のとき、変更後の状態（DECISIONS H）
+    var createdAt: Date = Date()          // 保存日時。「最新の出来事」の判定に使う（DECISIONS H）
     var note: String = ""
     var cohort: Cohort?
 }
