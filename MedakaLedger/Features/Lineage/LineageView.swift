@@ -13,6 +13,8 @@ struct LineageView: View {
     @GestureState private var pinch: CGFloat = 1
 
     private static let scaleRange: ClosedRange<CGFloat> = 0.4...3
+    /// 画面の下に浮かぶタブバーに、選んだ群が隠れないための余白。
+    private static let tabBarClearance: CGFloat = 96
 
     var body: some View {
         let maxDepth = LineageResolver.depthLimit(isPro: isPro)
@@ -24,7 +26,11 @@ struct LineageView: View {
                     ScrollView([.horizontal, .vertical]) {
                         diagram(tree: tree, cohorts: cohorts)
                             // 木が画面より小さいときは、選んだ群を画面の下の中央に置く。大きいときはスクロールする
-                            .frame(minWidth: viewport.size.width, minHeight: viewport.size.height, alignment: .bottom)
+                            .frame(
+                                minWidth: viewport.size.width,
+                                minHeight: max(viewport.size.height - Self.tabBarClearance, 0),
+                                alignment: .bottom
+                            )
                     }
                     .gesture(
                         MagnifyGesture()
@@ -126,7 +132,8 @@ private struct LineageNodeCard: View {
                 .multilineTextAlignment(.center)
         }
         .padding(8)
-        .frame(minWidth: 84, maxWidth: 132)
+        // 祖先を2世代まで出すと4つ並ぶので、狭い画面に収まる幅にする（文字が大きいときは縦に伸びる）
+        .frame(width: 80)
         .background(.fill.quaternary, in: .rect(cornerRadius: Theme.cornerRadius))
         .overlay {
             RoundedRectangle(cornerRadius: Theme.cornerRadius)
