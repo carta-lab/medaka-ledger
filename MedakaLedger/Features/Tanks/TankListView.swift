@@ -19,7 +19,7 @@ struct TankListView: View {
                     Text("まず容器を登録しましょう")
                 } actions: {
                     Button("容器を登録する") { model.isCreating = true }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(LargeButtonStyle())
                 }
             } else if sections.isEmpty {
                 ContentUnavailableView.search(text: model.searchText)
@@ -94,10 +94,12 @@ struct TankListView: View {
 }
 
 struct TankCard: View {
+    @Environment(AppSettings.self) private var settings
     let tank: Tank
 
     var body: some View {
         let cohorts = tank.activeCohorts
+        let water = TankWaterStatus(tank: tank, settings: settings)
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
                 Image(systemName: tank.kind.symbolName)
@@ -127,6 +129,15 @@ struct TankCard: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            Spacer(minLength: 4)
+            Label {
+                Text(verbatim: water.text)
+            } icon: {
+                Image(systemName: "drop")
+            }
+            .font(.caption)
+            .foregroundStyle(water.isOverdue ? Theme.warning : .secondary)
+            .fontWeight(water.isOverdue ? .bold : .regular)
         }
         .frame(maxWidth: .infinity, minHeight: 88, alignment: .topLeading)
         .cardBackground()

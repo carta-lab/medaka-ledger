@@ -5,15 +5,22 @@ import SwiftUI
 
 struct TankDetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppSettings.self) private var settings
     @Bindable var tank: Tank
     @State private var model = TankDetailModel()
 
     var body: some View {
         let cohorts = tank.activeCohorts
+        let water = TankWaterStatus(tank: tank, settings: settings)
         List {
             Section {
                 InfoRow(title: "種類", value: tank.kind.label)
                 InfoRow(title: "置き場所", value: placementText)
+                LabeledContent("最終水換え") {
+                    Text(verbatim: water.text)
+                        .foregroundStyle(water.isOverdue ? Theme.warning : .secondary)
+                        .fontWeight(water.isOverdue ? .bold : .regular)
+                }
                 if let capacity = tank.capacityLiters {
                     InfoRow(title: "容量", value: "\(NumberParsing.text(from: capacity)) L")
                 }
@@ -44,9 +51,26 @@ struct TankDetailView: View {
                 }
             }
 
-            Section("作業記録") {
-                Text("作業記録はまだありません")
-                    .foregroundStyle(.secondary)
+            Section {
+                let logs = tank.recentLogs
+                if logs.isEmpty {
+                    Text("作業記録はまだありません")
+                        .foregroundStyle(.secondary)
+                }
+                MaintenanceLogRows(logs: Array(logs.prefix(10)))
+                if logs.count > 10 {
+                    NavigationLink(value: Route.tankLogs(tank)) {
+                        Text("すべて見る")
+                    }
+                }
+                Button {
+                    model.isRecordingMaintenance = true
+                } label: {
+                    Label("この容器の記録", systemImage: "plus.circle")
+                }
+                .accessibilityIdentifier("recordMaintenanceButton")
+            } header: {
+                Text("作業記録")
             }
         }
         .navigationTitle(tank.name)
@@ -78,6 +102,9 @@ struct TankDetailView: View {
         }
         .sheet(isPresented: $model.isEditing) {
             TankEditView(tank: tank)
+        }
+        .sheet(isPresented: $model.isRecordingMaintenance) {
+            MaintenanceSheet(initialTanks: [tank], isTankLocked: true)
         }
         .sheet(item: $model.movingCohort) { cohort in
             MoveCohortSheet(cohort: cohort)

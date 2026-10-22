@@ -235,11 +235,17 @@ struct CohortOperationsTests {
         #expect(tanks.filter(\.isSample).count == 6)
         #expect(strains.filter(\.isSample).count == 2)
         #expect(cohorts.filter(\.isSample).count == 4)
+        #expect(try context.fetch(FetchDescriptor<BreedingSet>()).filter(\.isSample).count == 1)
+        #expect(try context.fetch(FetchDescriptor<EggBatch>()).filter(\.isSample).count == 2)
+        #expect(try context.fetch(FetchDescriptor<MaintenanceLog>()).filter(\.isSample).count == 4)
 
         try SampleDataSeeder.deleteSamples(in: context)
         let left = try context.fetch(FetchDescriptor<Tank>())
         #expect(left.map(\.id) == [ownTank.id])
         #expect(try context.fetch(FetchDescriptor<Cohort>()).isEmpty)
         #expect(try context.fetch(FetchDescriptor<CohortEvent>()).isEmpty)
+        #expect(try context.fetch(FetchDescriptor<BreedingSet>()).isEmpty)
+        #expect(try context.fetch(FetchDescriptor<EggBatch>()).isEmpty)
+        #expect(try context.fetch(FetchDescriptor<MaintenanceLog>()).isEmpty)
     }
 }

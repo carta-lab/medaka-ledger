@@ -3,11 +3,15 @@ import SwiftUI
 
 @main
 struct MedakaLedgerApp: App {
-    @State private var settings = AppSettings()
+    @State private var settings: AppSettings
     @State private var router = Router()
+    @State private var scheduler: NotificationScheduler
     private let containerResult: Result<ModelContainer, any Error>
 
     init() {
+        let settings = AppSettings()
+        _settings = State(initialValue: settings)
+        _scheduler = State(initialValue: NotificationScheduler(settings: settings))
         let launch = LaunchOptions.current
         let result = Result { try ModelStore.makeContainer(inMemory: launch.usesInMemoryStore) }
         if launch.seedsSampleData, case let .success(container) = result {
@@ -25,6 +29,7 @@ struct MedakaLedgerApp: App {
                     .modelContainer(container)
                     .environment(settings)
                     .environment(router)
+                    .environment(scheduler)
             case let .failure(error):
                 StoreErrorView(error: error)
             }
@@ -46,6 +51,9 @@ struct LaunchOptions {
 
 struct RootView: View {
     @Environment(Router.self) private var router
+    @Environment(NotificationScheduler.self) private var scheduler
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         @Bindable var router = router
@@ -64,6 +72,12 @@ struct RootView: View {
             }
             Tab("販売", systemImage: "yensign.circle", value: AppTab.sales) {
                 NavigationStack { SalesView().routeDestinations() }
+            }
+        }
+        // 起動時とフォアグラウンドに戻ったとき、孵化予定の通知を計画し直す
+        .task(id: scenePhase) {
+            if scenePhase == .active {
+                await scheduler.reschedule(in: modelContext)
             }
         }
     }

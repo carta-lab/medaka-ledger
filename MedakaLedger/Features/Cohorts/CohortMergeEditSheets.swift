@@ -37,6 +37,7 @@ struct MergeCohortSheet: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    .accessibilityAddTraits(selected?.id == candidate.id ? .isSelected : [])
                 }
             } header: {
                 Text("この群にまとめる群")

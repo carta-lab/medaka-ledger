@@ -27,6 +27,15 @@ final class ScreenshotTests: XCTestCase {
             snapshot("03-容器詳細")
         }
 
+        tapTab(app, "繁殖")
+        snapshot("07-繁殖")
+        let setRow = app.buttons.matching(identifier: "breedingSetRow").firstMatch
+        if setRow.waitForExistence(timeout: 5) {
+            setRow.tap()
+            sleepBriefly()
+            snapshot("08-親魚セット詳細")
+        }
+
         tapTab(app, "系統")
         snapshot("04-系統一覧")
 

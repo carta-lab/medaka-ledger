@@ -77,6 +77,7 @@ struct CohortCreateView: View {
             try model.save(in: modelContext)
             onFinish()
         } catch {
+            modelContext.rollback()
             model.error = UserFacingError(error)
         }
     }

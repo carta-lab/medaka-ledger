@@ -106,6 +106,7 @@ struct StageChangeSheet: View {
                         .contentShape(.rect)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityAddTraits(option == stage ? .isSelected : [])
                 }
             }
             Section {

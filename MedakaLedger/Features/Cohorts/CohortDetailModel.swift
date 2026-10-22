@@ -63,12 +63,16 @@ final class CohortDetailModel {
         eventPendingDeletion = nil
     }
 
-    func deleteCohort(_ cohort: Cohort, in context: ModelContext) {
-        CohortOperations.deleteCohort(cohort, in: context)
+    /// 削除できたら true。失敗したら途中の変更を戻して、理由をアラートに出す。
+    func deleteCohort(_ cohort: Cohort, in context: ModelContext) -> Bool {
         do {
+            try CohortOperations.deleteCohort(cohort, in: context)
             try context.save()
+            return true
         } catch {
+            context.rollback()
             self.error = UserFacingError(error, title: String(localized: "削除できませんでした"))
+            return false
         }
     }
 
@@ -87,6 +91,8 @@ final class CohortDetailModel {
             try body()
             try context.save()
         } catch {
+            // 途中まで適用された変更を残さない
+            context.rollback()
             self.error = UserFacingError(error)
         }
     }

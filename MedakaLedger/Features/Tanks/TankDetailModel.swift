@@ -7,6 +7,7 @@ import SwiftData
 final class TankDetailModel {
     var isEditing = false
     var isConfirmingArchive = false
+    var isRecordingMaintenance = false
     var movingCohort: Cohort?
     var error: UserFacingError?
 

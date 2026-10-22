@@ -10,6 +10,7 @@ struct OperationForm<Content: View>: View {
     private let onSave: () throws -> Void
     private let content: () -> Content
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @State private var error: UserFacingError? = nil
 
     init(title: LocalizedStringKey, canSave: Bool, onSave: @escaping () throws -> Void, @ViewBuilder content: @escaping () -> Content) {
@@ -36,6 +37,7 @@ struct OperationForm<Content: View>: View {
                             try onSave()
                             dismiss()
                         } catch {
+                            modelContext.rollback()
                             self.error = UserFacingError(error)
                         }
                     }

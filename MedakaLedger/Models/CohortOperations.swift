@@ -9,6 +9,8 @@ enum CohortOperations {
         case ledger(LedgerError)
         case sourceTankArchived
         case tankArchived
+        case usedByBreedingSet
+        case partnerMissing
         case missingCohort
 
         var errorDescription: String? {
@@ -16,6 +18,8 @@ enum CohortOperations {
             case let .ledger(error): error.message
             case .sourceTankArchived: String(localized: "移動元の容器がアーカイブされています。容器のアーカイブを解除してから削除してください。")
             case .tankArchived: String(localized: "この群の容器がアーカイブされています。容器のアーカイブを解除してから削除してください。")
+            case .usedByBreedingSet: String(localized: "親魚セットに使われている群は削除できません。アーカイブしてください。")
+            case .partnerMissing: String(localized: "分割元の群が削除されているため、この記録は削除できません。")
             case .missingCohort: String(localized: "群が見つかりません。")
             }
         }
@@ -152,6 +156,8 @@ enum CohortOperations {
         switch event.kind {
         case .split, .merge:
             guard let partner = event.relatedCohortID.flatMap({ fetchCohort(id: $0, in: context) }) else {
+                // 分割先の群の split は、分割元が無いと匹数を戻せない（previousCount が無い）
+                if event.kind == .split, event.countDelta > 0 { throw .partnerMissing }
                 // 相手の群が削除済みなら、こちらだけ戻す
                 if let blocker = revertBlocker(cohort, undoing: event, in: context) { throw blocker }
                 try revert(cohort, undoing: event, in: context)
@@ -166,6 +172,8 @@ enum CohortOperations {
             if event.kind == .split {
                 // countDelta の符号で元の群（マイナス）と分割先（プラス）を見分ける
                 let (sourceEvent, source, child) = event.countDelta < 0 ? (event, cohort, partner) : (partnerEvent, partner, cohort)
+                // 分割先の群を消すと親魚セットの親が失われる
+                if isUsedByBreedingSet(child) { throw .usedByBreedingSet }
                 if let blocker = revertBlocker(source, undoing: sourceEvent, in: context) { throw blocker }
                 try revert(source, undoing: sourceEvent, in: context)
                 context.delete(sourceEvent)
@@ -186,8 +194,14 @@ enum CohortOperations {
         }
     }
 
+    /// 親魚セットの雄または雌に使われているか。使われている群は削除できず、アーカイブだけ（DECISIONS.md C）。
+    static func isUsedByBreedingSet(_ cohort: Cohort) -> Bool {
+        !(cohort.asSire ?? []).isEmpty || !(cohort.asDam ?? []).isEmpty
+    }
+
     /// 群の削除。出来事、選別、写真も消える。分割や統合の相手の群は変えない（DECISIONS.md H）。
-    static func deleteCohort(_ cohort: Cohort, in context: ModelContext) {
+    static func deleteCohort(_ cohort: Cohort, in context: ModelContext) throws(OperationError) {
+        if isUsedByBreedingSet(cohort) { throw .usedByBreedingSet }
         context.delete(cohort)
     }
 

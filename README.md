@@ -14,6 +14,7 @@ Claude Codeに渡して実装を始めるための文書として書いていま
 | `docs/SCREENS.md` | 画面ごとの構成、遷移、状態、操作 | Claude Code、デザイン |
 | `docs/ROADMAP.md` | 6週間の日割り計画とマイルストーン | 企画者、Claude Code |
 | `docs/LAUNCH.md` | 名称、価格、ストア掲載、テスター募集、法務と税務の確認事項 | 企画者 |
+| `docs/TESTFLIGHT.md` | TestFlight配信の準備（Apple Developer、APIキー、Secrets） | 企画者 |
 | `docs/DECISIONS.md` | 仕様レビューへの回答。他の文書と食い違う場合はこちらが優先 | Claude Code |
 
 ## 前提

@@ -68,7 +68,8 @@ jobs:
           retention-days: 7
 
       - name: Post screenshots to PR
-        if: always() && github.event_name == 'pull_request'
+        # 取り消された実行では投稿しない（新しい実行と競合する）。forkのPRはトークンが読み取り専用なので投稿しない
+        if: ${{ !cancelled() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}

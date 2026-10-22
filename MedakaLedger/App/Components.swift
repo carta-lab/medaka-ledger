@@ -90,6 +90,11 @@ enum NumberParsing {
         return Double(normalized)
     }
 
+    /// 空欄は未入力として正しい。何か入れてあるのに数字として読めないときは false。
+    static func isValidOptional(_ text: String) -> Bool {
+        text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || double(from: text) != nil
+    }
+
     static func text(from value: Double?) -> String {
         guard let value else { return "" }
         return value.formatted(.number.grouping(.never))

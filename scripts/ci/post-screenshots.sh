@@ -18,11 +18,17 @@ if [ ${#SHOTS[@]} -eq 0 ]; then
 スクリーンショットはありません。ビルドかUIテストが失敗した可能性があります。
 [CIの実行結果](${RUN_URL})"
 else
-  if git clone --quiet --depth 1 --branch "$BRANCH" "$REMOTE" "$WORK" 2>/dev/null; then
-    :
+  # ブランチが無いときだけ新しく作る。認証や通信の失敗では先へ進まない
+  if git ls-remote --exit-code --heads "$REMOTE" "$BRANCH" >/dev/null 2>&1; then
+    git clone --quiet --depth 1 --branch "$BRANCH" "$REMOTE" "$WORK"
   else
-    git -C "$WORK" init --quiet -b "$BRANCH"
-    git -C "$WORK" remote add origin "$REMOTE"
+    if git ls-remote "$REMOTE" >/dev/null 2>&1; then
+      git -C "$WORK" init --quiet -b "$BRANCH"
+      git -C "$WORK" remote add origin "$REMOTE"
+    else
+      echo "ci-screenshots の状態を確認できませんでした（認証か通信の失敗）" >&2
+      exit 1
+    fi
   fi
   mkdir -p "$WORK/$DEST"
   cp "${SHOTS[@]}" "$WORK/$DEST/"
@@ -30,7 +36,17 @@ else
   git -C "$WORK" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
   git -C "$WORK" add "$DEST"
   git -C "$WORK" commit --quiet -m "PR #${PR_NUMBER} ${SHORT_SHA} のスクリーンショット"
-  git -C "$WORK" push --quiet origin "$BRANCH"
+  # 別のPRの実行と同時に push したときは、取り込み直して再試行する
+  pushed=0
+  for attempt in 1 2 3; do
+    if git -C "$WORK" push --quiet origin "$BRANCH"; then pushed=1; break; fi
+    git -C "$WORK" pull --quiet --rebase origin "$BRANCH" || true
+    sleep $((attempt * 2))
+  done
+  if [ "$pushed" -ne 1 ]; then
+    echo "ci-screenshots への push に失敗しました" >&2
+    exit 1
+  fi
 
   BODY="**画面のスクリーンショット**（${SHORT_SHA}）
 
