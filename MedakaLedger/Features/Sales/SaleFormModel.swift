@@ -36,7 +36,7 @@ final class SaleFormModel {
         editing = sale
         if let sale {
             date = sale.date
-            cohort = sale.cohort
+            self.cohort = sale.cohort
             strain = sale.strain
             unit = sale.unit
             quantity = sale.quantity

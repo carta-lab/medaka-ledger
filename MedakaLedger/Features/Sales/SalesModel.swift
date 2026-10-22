@@ -60,7 +60,7 @@ final class SalesModel {
             try context.save()
         } catch {
             context.rollback()
-            error = UserFacingError(error)
+            self.error = UserFacingError(error)
         }
     }
 }
