@@ -14,6 +14,7 @@ final class CohortDetailModel {
     var isAskingToEnd = false
     var isConfirmingCohortDeletion = false
     var eventPendingDeletion: CohortEvent?
+    var isConfirmingEventDeletion = false
     var error: UserFacingError?
     private var countBeforeSheet: Int?
 
@@ -33,6 +34,11 @@ final class CohortDetailModel {
         perform(context) { () throws(CohortOperations.OperationError) in
             try CohortOperations.changeStatus(cohort, to: status, date: Date(), in: context)
         }
+    }
+
+    func askToDelete(_ event: CohortEvent) {
+        eventPendingDeletion = event
+        isConfirmingEventDeletion = true
     }
 
     func deletionMessage(for event: CohortEvent) -> String {

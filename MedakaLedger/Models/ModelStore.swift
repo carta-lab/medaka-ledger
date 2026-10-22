@@ -26,7 +26,8 @@ enum ModelStore {
         if inMemory {
             configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         } else {
-            configuration = ModelConfiguration(schema: schema, url: try storeURL(), cloudKitDatabase: .none)
+            let url = try storeURL()
+            configuration = ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none)
         }
         return try ModelContainer(for: schema, migrationPlan: MedakaMigrationPlan.self, configurations: [configuration])
     }

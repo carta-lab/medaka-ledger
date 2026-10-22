@@ -82,7 +82,7 @@ struct CohortDetailView: View {
         }
         .confirmationDialog(
             "この記録を削除しますか",
-            isPresented: Binding(get: { model.eventPendingDeletion != nil }, set: { if !$0 { model.eventPendingDeletion = nil } }),
+            isPresented: $model.isConfirmingEventDeletion,
             titleVisibility: .visible,
             presenting: model.eventPendingDeletion
         ) { event in
@@ -185,7 +185,7 @@ struct CohortDetailView: View {
                     .swipeActions(edge: .trailing) {
                         if CohortOperations.deletionBlocker(for: event) == nil {
                             Button("削除", role: .destructive) {
-                                model.eventPendingDeletion = event
+                                model.askToDelete(event)
                             }
                         }
                     }

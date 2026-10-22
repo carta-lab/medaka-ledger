@@ -27,17 +27,25 @@ extension View {
 
 private struct ErrorAlertModifier: ViewModifier {
     @Binding var error: UserFacingError?
+    @State private var isPresented = false
+
+    init(error: Binding<UserFacingError?>) {
+        _error = error
+    }
 
     func body(content: Content) -> some View {
-        content.alert(
-            error?.title ?? "",
-            isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } }),
-            presenting: error
-        ) { _ in
-            Button("OK") {}
-        } message: { error in
-            Text(verbatim: error.message)
-        }
+        content
+            .alert(error?.title ?? "", isPresented: $isPresented, presenting: error) { _ in
+                Button("OK") {}
+            } message: { error in
+                Text(verbatim: error.message)
+            }
+            .onChange(of: error?.id, initial: true) { _, id in
+                isPresented = id != nil
+            }
+            .onChange(of: isPresented) { _, shown in
+                if !shown { error = nil }
+            }
     }
 }
 
