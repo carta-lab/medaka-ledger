@@ -33,12 +33,17 @@ enum BackupArchive {
         defer { try? decompressStream.close() }
         guard let decodeStream = ArchiveStream.decodeStream(readingFrom: decompressStream) else { throw BackupError.notABackup }
         defer { try? decodeStream.close() }
+        // 展開先として、同じ場所を指す別の書き方（/var と /private/var）も許す
+        let roots = [directory.path, directory.resolvingSymlinksInPath().path, "/private" + directory.path]
+        let rejected = RejectedEntry()
         guard
             let extractStream = ArchiveStream.extractStream(
                 extractingTo: FilePath(directory.path),
                 selectUsing: { message, path, _ in
                     guard message == .extractBegin else { return .ok }
-                    return BackupPaths.isSafeEntry(path.string) ? .ok : .cancel
+                    if BackupPaths.isSafeEntry(path.string, extractingTo: roots) { return .ok }
+                    rejected.path = path.string
+                    return .cancel
                 },
                 flags: [.ignoreOperationNotPermitted]
             )
@@ -47,7 +52,20 @@ enum BackupArchive {
         do {
             _ = try ArchiveStream.process(readingFrom: decodeStream, writingTo: extractStream)
         } catch {
-            throw BackupError.notABackup
+            if let path = rejected.path { throw BackupError.unsafeEntry(path) }
+            throw BackupError.unreadable(String(describing: error))
         }
+        if let path = rejected.path { throw BackupError.unsafeEntry(path) }
+    }
+}
+
+/// 展開を断ったエントリの記録。展開の途中で別のスレッドから書かれ、終わってから読む。
+private final class RejectedEntry: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value: String?
+
+    var path: String? {
+        get { lock.withLock { value } }
+        set { lock.withLock { value = newValue } }
     }
 }

@@ -43,7 +43,7 @@ struct BackupManifestTests {
     }
 
     @Test func 版は合っていても中身が壊れていれば拒否する() {
-        #expect(throws: BackupError.notABackup) { try BackupManifest.decode(Data("{\"schemaVersion\":1}".utf8)) }
+        #expect(throws: BackupError.self) { try BackupManifest.decode(Data("{\"schemaVersion\":1}".utf8)) }
     }
 
     @Test func 件数() {
@@ -63,7 +63,21 @@ struct BackupManifestTests {
         #expect(!BackupPaths.isSafeEntry("photos/../../evil"))
         #expect(!BackupPaths.isSafeEntry("/etc/passwd"))
         #expect(!BackupPaths.isSafeEntry("other.txt"))
-        #expect(!BackupPaths.isSafeEntry("./manifest.json"))
-        #expect(!BackupPaths.isSafeEntry(""))
+        #expect(BackupPaths.isSafeEntry("./manifest.json"))
+        #expect(BackupPaths.isSafeEntry("./photos/ABC.jpg"))
+        #expect(BackupPaths.isSafeEntry(""))
+        #expect(BackupPaths.isSafeEntry("."))
+        #expect(!BackupPaths.isSafeEntry("./../evil"))
+    }
+
+    @Test func 展開先の絶対パスは相対に直して判定する() {
+        let roots = ["/var/tmp/out", "/private/var/tmp/out"]
+        #expect(BackupPaths.isSafeEntry("/var/tmp/out/manifest.json", extractingTo: roots))
+        #expect(BackupPaths.isSafeEntry("/private/var/tmp/out/photos/A.jpg", extractingTo: roots))
+        #expect(BackupPaths.isSafeEntry("/var/tmp/out", extractingTo: roots))
+        #expect(!BackupPaths.isSafeEntry("/var/tmp/out/../evil", extractingTo: roots))
+        #expect(!BackupPaths.isSafeEntry("/var/tmp/other/manifest.json", extractingTo: roots))
+        #expect(!BackupPaths.isSafeEntry("/var/tmp/out/other.txt", extractingTo: roots))
+        #expect(BackupPaths.isSafeEntry("manifest.json", extractingTo: roots))
     }
 }

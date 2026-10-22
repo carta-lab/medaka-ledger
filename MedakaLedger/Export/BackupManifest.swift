@@ -203,6 +203,10 @@ struct BackupManifest: Codable, Equatable, Sendable {
 
 enum BackupError: LocalizedError, Equatable {
     case notABackup
+    /// 読めなかった理由（調べるための文字列。画面には出さない）。
+    case unreadable(String)
+    /// 展開してよい場所の外を指すエントリ。
+    case unsafeEntry(String)
     case unsupportedVersion(Int)
     case lightweightCannotReplace
     case archiveFailed
@@ -210,8 +214,10 @@ enum BackupError: LocalizedError, Equatable {
 
     var errorDescription: String? {
         switch self {
-        case .notABackup:
+        case .notABackup, .unreadable:
             String(localized: "めだか台帳のバックアップとして読めませんでした。")
+        case .unsafeEntry:
+            String(localized: "このファイルには、読み込めない場所を指す項目が含まれています。")
         case let .unsupportedVersion(version):
             String(localized: "このバックアップは新しい版のアプリで作られています（版\(version.formatted())）。アプリを更新してから読み込んでください。")
         case .lightweightCannotReplace:
@@ -246,7 +252,7 @@ extension BackupManifest {
         do {
             return try JSONDecoder().decode(BackupManifest.self, from: data)
         } catch {
-            throw .notABackup
+            throw .unreadable(String(describing: error))
         }
     }
 }
@@ -258,11 +264,26 @@ enum BackupPaths {
     /// 拡張子（ARCHITECTURE.md 5.3）。
     static let fileExtension = "medakabackup"
 
-    /// 展開してよい相対パスか。manifest.json と photos/ の下だけ。絶対パスと、..、. を含むものは取り込まない。
+    /// 展開してよい相対パスか。manifest.json と photos/ の下だけ。絶対パスと、.. を含むものは取り込まない。
+    /// 先頭の「./」と、展開先そのもの（空、「.」）は許す。
     static func isSafeEntry(_ path: String) -> Bool {
         guard !path.hasPrefix("/") else { return false }
-        let parts = path.split(separator: "/", omittingEmptySubsequences: true).map(String.init)
-        guard let first = parts.first, !parts.contains(".."), !parts.contains(".") else { return false }
-        return first == manifestName || first == photosDirectoryName
+        let parts = path.split(separator: "/", omittingEmptySubsequences: true).map(String.init).filter { $0 != "." }
+        if parts.isEmpty { return true }
+        guard !parts.contains("..") else { return false }
+        return parts[0] == manifestName || parts[0] == photosDirectoryName
+    }
+
+    /// 展開先 roots のどれかを頭に付けた絶対パスのとき、その下の相対パスに直してから判定する。
+    static func isSafeEntry(_ path: String, extractingTo roots: [String]) -> Bool {
+        if path.hasPrefix("/") {
+            for root in roots where !root.isEmpty {
+                let prefix = root.hasSuffix("/") ? root : root + "/"
+                if path == root { return true }
+                if path.hasPrefix(prefix) { return isSafeEntry(String(path.dropFirst(prefix.count))) }
+            }
+            return false
+        }
+        return isSafeEntry(path)
     }
 }
