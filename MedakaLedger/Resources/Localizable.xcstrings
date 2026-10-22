@@ -916,6 +916,9 @@
     "数量": {
       "extractionState": "manual"
     },
+    "数量か金額が大きすぎます。数量は100万まで、金額は1兆円までです。": {
+      "extractionState": "manual"
+    },
     "数量の分だけ、群の匹数を減らします。": {
       "extractionState": "manual"
     },

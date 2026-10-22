@@ -8,12 +8,14 @@ enum SaleOperations {
     enum OperationError: LocalizedError, Equatable {
         case invalidQuantity
         case negativeAmount
+        case tooLarge
         case cohort(CohortOperations.OperationError)
 
         var errorDescription: String? {
             switch self {
             case .invalidQuantity: String(localized: "数量は1以上で入れてください。")
             case .negativeAmount: String(localized: "金額は0円以上で入れてください。")
+            case .tooLarge: String(localized: "数量か金額が大きすぎます。数量は100万まで、金額は1兆円までです。")
             case let .cohort(error): error.errorDescription
             }
         }
@@ -106,6 +108,10 @@ enum SaleOperations {
     private static func validate(_ input: Input) throws(OperationError) {
         guard input.quantity >= 1 else { throw .invalidQuantity }
         guard input.unitPrice >= 0, input.totalPrice >= 0, input.fee >= 0, input.shippingCost >= 0 else { throw .negativeAmount }
+        let amounts = [input.unitPrice, input.totalPrice, input.fee, input.shippingCost]
+        guard input.quantity <= SaleRules.maxQuantity, (input.bundleFishCount ?? 0) <= SaleRules.maxQuantity,
+              amounts.allSatisfy({ $0 <= SaleRules.maxAmount })
+        else { throw .tooLarge }
     }
 
     private static func apply(_ input: Input, to sale: Sale) {

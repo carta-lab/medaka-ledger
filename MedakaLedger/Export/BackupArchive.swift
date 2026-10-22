@@ -22,8 +22,35 @@ enum BackupArchive {
         try encodeStream.writeDirectoryContents(archiveFrom: FilePath(directory.path), keySet: keySet)
     }
 
+    /// 全てのエントリの種類とパスを確かめる。通常のファイルとフォルダだけを許し、リンクや特殊なファイルは断る。
+    static func validateEntries(in file: URL) throws {
+        guard
+            let readStream = ArchiveByteStream.fileStream(path: FilePath(file.path), mode: .readOnly, options: [], permissions: [])
+        else { throw BackupError.notABackup }
+        defer { try? readStream.close() }
+        guard let decompressStream = ArchiveByteStream.decompressionStream(readingFrom: readStream) else { throw BackupError.notABackup }
+        defer { try? decompressStream.close() }
+        guard let decodeStream = ArchiveStream.decodeStream(readingFrom: decompressStream) else { throw BackupError.notABackup }
+        defer { try? decodeStream.close() }
+        do {
+            while let header = try decodeStream.readHeader() {
+                let path = header.entryPath?.string ?? ""
+                guard header.entryPath != nil, BackupPaths.isSafeEntry(path) else { throw BackupError.unsafeEntry(path) }
+                guard let type = header.entryType, type == .regularFile || type == .directory else {
+                    throw BackupError.unsafeEntry(path)
+                }
+            }
+        } catch let error as BackupError {
+            throw error
+        } catch {
+            throw BackupError.unreadable(String(describing: error))
+        }
+    }
+
     /// file を directory に展開する。manifest.json と photos/ の外へ書こうとするエントリ（絶対パス、..）は取り込まない。
     static func extract(from file: URL, to directory: URL) throws {
+        // 展開の前に、全てのエントリを読んで確かめる。シンボリックリンクなどを通すと、展開が別の場所への書き込みになる
+        try validateEntries(in: file)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         guard
             let readStream = ArchiveByteStream.fileStream(path: FilePath(file.path), mode: .readOnly, options: [], permissions: [])

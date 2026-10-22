@@ -33,6 +33,31 @@ struct SaleRulesTests {
     }
 }
 
+struct SaleOverflowTests {
+    @Test func 掛け算は桁あふれしない() {
+        #expect(SaleRules.defaultTotal(quantity: Int.max, unitPrice: Int.max) == Int.max)
+        #expect(SaleRules.fishToDeduct(unit: .pair, quantity: Int.max, bundleFishCount: nil) == Int.max)
+        #expect(SaleRules.fishToDeduct(unit: .trio, quantity: Int.max, bundleFishCount: nil) == Int.max)
+        #expect(SaleRules.defaultTotal(quantity: 3, unitPrice: 800) == 2400)
+    }
+
+    @Test func 純額は桁あふれしない() {
+        #expect(SaleRules.net(total: 0, fee: Int.max, shipping: Int.max) == -2 * SaleRules.maxAmount)
+        #expect(SaleRules.net(total: Int.max, fee: 0, shipping: 0) == SaleRules.maxAmount)
+    }
+
+    @Test func 集計は桁あふれしない() {
+        let big = SaleRecord(
+            id: UUID(), date: Date(), status: .sold, channel: .other, unit: .fish, quantity: 1, unitPrice: 0,
+            totalPrice: Int.max, fee: Int.max, shippingCost: Int.max, shippedAt: nil, buyerMemo: "", note: "",
+            breedName: "", lineName: "", generation: 0
+        )
+        let summary = SalesAggregations.summary([big, big, big])
+        #expect(summary.revenue == 3 * SaleRules.maxAmount)
+        #expect(summary.count == 3)
+    }
+}
+
 struct SalesAggregationsTests {
     private var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)

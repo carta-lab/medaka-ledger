@@ -127,14 +127,17 @@ final class SaleFormModel {
         perform(reducesCohort: reducesCohort, in: context)
     }
 
-    func end(as status: CohortStatus, in context: ModelContext) {
-        guard let savedCohort else { return }
+    /// 終了できたら true。失敗したら理由をアラートに出し、シートは開いたままにする。
+    func end(as status: CohortStatus, in context: ModelContext) -> Bool {
+        guard let savedCohort else { return true }
         do {
             try CohortOperations.changeStatus(savedCohort, to: status, date: Date(), in: context)
             try context.save()
+            return true
         } catch {
             context.rollback()
             self.error = UserFacingError(error)
+            return false
         }
     }
 

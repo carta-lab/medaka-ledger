@@ -93,8 +93,14 @@ final class BackupModel {
                 do {
                     let (local, manifest) = try await Task.detached { () throws -> (URL, BackupManifest) in
                         let local = try Self.copyToTemporary(url)
-                        let worker = BackupActor(modelContainer: container)
-                        return (local, try await worker.inspect(file: local))
+                        do {
+                            let worker = BackupActor(modelContainer: container)
+                            return (local, try await worker.inspect(file: local))
+                        } catch {
+                            // 読めなかったバックアップの写しを残さない
+                            try? FileManager.default.removeItem(at: local)
+                            throw error
+                        }
                     }.value
                     pendingFile = local
                     pendingManifest = manifest
@@ -122,6 +128,7 @@ final class BackupModel {
                 finishRestore(summary)
             } catch {
                 progress = nil
+                discardPending()
                 self.error = UserFacingError(error, title: String(localized: "読み込めませんでした"))
             }
         }

@@ -46,8 +46,7 @@ struct SaleSheet: View {
             }
             .confirmationDialog("この群を終了しますか", isPresented: $model.isAskingToEnd, titleVisibility: .visible) {
                 Button("完売") {
-                    model.end(as: .soldOut, in: modelContext)
-                    dismiss()
+                    if model.end(as: .soldOut, in: modelContext) { dismiss() }
                 }
                 Button("そのまま") { dismiss() }
             } message: {

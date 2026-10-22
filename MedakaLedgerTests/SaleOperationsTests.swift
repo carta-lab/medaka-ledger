@@ -89,6 +89,21 @@ struct SaleOperationsTests {
         }
     }
 
+    @Test func 大きすぎる数量と金額は止める() {
+        let cohort = makeCohort()
+        var tooMany = input(cohort: cohort)
+        tooMany.quantity = SaleRules.maxQuantity + 1
+        #expect(throws: SaleOperations.OperationError.tooLarge) {
+            try SaleOperations.record(tooMany, reducesCohort: true, in: context)
+        }
+        var tooExpensive = input(cohort: cohort)
+        tooExpensive.totalPrice = Int.max
+        #expect(throws: SaleOperations.OperationError.tooLarge) {
+            try SaleOperations.record(tooExpensive, reducesCohort: false, in: context)
+        }
+        #expect(cohort.count == 30)
+    }
+
     @Test func 群を選ばない販売は系統だけを写す() throws {
         let strain = Strain(breedName: "幹之", lineName: "")
         context.insert(strain)

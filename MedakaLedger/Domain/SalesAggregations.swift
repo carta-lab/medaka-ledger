@@ -54,9 +54,9 @@ enum SalesAggregations {
     static func summary(_ records: [SaleRecord]) -> SalesSummary {
         records.filter { SaleRules.countsInTotals($0.status) }.reduce(into: SalesSummary()) { result, record in
             result.count += 1
-            result.revenue += record.totalPrice
-            result.fee += record.fee
-            result.shipping += record.shippingCost
+            result.revenue += SaleRules.clamped(record.totalPrice)
+            result.fee += SaleRules.clamped(record.fee)
+            result.shipping += SaleRules.clamped(record.shippingCost)
         }
     }
 
