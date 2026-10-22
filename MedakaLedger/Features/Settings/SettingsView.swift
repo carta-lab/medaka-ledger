@@ -1,8 +1,8 @@
 import SwiftData
 import SwiftUI
 
-// 設定。第2週は「計算」だけ（孵化予定日と水換え警告に使う値。ROADMAP.md 第2週の完了条件を確かめるため）。
-// バックアップ、サンプル、Pro、用語の説明などは第4週以降。値を変えると孵化予定日は即時に再計算される（PRD.md F14）。
+// 設定。計算（孵化予定日と水換え警告に使う値）とバックアップと書き出し。
+// サンプル、Pro、用語の説明などは第5週。値を変えると孵化予定日は即時に再計算される（PRD.md F14）。
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
@@ -59,6 +59,8 @@ struct SettingsView: View {
                 } footer: {
                     Text("産卵期はホームの並びと水換えの警告日数が変わります。産卵期の最初の月の前月15日に「親魚セットを組みましょう」とお知らせします。")
                 }
+
+                BackupSection()
             }
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)

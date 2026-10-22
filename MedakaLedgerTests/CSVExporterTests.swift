@@ -63,11 +63,11 @@ struct CSVExporterTests {
     }
 
     @Test func 群CSVの未計数と日齢() {
-        let hatched = CohortRecord(
+        let hatched = CohortCSVRow(
             lineName: "〇〇めだか", breedName: "楊貴妃", generation: 2, tankName: "A-1", count: 30, stage: .young,
             hatchedAt: date(2027, 5, 1), status: .active, note: ""
         )
-        let acquired = CohortRecord(
+        let acquired = CohortCSVRow(
             lineName: "", breedName: "幹之", generation: 0, tankName: "", count: nil, stage: .adult,
             hatchedAt: nil, status: .soldOut, note: "メモ,あり"
         )

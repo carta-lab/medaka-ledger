@@ -2,7 +2,7 @@ import Foundation
 
 // CSVの書き出し（ARCHITECTURE.md 5.1、5.2）。UTF-8、BOM付き、CRLF改行。Excelで開ける形にする。
 
-struct CohortRecord: Equatable, Sendable {
+struct CohortCSVRow: Equatable, Sendable {
     var lineName: String
     var breedName: String
     var generation: Int
@@ -76,7 +76,7 @@ enum CSVExporter {
     }
 
     /// 群CSV。匹数が未計数のときと、孵化日が無いときの日齢は空にする。
-    static func cohortsCSV(_ cohorts: [CohortRecord], now: Date, calendar: Calendar) -> Data {
+    static func cohortsCSV(_ cohorts: [CohortCSVRow], now: Date, calendar: Calendar) -> Data {
         var lines = [line(cohortsHeader)]
         for cohort in cohorts {
             lines.append(line([

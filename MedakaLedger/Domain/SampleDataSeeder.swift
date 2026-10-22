@@ -168,7 +168,8 @@ enum SampleDataSeeder {
         try context.save()
     }
 
-    static func deleteEverything(in context: ModelContext) throws {
+    /// すべて削除する。saves が false のときは保存しない（バックアップの置き換えで、読み込みが失敗したら巻き戻すため）。
+    static func deleteEverything(in context: ModelContext, saves: Bool = true) throws {
         try deleteAll(Photo.self, where: nil, in: context)
         try deleteAll(CohortEvent.self, where: nil, in: context)
         try deleteAll(SelectionEvent.self, where: nil, in: context)
@@ -179,7 +180,7 @@ enum SampleDataSeeder {
         try deleteAll(Cohort.self, where: nil, in: context)
         try deleteAll(Strain.self, where: nil, in: context)
         try deleteAll(Tank.self, where: nil, in: context)
-        try context.save()
+        if saves { try context.save() }
     }
 
     // MARK: - Private

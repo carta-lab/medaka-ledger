@@ -74,6 +74,7 @@ struct RootView: View {
                 NavigationStack { SalesView().routeDestinations() }
             }
         }
+        .id(router.dataEpoch)
         // 起動時とフォアグラウンドに戻ったとき、孵化予定の通知を計画し直す
         .task(id: scenePhase) {
             if scenePhase == .active {
