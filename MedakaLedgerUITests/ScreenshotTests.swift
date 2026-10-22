@@ -50,6 +50,22 @@ final class ScreenshotTests: XCTestCase {
                 cohortRow.tap()
                 sleepBriefly()
                 snapshot("06-群詳細")
+                app.navigationBars.buttons.firstMatch.tap()
+                sleepBriefly()
+            }
+
+            // 血統図：系統詳細の「血統図」タブから、いちばん新しい世代の群を開く
+            let lineageTab = app.segmentedControls.buttons["血統図"]
+            if lineageTab.waitForExistence(timeout: 5) {
+                lineageTab.tap()
+                sleepBriefly()
+                snapshot("09-系統詳細の血統図")
+                let firstRow = app.cells.element(boundBy: 1)
+                if firstRow.waitForExistence(timeout: 5) {
+                    firstRow.tap()
+                    sleepBriefly()
+                    snapshot("10-血統図")
+                }
             }
         }
     }

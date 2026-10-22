@@ -27,22 +27,18 @@ struct OperationForm<Content: View>: View {
             }
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
+            .bottomSaveBar(isEnabled: canSave, identifier: "saveOperationButton") {
+                do {
+                    try onSave()
+                    dismiss()
+                } catch {
+                    modelContext.rollback()
+                    self.error = UserFacingError(error)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
-                        do {
-                            try onSave()
-                            dismiss()
-                        } catch {
-                            modelContext.rollback()
-                            self.error = UserFacingError(error)
-                        }
-                    }
-                    .disabled(!canSave)
-                    .accessibilityIdentifier("saveOperationButton")
                 }
             }
             .errorAlert($error)

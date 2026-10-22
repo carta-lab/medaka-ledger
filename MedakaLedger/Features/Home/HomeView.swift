@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 // ホーム（SCREENS.md 2）。今日やることと、注意が要る状態を一画面で見せる。
-// 出品中は第4週。写真と増減のクイック操作は第3週以降。
+// 出品中は第4週。増減のクイック操作は後の週。
 
 struct HomeView: View {
     @Environment(AppSettings.self) var settings
@@ -64,6 +64,7 @@ struct HomeView: View {
             case .eggBatch: EggBatchSheet()
             case .waterChange: MaintenanceSheet(kind: .waterChange)
             case .temperature: MaintenanceSheet(kind: .temperature)
+            case .photo: QuickPhotoSheet()
             case .settings: SettingsView()
             }
         }
@@ -151,7 +152,13 @@ struct HomeView: View {
                 }
                 .buttonStyle(LargeButtonStyle(prominent: false))
                 .accessibilityIdentifier("quickWaterChange")
-                disabledQuickAction("写真", systemImage: "camera")
+                Button {
+                    model.activeSheet = .photo
+                } label: {
+                    Label("写真", systemImage: "camera")
+                }
+                .buttonStyle(LargeButtonStyle(prominent: false))
+                .accessibilityIdentifier("quickPhoto")
                 disabledQuickAction("増減", systemImage: "plusminus")
             }
         }

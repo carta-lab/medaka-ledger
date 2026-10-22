@@ -1,10 +1,24 @@
 import Foundation
 import Observation
 import SwiftData
+import SwiftUI
 
 @MainActor
 @Observable
 final class StrainDetailModel {
+    enum Tab: String, CaseIterable, Identifiable {
+        case cohorts, lineage, photos
+        var id: String { rawValue }
+        var title: LocalizedStringKey {
+            switch self {
+            case .cohorts: "群"
+            case .lineage: "血統図"
+            case .photos: "写真"
+            }
+        }
+    }
+
+    var tab: Tab = .cohorts
     var isEditing = false
     var isAddingCohort = false
     var isConfirmingArchive = false

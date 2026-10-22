@@ -33,6 +33,26 @@ enum LineageSource {
         return LineageResolver.resolve(root: root.id, maxDepth: maxDepth) { infos[$0] }
     }
 
+    /// 木に出てくる群のID順の辞書。ノードから群詳細へ移る、代表写真を出すために使う。
+    static func cohorts(from root: Cohort, maxDepth: Int) -> [UUID: Cohort] {
+        var result: [UUID: Cohort] = [root.id: root]
+        var frontier = [root]
+        var level = 0
+        while !frontier.isEmpty, level < min(max(maxDepth, 0), LineageResolver.absoluteMaxDepth) + 1 {
+            var next: [Cohort] = []
+            for cohort in frontier {
+                let set = cohort.originBatch?.breedingSet
+                for parent in [set?.sireCohort, set?.damCohort].compactMap({ $0 }) where result[parent.id] == nil {
+                    result[parent.id] = parent
+                    next.append(parent)
+                }
+            }
+            frontier = next
+            level += 1
+        }
+        return result
+    }
+
     /// ノードの群。タップで群詳細へ移るために使う。
     static func cohort(id: UUID, in root: Cohort) -> Cohort? {
         var seen = Set<UUID>()

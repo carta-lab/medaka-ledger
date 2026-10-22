@@ -49,6 +49,40 @@ private struct ErrorAlertModifier: ViewModifier {
     }
 }
 
+/// 画面の下に大きく置く「保存」ボタン（CLAUDE.md：主要なボタンは高さ48pt以上、片手で届く下側）。
+struct BottomSaveBar: ViewModifier {
+    let title: LocalizedStringKey
+    let isEnabled: Bool
+    let identifier: String
+    let action: () -> Void
+
+    func body(content: Content) -> some View {
+        content.safeAreaInset(edge: .bottom) {
+            Button(action: action) {
+                Text(title)
+            }
+            .buttonStyle(LargeButtonStyle())
+            .disabled(!isEnabled)
+            .accessibilityIdentifier(identifier)
+            .padding(.horizontal, Theme.screenPadding)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity)
+            .background(.bar)
+        }
+    }
+}
+
+extension View {
+    func bottomSaveBar(
+        _ title: LocalizedStringKey = "保存",
+        isEnabled: Bool = true,
+        identifier: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        modifier(BottomSaveBar(title: title, isEnabled: isEnabled, identifier: identifier, action: action))
+    }
+}
+
 /// 整数の入力欄。空欄は nil（未入力）。全角の数字も受け付ける。
 struct IntField: View {
     private let title: LocalizedStringKey

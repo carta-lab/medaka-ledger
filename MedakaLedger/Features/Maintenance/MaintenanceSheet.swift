@@ -75,21 +75,17 @@ struct MaintenanceSheet: View {
             }
             .navigationTitle("作業を記録")
             .navigationBarTitleDisplayMode(.inline)
+            .bottomSaveBar(isEnabled: model.canSave, identifier: "saveMaintenanceButton") {
+                if model.save(in: modelContext) {
+                    // 先に閉じて、二重に保存されないようにする。通知の計画し直しは閉じた後で行う
+                    let context = modelContext
+                    dismiss()
+                    Task { await scheduler.reschedule(in: context) }
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
-                        if model.save(in: modelContext) {
-                            // 先に閉じて、二重に保存されないようにする。通知の計画し直しは閉じた後で行う
-                            let context = modelContext
-                            dismiss()
-                            Task { await scheduler.reschedule(in: context) }
-                        }
-                    }
-                    .disabled(!model.canSave)
-                    .accessibilityIdentifier("saveMaintenanceButton")
                 }
             }
             .errorAlert($model.error)

@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-// サンプルデータ（ROADMAP.md 11/7、DECISIONS.md E、H）。容器6、系統2、群4に、親魚セット1、採卵ロット2、作業記録4（第2週）。全て isSample = true。
+// サンプルデータ（ROADMAP.md 11/7、DECISIONS.md E、H）。容器6、系統2、群7（入手、分割、F1、F2）に、親魚セット3、採卵ロット4、選別3、作業記録4。全て isSample = true。
 // サンプルはFreeの上限に数えず、「サンプルを全削除」でまとめて消す。
 
 enum SampleDataSeeder {
@@ -61,6 +61,11 @@ enum SampleDataSeeder {
         try CohortOperations.changeCount(miyukiAdults, change: .recount(30), date: daysAgo(60), in: context)
         _ = try CohortOperations.split(miyukiAdults, amount: 10, to: tanks[5], label: "越冬用", date: daysAgo(30), in: context)
         try CohortOperations.changeStage(miyukiAdults, to: .adult, date: daysAgo(10), in: context)
+        _ = try SelectionOperations.record(
+            for: miyukiAdults,
+            .init(date: daysAgo(5), round: 3, criteria: ["体外光"], kept: 18, culled: 2, destination: .separateTank, separateTank: tanks[4], note: "光の強い個体を残した"),
+            in: context
+        )
 
         // 繁殖（第2週）：楊貴妃の親魚セットと、育卵中の採卵ロット2件
         let breedingSet = try BreedingOperations.createBreedingSet(
@@ -71,11 +76,54 @@ enum SampleDataSeeder {
             in: context
         )
         for (offset, eggs) in [(3, 40), (9, 60)] {
-            try BreedingOperations.recordEggBatch(
+            _ = try BreedingOperations.recordEggBatch(
                 in: breedingSet, collectedAt: daysAgo(offset), eggCount: eggs,
                 container: tanks[2], containerName: "", waterTempC: nil, note: "", context: context
             )
         }
+
+        // 累代（第3週）：入手→F1→F2。血統図と選別の累計の確認用
+        let f1Set = try BreedingOperations.createBreedingSet(
+            .init(
+                sire: yokihiAdults, dam: yokihiAdults, maleCount: 2, femaleCount: 4,
+                tank: nil, startedAt: daysAgo(150), name: "", note: "", movesParents: false
+            ),
+            in: context
+        )
+        let f1Batch = try BreedingOperations.recordEggBatch(
+            in: f1Set, collectedAt: daysAgo(120), eggCount: 80,
+            container: nil, containerName: "採卵カップ", waterTempC: 24, note: "", context: context
+        )
+        let f1 = try BreedingOperations.recordHatch(
+            of: f1Batch,
+            .init(hatchedAt: daysAgo(110), hatchedCount: 60, tank: tanks[4], label: "春1番", note: "", childStrain: nil, addTo: nil),
+            in: context
+        )
+        BreedingOperations.end(f1Set, on: daysAgo(100))
+        try CohortOperations.changeStage(f1, to: .adult, date: daysAgo(40), in: context)
+        _ = try SelectionOperations.record(
+            for: f1,
+            .init(date: daysAgo(80), round: 1, criteria: ["体型", "色"], kept: 45, culled: 15, destination: .feed, separateTank: nil, note: "奇形を弾いた"),
+            in: context
+        )
+        let f2Set = try BreedingOperations.createBreedingSet(
+            .init(sire: f1, dam: f1, maleCount: 1, femaleCount: 2, tank: nil, startedAt: daysAgo(70), name: "", note: "", movesParents: false),
+            in: context
+        )
+        let f2Batch = try BreedingOperations.recordEggBatch(
+            in: f2Set, collectedAt: daysAgo(60), eggCount: 50,
+            container: nil, containerName: "採卵カップ", waterTempC: 25, note: "", context: context
+        )
+        let f2 = try BreedingOperations.recordHatch(
+            of: f2Batch,
+            .init(hatchedAt: daysAgo(50), hatchedCount: 40, tank: tanks[2], label: "", note: "", childStrain: nil, addTo: nil),
+            in: context
+        )
+        _ = try SelectionOperations.record(
+            for: f2,
+            .init(date: daysAgo(20), round: 2, criteria: ["ラメ"], kept: 28, culled: 12, destination: .cheapSale, separateTank: nil, note: ""),
+            in: context
+        )
 
         // 作業記録：A-1とA-2は20日前、B-1は60日前の水換え。A-3に水温
         try MaintenanceOperations.record(on: [tanks[0], tanks[1]], kind: .waterChange, date: daysAgo(20), percent: 50, waterTempC: nil, note: "", in: context)

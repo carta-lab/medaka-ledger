@@ -60,13 +60,10 @@ struct CohortCreateView: View {
         .navigationTitle("入手個体の群を登録")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(isAfterStrainCreation)
+        .bottomSaveBar(identifier: "saveCohortButton") { save() }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button(isAfterStrainCreation ? LocalizedStringKey("あとで") : LocalizedStringKey("キャンセル")) { onFinish() }
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("保存") { save() }
-                    .accessibilityIdentifier("saveCohortButton")
             }
         }
         .errorAlert($model.error)

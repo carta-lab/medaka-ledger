@@ -49,13 +49,10 @@ struct StrainEditView: View {
             }
             .navigationTitle(model.isNew ? "系統を登録" : "系統を編集")
             .navigationBarTitleDisplayMode(.inline)
+            .bottomSaveBar(isEnabled: model.canSave, identifier: "saveStrainButton") { save() }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") { save() }
-                        .disabled(!model.canSave)
                 }
             }
             .navigationDestination(item: $model.createdStrain) { strain in

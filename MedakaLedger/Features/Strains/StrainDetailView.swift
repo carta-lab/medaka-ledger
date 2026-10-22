@@ -1,7 +1,7 @@
 import SwiftData
 import SwiftUI
 
-// 系統詳細（SCREENS.md 4.3）。第1週は「群」タブだけ（DECISIONS.md B）。
+// 系統詳細（SCREENS.md 4.3）。「群」「血統図」「写真」の切り替え。「販売」は第4週（DECISIONS.md B）。
 
 struct StrainDetailView: View {
     @Environment(\.modelContext) private var modelContext
@@ -32,31 +32,23 @@ struct StrainDetailView: View {
                 }
             }
 
-            if cohorts.isEmpty {
-                Section("群") {
-                    Text("この系統の群はまだありません")
-                        .foregroundStyle(.secondary)
-                    addCohortButton
-                }
-            } else {
-                ForEach(Aggregations.groupedByGeneration(cohorts, generation: { $0.generation })) { group in
-                    Section {
-                        ForEach(group.items.sorted { $0.createdAt < $1.createdAt }) { cohort in
-                            NavigationLink(value: Route.cohort(cohort)) {
-                                CohortSummaryRow(cohort: cohort, showsTank: true)
-                            }
-                            .accessibilityIdentifier("cohortRow.\(cohort.id.uuidString)")
-                        }
-                    } header: {
-                        Text(verbatim: generationHeader(group.generation, cohorts: group.items))
+            Section {
+                Picker("表示", selection: $model.tab) {
+                    ForEach(StrainDetailModel.Tab.allCases) { tab in
+                        Text(tab.title).tag(tab)
                     }
                 }
-                Section {
-                    addCohortButton
-                    if model.endedCount(of: strain) > 0 {
-                        Toggle("終了した群も表示", isOn: $model.showsEndedCohorts)
-                    }
-                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("strainTabPicker")
+            }
+
+            switch model.tab {
+            case .cohorts:
+                cohortsContent(cohorts)
+            case .lineage:
+                lineageContent
+            case .photos:
+                photosContent
             }
         }
         .navigationTitle(strain.displayName)
@@ -105,6 +97,77 @@ struct StrainDetailView: View {
         .errorAlert($model.error)
     }
 
+    @ViewBuilder
+    private func cohortsContent(_ cohorts: [Cohort]) -> some View {
+        if cohorts.isEmpty {
+            Section("群") {
+                Text("この系統の群はまだありません")
+                    .foregroundStyle(.secondary)
+                addCohortButton
+            }
+        } else {
+            ForEach(Aggregations.groupedByGeneration(cohorts, generation: { $0.generation })) { group in
+                Section {
+                    ForEach(group.items.sorted { $0.createdAt < $1.createdAt }) { cohort in
+                        NavigationLink(value: Route.cohort(cohort)) {
+                            CohortSummaryRow(cohort: cohort, showsTank: true)
+                        }
+                        .accessibilityIdentifier("cohortRow.\(cohort.id.uuidString)")
+                    }
+                } header: {
+                    Text(verbatim: generationHeader(group.generation, cohorts: group.items))
+                }
+            }
+            Section {
+                addCohortButton
+                if model.endedCount(of: strain) > 0 {
+                    Toggle("終了した群も表示", isOn: $model.showsEndedCohorts)
+                }
+            }
+        }
+    }
+
+    /// 血統図を見る群を選ぶ。世代の大きい（新しい）群から。
+    @ViewBuilder
+    private var lineageContent: some View {
+        let cohorts = (strain.cohorts ?? []).sorted {
+            $0.generation != $1.generation ? $0.generation > $1.generation : $0.createdAt > $1.createdAt
+        }
+        Section {
+            if cohorts.isEmpty {
+                Text("この系統の群はまだありません")
+                    .foregroundStyle(.secondary)
+            }
+            ForEach(cohorts) { cohort in
+                NavigationLink(value: Route.lineage(cohort)) {
+                    CohortSummaryRow(cohort: cohort, showsTank: true)
+                }
+            }
+        } header: {
+            Text("血統図を見る群")
+        } footer: {
+            Text("群を選ぶと、親魚セットをたどって、雄側と雌側の祖先を木で表示します。")
+        }
+    }
+
+    /// 系統の写真と、群の写真を世代順に（PRD.md F9）。
+    @ViewBuilder
+    private var photosContent: some View {
+        PhotoSection(owner: .strain(strain))
+        let groups = Aggregations.groupedByGeneration(strain.cohorts ?? [], generation: { $0.generation })
+        ForEach(groups) { group in
+            let photos = group.items.flatMap { PhotoOwner.cohort($0).photos }.sorted { $0.capturedAt < $1.capturedAt }
+            if !photos.isEmpty {
+                Section {
+                    PhotoGrid(photos: photos)
+                        .padding(.vertical, 4)
+                } header: {
+                    Text(verbatim: CohortText.generation(group.generation))
+                }
+            }
+        }
+    }
+
     private var addCohortButton: some View {
         Button {
             model.isAddingCohort = true
@@ -115,6 +178,15 @@ struct StrainDetailView: View {
 
     private func generationHeader(_ generation: Int, cohorts: [Cohort]) -> String {
         let tally = Aggregations.tally(counts: cohorts.filter(\.isActive).map(\.count))
-        return "\(CohortText.generation(generation))　\(StrainText.tally(tally))"
+        var header = "\(CohortText.generation(generation))　\(StrainText.tally(tally))"
+        // 世代ごとの選別の累計（PRD.md F5）
+        let totals = cohorts.reduce((kept: 0, culled: 0, count: 0)) { partial, cohort in
+            let selection = cohort.selectionTotals
+            return (partial.kept + selection.kept, partial.culled + selection.culled, partial.count + (cohort.selections ?? []).count)
+        }
+        if totals.count > 0 {
+            header += "　" + String(localized: "選別 残し\(totals.kept.formatted())・弾き\(totals.culled.formatted())")
+        }
+        return header
     }
 }

@@ -24,7 +24,7 @@ struct DebugMenuView: View {
                         run { worker in try await worker.deleteSamples() }
                     }
                 } footer: {
-                    Text("サンプルは容器6、系統2、群4です。Freeの上限には数えません。")
+                    Text("サンプルは容器6、系統2、群7です。Freeの上限には数えません。")
                 }
                 Section {
                     Button("すべてのデータを削除", role: .destructive) {

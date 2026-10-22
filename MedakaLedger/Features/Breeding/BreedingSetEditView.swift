@@ -61,16 +61,12 @@ struct BreedingSetEditView: View {
             }
             .navigationTitle("親魚セットを組む")
             .navigationBarTitleDisplayMode(.inline)
+            .bottomSaveBar(isEnabled: model.canSave, identifier: "saveBreedingSetButton") {
+                if model.save(in: modelContext) { dismiss() }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
-                        if model.save(in: modelContext) { dismiss() }
-                    }
-                    .disabled(!model.canSave)
-                    .accessibilityIdentifier("saveBreedingSetButton")
                 }
             }
             .errorAlert($model.error)
