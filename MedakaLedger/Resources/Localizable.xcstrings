@@ -58,6 +58,18 @@
     "%@：%@→%@": {
       "extractionState": "manual"
     },
+    "%@：残し%@・弾き%@（%@）": {
+      "extractionState": "manual"
+    },
+    "1回目": {
+      "extractionState": "manual"
+    },
+    "2回目": {
+      "extractionState": "manual"
+    },
+    "3回目": {
+      "extractionState": "manual"
+    },
     "NVボックス": {
       "extractionState": "manual"
     },
@@ -247,6 +259,9 @@
     "トロ舟": {
       "extractionState": "manual"
     },
+    "ヒレ": {
+      "extractionState": "manual"
+    },
     "プラ舟": {
       "extractionState": "manual"
     },
@@ -272,6 +287,9 @@
       "extractionState": "manual"
     },
     "ラベル（例 親魚候補）": {
+      "extractionState": "manual"
+    },
+    "ラメ": {
       "extractionState": "manual"
     },
     "ロット": {
@@ -314,6 +332,12 @@
       "extractionState": "manual"
     },
     "今日で終了": {
+      "extractionState": "manual"
+    },
+    "体型": {
+      "extractionState": "manual"
+    },
+    "体外光": {
       "extractionState": "manual"
     },
     "作業を記録": {
@@ -928,6 +952,9 @@
     "自店": {
       "extractionState": "manual"
     },
+    "色": {
+      "extractionState": "manual"
+    },
     "若魚": {
       "extractionState": "manual"
     },
@@ -1001,6 +1028,9 @@
       "extractionState": "manual"
     },
     "選んでください": {
+      "extractionState": "manual"
+    },
+    "選別": {
       "extractionState": "manual"
     },
     "針子": {
