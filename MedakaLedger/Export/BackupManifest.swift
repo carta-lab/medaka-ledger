@@ -250,3 +250,19 @@ extension BackupManifest {
         }
     }
 }
+
+/// バックアップのファイルの中の配置。
+enum BackupPaths {
+    static let manifestName = "manifest.json"
+    static let photosDirectoryName = "photos"
+    /// 拡張子（ARCHITECTURE.md 5.3）。
+    static let fileExtension = "medakabackup"
+
+    /// 展開してよい相対パスか。manifest.json と photos/ の下だけ。絶対パスと、..、. を含むものは取り込まない。
+    static func isSafeEntry(_ path: String) -> Bool {
+        guard !path.hasPrefix("/") else { return false }
+        let parts = path.split(separator: "/", omittingEmptySubsequences: true).map(String.init)
+        guard let first = parts.first, !parts.contains(".."), !parts.contains(".") else { return false }
+        return first == manifestName || first == photosDirectoryName
+    }
+}

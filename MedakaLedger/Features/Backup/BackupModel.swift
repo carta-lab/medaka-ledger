@@ -40,7 +40,7 @@ final class BackupModel {
         guard !isWorking else { return }
         progress = 0
         let version = appVersion
-        let fileName = "\(BackupExporter.fileName()).\(BackupArchive.fileExtension)"
+        let fileName = "\(BackupExporter.fileName()).\(BackupPaths.fileExtension)"
         Task {
             do {
                 let file = try await Task.detached { [weak self] () throws -> URL in
@@ -151,7 +151,7 @@ final class BackupModel {
     nonisolated private static func copyToTemporary(_ url: URL) throws -> URL {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-        let target = FileManager.default.temporaryDirectory.appending(path: "import-\(UUID().uuidString).\(BackupArchive.fileExtension)", directoryHint: .notDirectory)
+        let target = FileManager.default.temporaryDirectory.appending(path: "import-\(UUID().uuidString).\(BackupPaths.fileExtension)", directoryHint: .notDirectory)
         try FileManager.default.copyItem(at: url, to: target)
         return target
     }

@@ -9,6 +9,8 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(AppSettings.self) private var settings
     @Environment(NotificationScheduler.self) private var scheduler
+    @State private var backup = BackupModel()
+    @State private var usage: Int64?
 
     var body: some View {
         @Bindable var settings = settings
@@ -60,7 +62,7 @@ struct SettingsView: View {
                     Text("産卵期はホームの並びと水換えの警告日数が変わります。産卵期の最初の月の前月15日に「親魚セットを組みましょう」とお知らせします。")
                 }
 
-                BackupSection()
+                BackupSection(model: backup, usage: usage)
             }
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
@@ -69,11 +71,22 @@ struct SettingsView: View {
                     Button("閉じる") { dismiss() }
                 }
             }
+            .modifier(BackupPresentations(model: backup) {
+                Task { await refreshUsage() }
+            })
+            .fileExporter(isPresented: $backup.isExportingCSV, document: backup.csvDocument, contentType: .commaSeparatedText, defaultFilename: String(localized: "群の一覧")) { result in
+                backup.csvFinished(result)
+            }
+            .task { await refreshUsage() }
             .onDisappear {
                 // 積算温度、既定の水温、産卵期の月が変わると予定日と通知が変わる
                 Task { await scheduler.reschedule(in: modelContext) }
             }
         }
+    }
+
+    private func refreshUsage() async {
+        usage = await Task.detached { StorageUsage.bytes() }.value
     }
 
     private func monthRow(_ month: Int) -> some View {

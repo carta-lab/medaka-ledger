@@ -32,7 +32,7 @@ actor BackupActor {
         try BackupArchive.extract(from: file, to: work)
         progress(0.2)
         let manifest = try Self.readManifest(in: work)
-        let photos = work.appending(path: BackupArchive.photosDirectoryName, directoryHint: .isDirectory)
+        let photos = work.appending(path: BackupPaths.photosDirectoryName, directoryHint: .isDirectory)
         return try BackupImporter.restore(
             manifest,
             mode: mode,
@@ -48,7 +48,7 @@ actor BackupActor {
     }
 
     private static func readManifest(in directory: URL) throws -> BackupManifest {
-        let url = directory.appending(path: BackupArchive.manifestName, directoryHint: .notDirectory)
+        let url = directory.appending(path: BackupPaths.manifestName, directoryHint: .notDirectory)
         guard let data = try? Data(contentsOf: url) else { throw BackupError.notABackup }
         return try BackupManifest.decode(data)
     }

@@ -13,7 +13,7 @@ rm -rf "$WORK"
 mkdir -p "$WORK/Sources/MedakaLedger" "$WORK/Tests/MedakaLedgerTests"
 
 is_portable() {
-  ! grep -qE '^import (SwiftData|SwiftUI|UIKit|StoreKit|PhotosUI|Charts|XCTest)' "$1"
+  ! grep -qE '^import (SwiftData|SwiftUI|UIKit|StoreKit|PhotosUI|Charts|XCTest|AppleArchive)' "$1"
 }
 
 for file in "$ROOT"/MedakaLedger/Domain/*.swift "$ROOT"/MedakaLedger/Export/*.swift "$ROOT"/MedakaLedger/Models/Enums.swift "$ROOT"/MedakaLedger/Models/Enums+Label.swift; do

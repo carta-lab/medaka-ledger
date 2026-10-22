@@ -16,3 +16,6 @@ screenshots/
 
 # Linuxでのロジック検証（scripts/linux-check.sh）
 .linux-check/
+
+# XcodeGenが project.yml から生成する（バックアップのファイル型の宣言）
+MedakaLedger/Info.plist

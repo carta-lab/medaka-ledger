@@ -5,11 +5,6 @@ import System
 // バックアップのファイル化（ARCHITECTURE.md 5.3）。manifest.json と photos/ のフォルダを、Apple Archive（LZFSE）の1ファイルにまとめる。
 
 enum BackupArchive {
-    static let manifestName = "manifest.json"
-    static let photosDirectoryName = "photos"
-    /// 拡張子と型の識別子（ARCHITECTURE.md 5.3）。
-    static let fileExtension = "medakabackup"
-
     /// directory の中身をまとめて file に書く。
     static func create(from directory: URL, to file: URL) throws {
         try? FileManager.default.removeItem(at: file)
@@ -43,7 +38,7 @@ enum BackupArchive {
                 extractingTo: FilePath(directory.path),
                 selectUsing: { message, path, _ in
                     guard message == .extractBegin else { return .ok }
-                    return isSafeEntry(path.string) ? .ok : .cancel
+                    return BackupPaths.isSafeEntry(path.string) ? .ok : .cancel
                 },
                 flags: [.ignoreOperationNotPermitted]
             )
@@ -54,13 +49,5 @@ enum BackupArchive {
         } catch {
             throw BackupError.notABackup
         }
-    }
-
-    /// 展開してよい相対パスか。manifest.json と photos/ の下だけ。
-    static func isSafeEntry(_ path: String) -> Bool {
-        guard !path.hasPrefix("/") else { return false }
-        let parts = path.split(separator: "/", omittingEmptySubsequences: true).map(String.init)
-        guard let first = parts.first, !parts.contains(".."), !parts.contains(".") else { return false }
-        return first == manifestName || first == photosDirectoryName
     }
 }
