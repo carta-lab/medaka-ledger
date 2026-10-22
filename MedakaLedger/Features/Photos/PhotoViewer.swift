@@ -70,9 +70,10 @@ struct PhotoViewer: View {
     private func controls(for photo: Photo) -> some View {
         VStack(spacing: 10) {
             PhotoCaptionField(photo: photo)
+            PhotoDateField(photo: photo)
             HStack(spacing: 8) {
                 Button {
-                    model.setCover(photo, among: remaining, in: modelContext)
+                    model.setCover(photo, in: modelContext)
                 } label: {
                     Label(photo.isCover ? "代表" : "代表にする", systemImage: photo.isCover ? "star.fill" : "star")
                 }
@@ -131,5 +132,14 @@ private struct PhotoCaptionField: View {
     var body: some View {
         TextField("説明（任意）", text: $photo.caption)
             .textFieldStyle(.roundedBorder)
+    }
+}
+
+/// 撮影日の編集。
+private struct PhotoDateField: View {
+    @Bindable var photo: Photo
+
+    var body: some View {
+        DatePicker("撮影日", selection: $photo.capturedAt, in: ...Date(), displayedComponents: .date)
     }
 }

@@ -224,11 +224,11 @@ struct SelectionLineageTests {
         let older = PhotoOperations.add(photo(at: 100), to: .cohort(cohort), in: context)
         #expect(cohort.coverPhoto?.id == older.id)
 
-        PhotoOperations.setCover(newer, among: PhotoOwner.cohort(cohort).photos)
+        PhotoOperations.setCover(newer)
         #expect(cohort.coverPhoto?.id == newer.id)
         #expect(older.isCover == false)
 
-        PhotoOperations.setCover(older, among: PhotoOwner.cohort(cohort).photos)
+        PhotoOperations.setCover(older)
         #expect(newer.isCover == false)
         #expect(cohort.coverPhoto?.id == older.id)
     }
@@ -261,5 +261,30 @@ struct SelectionLineageTests {
         try context.save()
         #expect(try context.fetch(FetchDescriptor<Photo>()).isEmpty)
         #expect(try context.fetch(FetchDescriptor<SelectionEvent>()).isEmpty)
+    }
+}
+
+@MainActor
+struct PhotoCoverScopeTests {
+    @Test func 代表の変更は同じ付け先の写真だけに効く() throws {
+        let container = try ModelStore.makeContainer(inMemory: true)
+        let context = container.mainContext
+        let tank = Tank(name: "A", kind: .nvBox)
+        let strain = Strain(breedName: "テスト")
+        context.insert(tank)
+        context.insert(strain)
+        let day = Date(timeIntervalSince1970: 1_800_000_000)
+        let first = CohortOperations.createCohort(strain: strain, tank: tank, count: 10, stage: .young, generation: 0, acquiredAt: day, date: day, in: context)
+        let second = CohortOperations.createCohort(strain: strain, tank: tank, count: 10, stage: .young, generation: 0, acquiredAt: day, date: day, in: context)
+        let data = ProcessedPhoto(jpegData: Data([1]), thumbnailData: Data([1]), capturedAt: day)
+        let a1 = PhotoOperations.add(data, to: .cohort(first), in: context)
+        let a2 = PhotoOperations.add(data, to: .cohort(first), in: context)
+        let b1 = PhotoOperations.add(data, to: .cohort(second), in: context)
+        PhotoOperations.setCover(b1)
+        PhotoOperations.setCover(a1)
+        PhotoOperations.setCover(a2)
+        #expect(a2.isCover)
+        #expect(!a1.isCover)
+        #expect(b1.isCover)
     }
 }

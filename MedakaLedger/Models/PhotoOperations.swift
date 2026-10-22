@@ -58,11 +58,30 @@ enum PhotoOperations {
         return photo
     }
 
-    /// 代表にする。同じ付け先のほかの写真の代表は外す。
-    static func setCover(_ photo: Photo, among photos: [Photo]) {
-        for other in photos {
+    /// 写真の付け先にある写真（自分を含む）。付け先が無ければ自分だけ。
+    static func siblings(of photo: Photo) -> [Photo] {
+        let owner: PhotoOwner?
+        if let cohort = photo.cohort {
+            owner = .cohort(cohort)
+        } else if let tank = photo.tank {
+            owner = .tank(tank)
+        } else if let strain = photo.strain {
+            owner = .strain(strain)
+        } else if let selection = photo.selection {
+            owner = .selection(selection)
+        } else {
+            owner = nil
+        }
+        guard let owner else { return [photo] }
+        return owner.photos
+    }
+
+    /// 代表にする。同じ付け先のほかの写真の代表は外す。別の付け先の写真には触れない。
+    static func setCover(_ photo: Photo) {
+        for other in siblings(of: photo) {
             other.isCover = other.id == photo.id
         }
+        photo.isCover = true
     }
 
     static func delete(_ photo: Photo, in context: ModelContext) {

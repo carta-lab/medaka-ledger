@@ -730,6 +730,9 @@
     "採卵日": {
       "extractionState": "manual"
     },
+    "撮影日": {
+      "extractionState": "manual"
+    },
     "数え直した匹数": {
       "extractionState": "manual"
     },

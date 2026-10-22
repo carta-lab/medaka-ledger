@@ -18,8 +18,8 @@ final class PhotoViewerModel {
     }
 
     /// 代表にする。同じ付け先のほかの写真の代表は外す。
-    func setCover(_ photo: Photo, among photos: [Photo], in context: ModelContext) {
-        PhotoOperations.setCover(photo, among: photos)
+    func setCover(_ photo: Photo, in context: ModelContext) {
+        PhotoOperations.setCover(photo)
         save(context)
     }
 
