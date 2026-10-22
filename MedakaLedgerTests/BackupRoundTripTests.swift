@@ -7,9 +7,17 @@ import Testing
 struct BackupRoundTripTests {
     private let now = Date(timeIntervalSinceReferenceDate: 800_000_000)
 
-    private func makeContext() throws -> (ModelContainer, ModelContext) {
+    /// ModelContext はコンテナを保持しない。コンテナが先に解放されるとクラッシュするので、テストが終わるまで持っておく。
+    private final class ContainerKeeper {
+        var containers: [ModelContainer] = []
+    }
+
+    private let keeper = ContainerKeeper()
+
+    private func makeContext() throws -> ModelContext {
         let container = try ModelStore.makeContainer(inMemory: true)
-        return (container, container.mainContext)
+        keeper.containers.append(container)
+        return container.mainContext
     }
 
     /// サンプルに、写真と購入者メモ付きの販売を足したデータ。
@@ -81,7 +89,7 @@ struct BackupRoundTripTests {
     }
 
     @Test func 置き換えの往復で全モデルと写真が一致する() throws {
-        let (_, source) = try makeContext()
+        let source = try makeContext()
         try populate(source)
         let root = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -90,7 +98,7 @@ struct BackupRoundTripTests {
         #expect(manifest.photos.count == 4)
         #expect(manifest.sales.contains { $0.buyerMemo == "山田, 太郎\n様" })
 
-        let (_, target) = try makeContext()
+        let target = try makeContext()
         // 読み込み先に、消えるはずの別のデータを入れておく
         target.insert(Tank(name: "消える容器", kind: .cup))
         try target.save()
@@ -112,12 +120,12 @@ struct BackupRoundTripTests {
     }
 
     @Test func 関係がつながり直る() throws {
-        let (_, source) = try makeContext()
+        let source = try makeContext()
         try populate(source)
         let root = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: root) }
         let (manifest, loader) = try exportAndExtract(from: source, includesPhotos: true, in: root)
-        let (_, target) = try makeContext()
+        let target = try makeContext()
         try BackupImporter.restore(manifest, mode: .replace, loadPhoto: loader, makeThumbnail: { _ in nil }, into: target, progress: { _ in })
 
         let cohorts = try target.fetch(FetchDescriptor<Cohort>())
@@ -133,13 +141,13 @@ struct BackupRoundTripTests {
     }
 
     @Test func 追記は同じIDを上書きして足りないものを足す() throws {
-        let (_, source) = try makeContext()
+        let source = try makeContext()
         try populate(source)
         let root = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: root) }
         let (manifest, loader) = try exportAndExtract(from: source, includesPhotos: true, in: root)
 
-        let (_, target) = try makeContext()
+        let target = try makeContext()
         try BackupImporter.restore(manifest, mode: .replace, loadPhoto: loader, makeThumbnail: { _ in nil }, into: target, progress: { _ in })
         // 読み込み後に、端末側で変えたものと足したもの
         let tank = try #require(try target.fetch(FetchDescriptor<Tank>()).first)
@@ -159,7 +167,7 @@ struct BackupRoundTripTests {
     }
 
     @Test func 軽量版は追記だけで読み込める() throws {
-        let (_, source) = try makeContext()
+        let source = try makeContext()
         try populate(source)
         let root = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -167,7 +175,7 @@ struct BackupRoundTripTests {
         #expect(!manifest.includesPhotos)
         #expect(manifest.photos.isEmpty)
 
-        let (_, target) = try makeContext()
+        let target = try makeContext()
         target.insert(Tank(name: "既にある容器", kind: .cup))
         try target.save()
         #expect(throws: BackupError.lightweightCannotReplace) {
@@ -182,12 +190,12 @@ struct BackupRoundTripTests {
     }
 
     @Test func 本体が無い写真は飛ばして数える() throws {
-        let (_, source) = try makeContext()
+        let source = try makeContext()
         try populate(source)
         let root = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: root) }
         let (manifest, _) = try exportAndExtract(from: source, includesPhotos: true, in: root)
-        let (_, target) = try makeContext()
+        let target = try makeContext()
         let summary = try BackupImporter.restore(manifest, mode: .replace, loadPhoto: { _ in nil }, makeThumbnail: { _ in nil }, into: target, progress: { _ in })
         #expect(summary.skippedPhotos == 4)
         #expect(try target.fetch(FetchDescriptor<Photo>()).isEmpty)
