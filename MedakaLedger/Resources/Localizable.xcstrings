@@ -1,0 +1,741 @@
+{
+  "sourceLanguage": "ja",
+  "strings": {
+    "%@　%@": {
+      "extractionState": "manual"
+    },
+    "%@で登録・%@": {
+      "extractionState": "manual"
+    },
+    "%@の群から%@を分けて登録": {
+      "extractionState": "manual"
+    },
+    "%@の群から%@を受け入れました": {
+      "extractionState": "manual"
+    },
+    "%@の群に統合しました": {
+      "extractionState": "manual"
+    },
+    "%@を%@へ分けました": {
+      "extractionState": "manual"
+    },
+    "%@・%@": {
+      "extractionState": "manual"
+    },
+    "%@匹": {
+      "extractionState": "manual"
+    },
+    "%@（%@日目）": {
+      "extractionState": "manual"
+    },
+    "%@（入手から%@日）": {
+      "extractionState": "manual"
+    },
+    "%@：%@→%@": {
+      "extractionState": "manual"
+    },
+    "NVボックス": {
+      "extractionState": "manual"
+    },
+    "「%@」を登録しました": {
+      "extractionState": "manual"
+    },
+    "あとで": {
+      "extractionState": "manual"
+    },
+    "うち雄": {
+      "extractionState": "manual"
+    },
+    "うち雄（任意）": {
+      "extractionState": "manual"
+    },
+    "うち雌": {
+      "extractionState": "manual"
+    },
+    "うち雌（任意）": {
+      "extractionState": "manual"
+    },
+    "この容器に群はいません": {
+      "extractionState": "manual"
+    },
+    "この容器をアーカイブしますか": {
+      "extractionState": "manual"
+    },
+    "この系統の群はまだありません": {
+      "extractionState": "manual"
+    },
+    "この系統をアーカイブしますか": {
+      "extractionState": "manual"
+    },
+    "この群にまとめる群": {
+      "extractionState": "manual"
+    },
+    "この群の容器がアーカイブされています。容器のアーカイブを解除してから削除してください。": {
+      "extractionState": "manual"
+    },
+    "この群は削除されました": {
+      "extractionState": "manual"
+    },
+    "この群は未計数なので、匹数は未計数のまま記録だけ残ります。": {
+      "extractionState": "manual"
+    },
+    "この群は消え、分けた元の群の匹数が元に戻ります。": {
+      "extractionState": "manual"
+    },
+    "この群を削除しますか": {
+      "extractionState": "manual"
+    },
+    "この群を終了しますか": {
+      "extractionState": "manual"
+    },
+    "この記録を削除しますか": {
+      "extractionState": "manual"
+    },
+    "すべてのデータを削除": {
+      "extractionState": "manual"
+    },
+    "すべてのデータを削除しますか": {
+      "extractionState": "manual"
+    },
+    "そのまま": {
+      "extractionState": "manual"
+    },
+    "その他": {
+      "extractionState": "manual"
+    },
+    "できませんでした": {
+      "extractionState": "manual"
+    },
+    "ほか%@群": {
+      "extractionState": "manual"
+    },
+    "まず容器を登録しましょう": {
+      "extractionState": "manual"
+    },
+    "まず系統を登録しましょう": {
+      "extractionState": "manual"
+    },
+    "アーカイブ": {
+      "extractionState": "manual"
+    },
+    "アーカイブできません": {
+      "extractionState": "manual"
+    },
+    "アーカイブを解除": {
+      "extractionState": "manual"
+    },
+    "アーカイブ済み": {
+      "extractionState": "manual"
+    },
+    "アーカイブ済みの容器": {
+      "extractionState": "manual"
+    },
+    "アーカイブ済みの容器はありません": {
+      "extractionState": "manual"
+    },
+    "アーカイブ済みの系統": {
+      "extractionState": "manual"
+    },
+    "アーカイブ済みの系統はありません": {
+      "extractionState": "manual"
+    },
+    "アーカイブ済みを表示": {
+      "extractionState": "manual"
+    },
+    "イベント": {
+      "extractionState": "manual"
+    },
+    "カップ（採卵用など）": {
+      "extractionState": "manual"
+    },
+    "キャンセル": {
+      "extractionState": "manual"
+    },
+    "クイック操作": {
+      "extractionState": "manual"
+    },
+    "サイズ": {
+      "extractionState": "manual"
+    },
+    "サイズ（例 1.5〜2cm）": {
+      "extractionState": "manual"
+    },
+    "サンプルは容器6、系統2、群4です。Freeの上限には数えません。": {
+      "extractionState": "manual"
+    },
+    "サンプルデータを入れる": {
+      "extractionState": "manual"
+    },
+    "サンプルデータを全削除": {
+      "extractionState": "manual"
+    },
+    "タイムライン": {
+      "extractionState": "manual"
+    },
+    "タグを入力": {
+      "extractionState": "manual"
+    },
+    "デバッグ": {
+      "extractionState": "manual"
+    },
+    "データの保存場所を用意できませんでした。アプリを入れ直してもうまくいかない場合はお問い合わせください。": {
+      "extractionState": "manual"
+    },
+    "データを開けませんでした": {
+      "extractionState": "manual"
+    },
+    "トリオ": {
+      "extractionState": "manual"
+    },
+    "トロ舟": {
+      "extractionState": "manual"
+    },
+    "プラ舟": {
+      "extractionState": "manual"
+    },
+    "ペア": {
+      "extractionState": "manual"
+    },
+    "ホーム": {
+      "extractionState": "manual"
+    },
+    "メニュー": {
+      "extractionState": "manual"
+    },
+    "メモ": {
+      "extractionState": "manual"
+    },
+    "ヤフオク": {
+      "extractionState": "manual"
+    },
+    "ラベル": {
+      "extractionState": "manual"
+    },
+    "ラベル（例 親魚候補）": {
+      "extractionState": "manual"
+    },
+    "・": {
+      "extractionState": "manual"
+    },
+    "一覧から消えます。過去の記録からはたどれます。": {
+      "extractionState": "manual"
+    },
+    "世代": {
+      "extractionState": "manual"
+    },
+    "並べ替え": {
+      "extractionState": "manual"
+    },
+    "今": {
+      "extractionState": "manual"
+    },
+    "今いる群": {
+      "extractionState": "manual"
+    },
+    "今と同じ容器です。": {
+      "extractionState": "manual"
+    },
+    "今と同じ段階です。": {
+      "extractionState": "manual"
+    },
+    "今と同じ状態です。": {
+      "extractionState": "manual"
+    },
+    "今の匹数": {
+      "extractionState": "manual"
+    },
+    "今の容器": {
+      "extractionState": "manual"
+    },
+    "作業記録": {
+      "extractionState": "manual"
+    },
+    "作業記録はまだありません": {
+      "extractionState": "manual"
+    },
+    "保存": {
+      "extractionState": "manual"
+    },
+    "保存できませんでした": {
+      "extractionState": "manual"
+    },
+    "先に群を移動してください。": {
+      "extractionState": "manual"
+    },
+    "入手": {
+      "extractionState": "manual"
+    },
+    "入手個体": {
+      "extractionState": "manual"
+    },
+    "入手個体の群を登録": {
+      "extractionState": "manual"
+    },
+    "入手元": {
+      "extractionState": "manual"
+    },
+    "入手元・作出者": {
+      "extractionState": "manual"
+    },
+    "入手日": {
+      "extractionState": "manual"
+    },
+    "入手日を記録する": {
+      "extractionState": "manual"
+    },
+    "全滅": {
+      "extractionState": "manual"
+    },
+    "写真": {
+      "extractionState": "manual"
+    },
+    "処分": {
+      "extractionState": "manual"
+    },
+    "出品中": {
+      "extractionState": "manual"
+    },
+    "分けた先の群も消え、匹数が元に戻ります。": {
+      "extractionState": "manual"
+    },
+    "分けた分は新しい群になり、別の容器へ移ります。": {
+      "extractionState": "manual"
+    },
+    "分ける匹数": {
+      "extractionState": "manual"
+    },
+    "分割": {
+      "extractionState": "manual"
+    },
+    "別容器": {
+      "extractionState": "manual"
+    },
+    "削除": {
+      "extractionState": "manual"
+    },
+    "削除できませんでした": {
+      "extractionState": "manual"
+    },
+    "匹": {
+      "extractionState": "manual"
+    },
+    "匹数": {
+      "extractionState": "manual"
+    },
+    "匹数、段階、状態を記録の前に戻します。": {
+      "extractionState": "manual"
+    },
+    "匹数が0になりました。": {
+      "extractionState": "manual"
+    },
+    "匹数（数えていなければ空のまま）": {
+      "extractionState": "manual"
+    },
+    "卵": {
+      "extractionState": "manual"
+    },
+    "取消": {
+      "extractionState": "manual"
+    },
+    "同じ世代の群どうしだけ統合できます。": {
+      "extractionState": "manual"
+    },
+    "同じ系統の群どうしだけ統合できます。": {
+      "extractionState": "manual"
+    },
+    "同じ系統・同じ世代で、同じ親魚セットから生まれた群（または入手個体どうし）だけ統合できます。容器と段階はこの群のものを残し、孵化日は早いほうを残します。": {
+      "extractionState": "manual"
+    },
+    "同じ群どうしは統合できません。": {
+      "extractionState": "manual"
+    },
+    "同じ親魚セットから生まれた群どうし、または入手個体どうしだけ統合できます。": {
+      "extractionState": "manual"
+    },
+    "名前（例 A-1）": {
+      "extractionState": "manual"
+    },
+    "品種名（例 楊貴妃）": {
+      "extractionState": "manual"
+    },
+    "場所未設定": {
+      "extractionState": "manual"
+    },
+    "増やす": {
+      "extractionState": "manual"
+    },
+    "増減": {
+      "extractionState": "manual"
+    },
+    "売約": {
+      "extractionState": "manual"
+    },
+    "委託": {
+      "extractionState": "manual"
+    },
+    "孵化": {
+      "extractionState": "manual"
+    },
+    "孵化 %@": {
+      "extractionState": "manual"
+    },
+    "孵化日": {
+      "extractionState": "manual"
+    },
+    "完了": {
+      "extractionState": "manual"
+    },
+    "完売": {
+      "extractionState": "manual"
+    },
+    "室内": {
+      "extractionState": "manual"
+    },
+    "容器": {
+      "extractionState": "manual"
+    },
+    "容器がありません": {
+      "extractionState": "manual"
+    },
+    "容器と系統を登録すると、群の記録をつけられます。": {
+      "extractionState": "manual"
+    },
+    "容器を登録": {
+      "extractionState": "manual"
+    },
+    "容器を登録する": {
+      "extractionState": "manual"
+    },
+    "容器を編集": {
+      "extractionState": "manual"
+    },
+    "容器名・系統名で探す": {
+      "extractionState": "manual"
+    },
+    "容器未設定": {
+      "extractionState": "manual"
+    },
+    "容量": {
+      "extractionState": "manual"
+    },
+    "容量（リットル）": {
+      "extractionState": "manual"
+    },
+    "屋外": {
+      "extractionState": "manual"
+    },
+    "屋外か室内か": {
+      "extractionState": "manual"
+    },
+    "屋外の容器にいる群はありません": {
+      "extractionState": "manual"
+    },
+    "廃棄": {
+      "extractionState": "manual"
+    },
+    "後の記録があるため削除できません。計数修正か移動で直してください。": {
+      "extractionState": "manual"
+    },
+    "成魚": {
+      "extractionState": "manual"
+    },
+    "掃除": {
+      "extractionState": "manual"
+    },
+    "採卵": {
+      "extractionState": "manual"
+    },
+    "数え直した匹数": {
+      "extractionState": "manual"
+    },
+    "数を確かめてください。": {
+      "extractionState": "manual"
+    },
+    "新しい群のラベル（任意）": {
+      "extractionState": "manual"
+    },
+    "日付": {
+      "extractionState": "manual"
+    },
+    "最新の記録は左にスワイプして削除できます。匹数と容器が元に戻ります。": {
+      "extractionState": "manual"
+    },
+    "最近の記録": {
+      "extractionState": "manual"
+    },
+    "期限を超えた容器はありません": {
+      "extractionState": "manual"
+    },
+    "未計数": {
+      "extractionState": "manual"
+    },
+    "格安販売": {
+      "extractionState": "manual"
+    },
+    "棚、列など（例 棚A）": {
+      "extractionState": "manual"
+    },
+    "次の名前は「%@」で始めます。": {
+      "extractionState": "manual"
+    },
+    "死亡": {
+      "extractionState": "manual"
+    },
+    "段階": {
+      "extractionState": "manual"
+    },
+    "段階の変更": {
+      "extractionState": "manual"
+    },
+    "水換え": {
+      "extractionState": "manual"
+    },
+    "水換えの期限超え": {
+      "extractionState": "manual"
+    },
+    "水槽": {
+      "extractionState": "manual"
+    },
+    "水温": {
+      "extractionState": "manual"
+    },
+    "水温の記録": {
+      "extractionState": "manual"
+    },
+    "減った匹数": {
+      "extractionState": "manual"
+    },
+    "減らす": {
+      "extractionState": "manual"
+    },
+    "状態の変更": {
+      "extractionState": "manual"
+    },
+    "現在の匹数（%@匹）を超えています。数え直す場合は計数修正を使ってください。": {
+      "extractionState": "manual"
+    },
+    "理由": {
+      "extractionState": "manual"
+    },
+    "産卵期": {
+      "extractionState": "manual"
+    },
+    "産卵期外": {
+      "extractionState": "manual"
+    },
+    "発泡スチロール": {
+      "extractionState": "manual"
+    },
+    "発送済": {
+      "extractionState": "manual"
+    },
+    "登録": {
+      "extractionState": "manual"
+    },
+    "登録の記録は削除できません。群ごと削除してください。": {
+      "extractionState": "manual"
+    },
+    "直接": {
+      "extractionState": "manual"
+    },
+    "睡蓮鉢": {
+      "extractionState": "manual"
+    },
+    "移動": {
+      "extractionState": "manual"
+    },
+    "移動元の容器がアーカイブされています。容器のアーカイブを解除してから削除してください。": {
+      "extractionState": "manual"
+    },
+    "移動先の容器": {
+      "extractionState": "manual"
+    },
+    "移動先の容器がありません。先に容器を登録しましょう。": {
+      "extractionState": "manual"
+    },
+    "移動前の容器に戻します。": {
+      "extractionState": "manual"
+    },
+    "稚魚": {
+      "extractionState": "manual"
+    },
+    "稚魚まとめ": {
+      "extractionState": "manual"
+    },
+    "種類": {
+      "extractionState": "manual"
+    },
+    "空き": {
+      "extractionState": "manual"
+    },
+    "系統": {
+      "extractionState": "manual"
+    },
+    "系統がありません": {
+      "extractionState": "manual"
+    },
+    "系統を登録": {
+      "extractionState": "manual"
+    },
+    "系統を登録する": {
+      "extractionState": "manual"
+    },
+    "系統を編集": {
+      "extractionState": "manual"
+    },
+    "系統名は「〇〇めだか2026春購入」のように、同じ品種の中で見分ける呼び名です。": {
+      "extractionState": "manual"
+    },
+    "系統名・呼び名（任意）": {
+      "extractionState": "manual"
+    },
+    "系統未設定": {
+      "extractionState": "manual"
+    },
+    "終了した群も表示": {
+      "extractionState": "manual"
+    },
+    "統合": {
+      "extractionState": "manual"
+    },
+    "統合できる群がありません。": {
+      "extractionState": "manual"
+    },
+    "統合を取り消し、両方の群を元に戻します。": {
+      "extractionState": "manual"
+    },
+    "統合済み": {
+      "extractionState": "manual"
+    },
+    "続けて、入手した個体を群として登録できます。あとで系統の画面から登録することもできます。": {
+      "extractionState": "manual"
+    },
+    "続けて登録": {
+      "extractionState": "manual"
+    },
+    "編集": {
+      "extractionState": "manual"
+    },
+    "繁殖": {
+      "extractionState": "manual"
+    },
+    "置き場所": {
+      "extractionState": "manual"
+    },
+    "置き場所をまたいで動かすときは、容器の編集で置き場所を変えてください。": {
+      "extractionState": "manual"
+    },
+    "群": {
+      "extractionState": "manual"
+    },
+    "群が見つかりません。": {
+      "extractionState": "manual"
+    },
+    "群のタイムラインもすべて消えます。元に戻せません。": {
+      "extractionState": "manual"
+    },
+    "群を削除": {
+      "extractionState": "manual"
+    },
+    "群を編集": {
+      "extractionState": "manual"
+    },
+    "育卵中": {
+      "extractionState": "manual"
+    },
+    "自店": {
+      "extractionState": "manual"
+    },
+    "若魚": {
+      "extractionState": "manual"
+    },
+    "薬浴": {
+      "extractionState": "manual"
+    },
+    "表現タグ": {
+      "extractionState": "manual"
+    },
+    "親": {
+      "extractionState": "manual"
+    },
+    "親魚セットから孵化": {
+      "extractionState": "manual"
+    },
+    "親魚セットと採卵の記録は、次の更新で使えるようになります。": {
+      "extractionState": "manual"
+    },
+    "親魚セットはまだありません": {
+      "extractionState": "manual"
+    },
+    "計数修正": {
+      "extractionState": "manual"
+    },
+    "記録はまだありません": {
+      "extractionState": "manual"
+    },
+    "譲渡": {
+      "extractionState": "manual"
+    },
+    "販売": {
+      "extractionState": "manual"
+    },
+    "販売の記録はまだありません": {
+      "extractionState": "manual"
+    },
+    "販売台帳は、次の更新で使えるようになります。": {
+      "extractionState": "manual"
+    },
+    "越冬中の群": {
+      "extractionState": "manual"
+    },
+    "足し水": {
+      "extractionState": "manual"
+    },
+    "追加": {
+      "extractionState": "manual"
+    },
+    "針子": {
+      "extractionState": "manual"
+    },
+    "閉じる": {
+      "extractionState": "manual"
+    },
+    "雄%@・雌%@": {
+      "extractionState": "manual"
+    },
+    "雌雄の内訳": {
+      "extractionState": "manual"
+    },
+    "雌雄の内訳は分割や増減で自動では変わりません。ここで直してください。": {
+      "extractionState": "manual"
+    },
+    "飛び出し": {
+      "extractionState": "manual"
+    },
+    "飼育中": {
+      "extractionState": "manual"
+    },
+    "飼育中でない群は操作できません。": {
+      "extractionState": "manual"
+    },
+    "飼育中の群 %@・%@匹": {
+      "extractionState": "manual"
+    },
+    "飼育中の群 %@・%@匹＋未計数": {
+      "extractionState": "manual"
+    },
+    "飼育中の群が%@つあります。一覧から消えますが、群と過去の記録は残ります。": {
+      "extractionState": "manual"
+    },
+    "飼育中の群どうしだけ統合できます。": {
+      "extractionState": "manual"
+    },
+    "飼育中の群はありません": {
+      "extractionState": "manual"
+    },
+    "餌用": {
+      "extractionState": "manual"
+    }
+  },
+  "version": "1.0"
+}
