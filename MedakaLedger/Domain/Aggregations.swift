@@ -10,6 +10,12 @@ struct LocationSection<Item>: Identifiable {
     var id: String { isUnset ? "\u{0}unset" : title }
 }
 
+struct GenerationGroup<Item>: Identifiable {
+    var generation: Int
+    var items: [Item]
+    var id: Int { generation }
+}
+
 struct CohortTally: Equatable, Sendable {
     var cohortCount: Int
     var fishCount: Int
@@ -92,10 +98,10 @@ enum Aggregations {
     }
 
     /// 世代ごとにまとめる。世代の小さい順。
-    static func groupedByGeneration<Item>(_ items: [Item], generation: (Item) -> Int) -> [(generation: Int, items: [Item])] {
+    static func groupedByGeneration<Item>(_ items: [Item], generation: (Item) -> Int) -> [GenerationGroup<Item>] {
         Dictionary(grouping: items, by: generation)
             .sorted { $0.key < $1.key }
-            .map { (generation: $0.key, items: $0.value) }
+            .map { GenerationGroup(generation: $0.key, items: $0.value) }
     }
 
     /// 種類ごとに取得した最新の記録を、日付の新しい順に混ぜて limit 件にする（DECISIONS.md E）。
