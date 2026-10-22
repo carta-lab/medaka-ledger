@@ -103,10 +103,10 @@ struct SaleSheet: View {
                     Text(verbatim: unit.label).tag(unit)
                 }
             }
-            IntField("数量", value: $model.quantity)
+            amountField("数量", placeholder: "1", value: $model.quantity)
                 .accessibilityIdentifier("saleQuantityField")
             if model.unit == .fryBundle, !model.isEditing, model.cohort != nil {
-                IntField("群から減らす匹数", value: $model.bundleFishCount)
+                amountField("群から減らす匹数", placeholder: "0", value: $model.bundleFishCount)
             }
         } footer: {
             if !model.isEditing, model.cohort != nil {
@@ -129,14 +129,11 @@ struct SaleSheet: View {
 
     private var amountSection: some View {
         Section {
-            IntField("単価（円）", value: $model.unitPrice)
+            amountField("単価（円）", placeholder: "0", value: $model.unitPrice)
                 .accessibilityIdentifier("saleUnitPriceField")
-            LabeledContent("合計（円）") {
-                IntField(LocalizedStringKey(model.autoTotal.formatted(.number.grouping(.never))), value: $model.manualTotal)
-                    .multilineTextAlignment(.trailing)
-            }
-            IntField("手数料（円）", value: $model.fee)
-            IntField("送料（円）", value: $model.shippingCost)
+            amountField("合計（円）", placeholder: model.autoTotal.formatted(.number.grouping(.never)), value: $model.manualTotal)
+            amountField("手数料（円）", placeholder: "0", value: $model.fee)
+            amountField("送料（円）", placeholder: "0", value: $model.shippingCost)
             InfoRow(title: "純額", value: SaleText.yen(model.net))
         } footer: {
             Text("合計が空のときは、数量×単価で計算します。値引きなどで違うときは、合計に入れてください。")
@@ -172,6 +169,14 @@ struct SaleSheet: View {
                 .lineLimit(1...4)
         } footer: {
             Text("購入者メモは、この端末とバックアップにだけ保存されます。")
+        }
+    }
+
+    /// 項目名を左に残し、数字を右に置く入力欄。入力しても何の欄か分かる。
+    private func amountField(_ title: LocalizedStringKey, placeholder: String, value: Binding<Int?>) -> some View {
+        LabeledContent(title) {
+            IntField(LocalizedStringKey(placeholder), value: value)
+                .multilineTextAlignment(.trailing)
         }
     }
 }
