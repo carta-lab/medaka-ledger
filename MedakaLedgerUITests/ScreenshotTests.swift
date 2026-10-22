@@ -60,6 +60,14 @@ final class ScreenshotTests: XCTestCase {
                 lineageTab.tap()
                 sleepBriefly()
                 snapshot("09-系統詳細の血統図")
+                let salesTab = app.segmentedControls.buttons["販売"]
+                if salesTab.waitForExistence(timeout: 5) {
+                    salesTab.tap()
+                    sleepBriefly()
+                    snapshot("13-系統詳細の販売")
+                    lineageTab.tap()
+                    sleepBriefly()
+                }
                 let firstRow = app.buttons.matching(identifier: "lineageRow").firstMatch
                 if firstRow.waitForExistence(timeout: 5) {
                     firstRow.tap()
@@ -67,6 +75,48 @@ final class ScreenshotTests: XCTestCase {
                     snapshot("10-血統図")
                 }
             }
+        }
+
+        captureSalesAndSettings(app)
+    }
+
+    /// 販売台帳（全期間）、販売記録のシート、設定のバックアップ。
+    @MainActor
+    private func captureSalesAndSettings(_ app: XCUIApplication) {
+        tapTab(app, "販売")
+        let all = app.segmentedControls.buttons["全期間"]
+        if all.waitForExistence(timeout: 5) {
+            all.tap()
+            sleepBriefly()
+        }
+        snapshot("11-販売台帳")
+
+        let menu = app.buttons["salesMenu"]
+        if menu.waitForExistence(timeout: 5) {
+            menu.tap()
+            let add = app.buttons["販売を記録"]
+            if add.waitForExistence(timeout: 5) {
+                add.tap()
+                sleepBriefly()
+                snapshot("12-販売記録")
+                let cancel = app.buttons["キャンセル"]
+                if cancel.waitForExistence(timeout: 5) {
+                    cancel.tap()
+                    sleepBriefly()
+                }
+            }
+        }
+
+        tapTab(app, "ホーム")
+        let settings = app.buttons["settingsButton"]
+        if settings.waitForExistence(timeout: 5) {
+            settings.tap()
+            sleepBriefly()
+            snapshot("14-設定")
+            app.swipeUp()
+            app.swipeUp()
+            sleepBriefly()
+            snapshot("15-設定のバックアップ")
         }
     }
 
