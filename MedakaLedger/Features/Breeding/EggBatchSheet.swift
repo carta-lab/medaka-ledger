@@ -51,16 +51,12 @@ struct EggBatchSheet: View {
             }
             .navigationTitle("採卵を記録")
             .navigationBarTitleDisplayMode(.inline)
+            .bottomSaveBar(isEnabled: model.canSave, identifier: "saveEggBatchButton") {
+                model.save(in: modelContext, settings: settings, needsAuthorization: scheduler.needsAuthorizationPrompt)
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
-                        model.save(in: modelContext, settings: settings, needsAuthorization: scheduler.needsAuthorizationPrompt)
-                    }
-                    .disabled(!model.canSave)
-                    .accessibilityIdentifier("saveEggBatchButton")
                 }
             }
             .alert("採卵を記録しました", isPresented: $model.isShowingResult) {

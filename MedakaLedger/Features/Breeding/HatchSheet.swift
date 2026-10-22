@@ -67,21 +67,17 @@ struct HatchSheet: View {
             }
             .navigationTitle("孵化を記録")
             .navigationBarTitleDisplayMode(.inline)
+            .bottomSaveBar(isEnabled: model.canSave, identifier: "saveHatchButton") {
+                if model.save(in: modelContext) {
+                    // 先に閉じて、二重に保存されないようにする。通知の計画し直しは閉じた後で行う
+                    let context = modelContext
+                    dismiss()
+                    Task { await scheduler.reschedule(in: context) }
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") {
-                        if model.save(in: modelContext) {
-                            // 先に閉じて、二重に保存されないようにする。通知の計画し直しは閉じた後で行う
-                            let context = modelContext
-                            dismiss()
-                            Task { await scheduler.reschedule(in: context) }
-                        }
-                    }
-                    .disabled(!model.canSave)
-                    .accessibilityIdentifier("saveHatchButton")
                 }
             }
             .errorAlert($model.error)

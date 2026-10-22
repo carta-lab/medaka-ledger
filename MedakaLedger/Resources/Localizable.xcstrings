@@ -49,6 +49,9 @@
     "%@月": {
       "extractionState": "manual"
     },
+    "%@枚は画像として読めなかったため、追加していません。": {
+      "extractionState": "manual"
+    },
     "%@（%@日目）": {
       "extractionState": "manual"
     },
@@ -58,7 +61,25 @@
     "%@：%@→%@": {
       "extractionState": "manual"
     },
+    "%@：残し%@・弾き%@（%@）": {
+      "extractionState": "manual"
+    },
+    "1回目": {
+      "extractionState": "manual"
+    },
+    "2回目": {
+      "extractionState": "manual"
+    },
+    "3回目": {
+      "extractionState": "manual"
+    },
     "NVボックス": {
+      "extractionState": "manual"
+    },
+    "Proで全世代を表示": {
+      "extractionState": "manual"
+    },
+    "　": {
       "extractionState": "manual"
     },
     "「%@」を登録しました": {
@@ -86,6 +107,9 @@
       "extractionState": "manual"
     },
     "このロットを廃棄しますか": {
+      "extractionState": "manual"
+    },
+    "この写真を削除しますか": {
       "extractionState": "manual"
     },
     "この容器に群はいません": {
@@ -131,6 +155,9 @@
       "extractionState": "manual"
     },
     "この記録を削除しますか": {
+      "extractionState": "manual"
+    },
+    "この選別の記録を削除しますか": {
       "extractionState": "manual"
     },
     "すべてのデータを削除": {
@@ -205,6 +232,12 @@
     "カップ（採卵用など）": {
       "extractionState": "manual"
     },
+    "カメラで撮る": {
+      "extractionState": "manual"
+    },
+    "カメラを開く": {
+      "extractionState": "manual"
+    },
     "キャンセル": {
       "extractionState": "manual"
     },
@@ -217,7 +250,7 @@
     "サイズ（例 1.5〜2cm）": {
       "extractionState": "manual"
     },
-    "サンプルは容器6、系統2、群4です。Freeの上限には数えません。": {
+    "サンプルは容器6、系統2、群7です。Freeの上限には数えません。": {
       "extractionState": "manual"
     },
     "サンプルデータを入れる": {
@@ -247,6 +280,9 @@
     "トロ舟": {
       "extractionState": "manual"
     },
+    "ヒレ": {
+      "extractionState": "manual"
+    },
     "プラ舟": {
       "extractionState": "manual"
     },
@@ -265,6 +301,9 @@
     "ヤフオク": {
       "extractionState": "manual"
     },
+    "ライブラリから選ぶ": {
+      "extractionState": "manual"
+    },
     "ラベル": {
       "extractionState": "manual"
     },
@@ -272,6 +311,9 @@
       "extractionState": "manual"
     },
     "ラベル（例 親魚候補）": {
+      "extractionState": "manual"
+    },
+    "ラメ": {
       "extractionState": "manual"
     },
     "ロット": {
@@ -316,6 +358,24 @@
     "今日で終了": {
       "extractionState": "manual"
     },
+    "付け先": {
+      "extractionState": "manual"
+    },
+    "代表": {
+      "extractionState": "manual"
+    },
+    "代表にする": {
+      "extractionState": "manual"
+    },
+    "代表写真": {
+      "extractionState": "manual"
+    },
+    "体型": {
+      "extractionState": "manual"
+    },
+    "体外光": {
+      "extractionState": "manual"
+    },
     "作業を記録": {
       "extractionState": "manual"
     },
@@ -328,7 +388,16 @@
     "保存": {
       "extractionState": "manual"
     },
+    "保存しました": {
+      "extractionState": "manual"
+    },
+    "保存すると、この群の匹数が残し数になります。": {
+      "extractionState": "manual"
+    },
     "保存できませんでした": {
+      "extractionState": "manual"
+    },
+    "元に戻せません。端末の写真ライブラリにある写真は消えません。": {
       "extractionState": "manual"
     },
     "先に群を移動してください。": {
@@ -359,6 +428,30 @@
       "extractionState": "manual"
     },
     "写真": {
+      "extractionState": "manual"
+    },
+    "写真はありません": {
+      "extractionState": "manual"
+    },
+    "写真はまだありません": {
+      "extractionState": "manual"
+    },
+    "写真を撮るためにカメラを使います": {
+      "extractionState": "manual"
+    },
+    "写真を縮小しています": {
+      "extractionState": "manual"
+    },
+    "写真を読み込めません": {
+      "extractionState": "manual"
+    },
+    "写真を読み込めませんでした。": {
+      "extractionState": "manual"
+    },
+    "写真を追加": {
+      "extractionState": "manual"
+    },
+    "写真を選んで、付け先を選ぶと保存できます。": {
       "extractionState": "manual"
     },
     "処分": {
@@ -463,6 +556,12 @@
     "品種名（例 楊貴妃）": {
       "extractionState": "manual"
     },
+    "回数": {
+      "extractionState": "manual"
+    },
+    "基準": {
+      "extractionState": "manual"
+    },
     "場所未設定": {
       "extractionState": "manual"
     },
@@ -473,6 +572,9 @@
       "extractionState": "manual"
     },
     "売約": {
+      "extractionState": "manual"
+    },
+    "外す": {
       "extractionState": "manual"
     },
     "委託": {
@@ -589,6 +691,15 @@
     "廃棄したロットには孵化を記録できません。": {
       "extractionState": "manual"
     },
+    "弾いた分は新しい群になり、選んだ容器へ移ります。残し数は、今の群の匹数になります。": {
+      "extractionState": "manual"
+    },
+    "弾きの行き先": {
+      "extractionState": "manual"
+    },
+    "弾き数": {
+      "extractionState": "manual"
+    },
     "後の記録があるため削除できません。計数修正か移動で直してください。": {
       "extractionState": "manual"
     },
@@ -619,6 +730,9 @@
     "採卵日": {
       "extractionState": "manual"
     },
+    "撮影日": {
+      "extractionState": "manual"
+    },
     "数え直した匹数": {
       "extractionState": "manual"
     },
@@ -644,6 +758,12 @@
       "extractionState": "manual"
     },
     "早く孵った分と遅れた分は、同じ群に足すこともできます。": {
+      "extractionState": "manual"
+    },
+    "書き出す": {
+      "extractionState": "manual"
+    },
+    "書き出せませんでした": {
       "extractionState": "manual"
     },
     "最初の孵化記録で決めます": {
@@ -683,6 +803,9 @@
       "extractionState": "manual"
     },
     "死亡": {
+      "extractionState": "manual"
+    },
+    "残し数": {
       "extractionState": "manual"
     },
     "段階": {
@@ -823,6 +946,9 @@
     "空き": {
       "extractionState": "manual"
     },
+    "端末の写真ライブラリに保存しました。": {
+      "extractionState": "manual"
+    },
     "系統": {
       "extractionState": "manual"
     },
@@ -863,6 +989,9 @@
       "extractionState": "manual"
     },
     "終了すると、新しい採卵は記録できません。過去の記録は残ります。": {
+      "extractionState": "manual"
+    },
+    "結果": {
       "extractionState": "manual"
     },
     "統合": {
@@ -910,6 +1039,9 @@
     "群を編集": {
       "extractionState": "manual"
     },
+    "群を選ぶと、親魚セットをたどって、雄側と雌側の祖先を木で表示します。": {
+      "extractionState": "manual"
+    },
     "育卵中": {
       "extractionState": "manual"
     },
@@ -928,13 +1060,28 @@
     "自店": {
       "extractionState": "manual"
     },
+    "色": {
+      "extractionState": "manual"
+    },
     "若魚": {
       "extractionState": "manual"
     },
     "薬浴": {
       "extractionState": "manual"
     },
+    "血統を表示できません": {
+      "extractionState": "manual"
+    },
+    "血統図": {
+      "extractionState": "manual"
+    },
+    "血統図を見る群": {
+      "extractionState": "manual"
+    },
     "表現タグ": {
+      "extractionState": "manual"
+    },
+    "表示": {
       "extractionState": "manual"
     },
     "複数の容器を選ぶと、同じ内容を各容器に保存します。": {
@@ -970,6 +1117,9 @@
     "計数修正": {
       "extractionState": "manual"
     },
+    "記録だけが消えます。匹数と、分けた群は元に戻りません。": {
+      "extractionState": "manual"
+    },
     "記録の先": {
       "extractionState": "manual"
     },
@@ -977,6 +1127,9 @@
       "extractionState": "manual"
     },
     "設定": {
+      "extractionState": "manual"
+    },
+    "説明（任意）": {
       "extractionState": "manual"
     },
     "譲渡": {
@@ -1000,7 +1153,19 @@
     "追加": {
       "extractionState": "manual"
     },
+    "追加できない写真がありました": {
+      "extractionState": "manual"
+    },
     "選んでください": {
+      "extractionState": "manual"
+    },
+    "選別": {
+      "extractionState": "manual"
+    },
+    "選別 残し%@・弾き%@": {
+      "extractionState": "manual"
+    },
+    "選別を記録": {
       "extractionState": "manual"
     },
     "針子": {
@@ -1091,6 +1256,9 @@
       "extractionState": "manual"
     },
     "餌用": {
+      "extractionState": "manual"
+    },
+    "（循環）": {
       "extractionState": "manual"
     }
   },

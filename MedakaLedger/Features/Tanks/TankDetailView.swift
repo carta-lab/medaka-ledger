@@ -51,6 +51,8 @@ struct TankDetailView: View {
                 }
             }
 
+            PhotoSection(owner: .tank(tank))
+
             Section {
                 let logs = tank.recentLogs
                 if logs.isEmpty {

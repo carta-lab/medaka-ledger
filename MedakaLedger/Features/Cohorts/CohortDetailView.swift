@@ -28,7 +28,8 @@ struct CohortDetailView: View {
                 Text(cohort.originBatch == nil ? LocalizedStringKey("入手個体") : LocalizedStringKey("親魚セットから孵化"))
                     .foregroundStyle(.secondary)
             }
-            timelineSection
+            PhotoSection(owner: .cohort(cohort))
+            CohortTimelineSection(cohort: cohort, model: model)
         }
         .navigationTitle(cohort.strainName)
         .navigationBarTitleDisplayMode(.inline)
@@ -47,6 +48,9 @@ struct CohortDetailView: View {
                         Label("段階の変更", systemImage: "chart.line.uptrend.xyaxis")
                     }
                     .disabled(!cohort.isActive)
+                    NavigationLink(value: Route.lineage(cohort)) {
+                        Label("血統図", systemImage: "list.bullet.indent")
+                    }
                     Button {
                         model.open(.edit, cohort: cohort)
                     } label: {
@@ -78,6 +82,7 @@ struct CohortDetailView: View {
             case .move: MoveCohortSheet(cohort: cohort)
             case .split: SplitCohortSheet(cohort: cohort)
             case .count: CountChangeSheet(cohort: cohort)
+            case .selection: SelectionSheet(cohort: cohort)
             case .stage: StageChangeSheet(cohort: cohort)
             case .merge: MergeCohortSheet(cohort: cohort)
             case .edit: CohortEditView(cohort: cohort)
@@ -104,6 +109,17 @@ struct CohortDetailView: View {
             Button("キャンセル", role: .cancel) {}
         } message: { event in
             Text(verbatim: model.deletionMessage(for: event))
+        }
+        .confirmationDialog(
+            "この選別の記録を削除しますか",
+            isPresented: $model.isConfirmingSelectionDeletion,
+            titleVisibility: .visible,
+            presenting: model.selectionPendingDeletion
+        ) { selection in
+            Button("削除", role: .destructive) { model.delete(selection, in: modelContext) }
+            Button("キャンセル", role: .cancel) {}
+        } message: { _ in
+            Text("記録だけが消えます。匹数と、分けた群は元に戻りません。")
         }
         .alert("この群を削除しますか", isPresented: $model.isConfirmingCohortDeletion) {
             Button("削除", role: .destructive) {
@@ -166,10 +182,15 @@ struct CohortDetailView: View {
 
     private var actionSection: some View {
         Section {
-            HStack(spacing: 8) {
-                actionButton("移動", systemImage: "arrow.right", sheet: .move)
-                actionButton("分割", systemImage: "arrow.triangle.branch", sheet: .split)
-                actionButton("増減", systemImage: "plusminus", sheet: .count)
+            VStack(spacing: 8) {
+                HStack(spacing: 8) {
+                    actionButton("移動", systemImage: "arrow.right", sheet: .move)
+                    actionButton("分割", systemImage: "arrow.triangle.branch", sheet: .split)
+                }
+                HStack(spacing: 8) {
+                    actionButton("増減", systemImage: "plusminus", sheet: .count)
+                    actionButton("選別", systemImage: "line.3.horizontal.decrease.circle", sheet: .selection)
+                }
             }
             .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
         }
@@ -187,24 +208,5 @@ struct CohortDetailView: View {
         }
         .buttonStyle(LargeButtonStyle(prominent: false))
         .accessibilityIdentifier("cohortAction.\(sheet.rawValue)")
-    }
-
-    private var timelineSection: some View {
-        Section {
-            ForEach(cohort.timeline) { event in
-                CohortEventRow(event: event)
-                    .swipeActions(edge: .trailing) {
-                        if CohortOperations.deletionBlocker(for: event) == nil {
-                            Button("削除", role: .destructive) {
-                                model.askToDelete(event)
-                            }
-                        }
-                    }
-            }
-        } header: {
-            Text("タイムライン")
-        } footer: {
-            Text("最新の記録は左にスワイプして削除できます。匹数と容器が元に戻ります。")
-        }
     }
 }

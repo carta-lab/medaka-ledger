@@ -69,6 +69,16 @@ struct StrainRow: View {
 
     var body: some View {
         let tally = Aggregations.tally(counts: strain.activeCohorts.map(\.count))
+        HStack(spacing: 12) {
+            if let photo = strain.coverPhoto {
+                PhotoThumbnail(photo: photo, size: 48)
+            }
+            rowText(strain: strain, tally: tally)
+        }
+        .padding(.vertical, 2)
+    }
+
+    private func rowText(strain: Strain, tally: CohortTally) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(verbatim: strain.displayName)
                 .font(.headline)

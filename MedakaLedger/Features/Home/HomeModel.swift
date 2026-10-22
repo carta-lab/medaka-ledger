@@ -20,7 +20,7 @@ struct OverdueTank: Identifiable {
 @Observable
 final class HomeModel {
     enum Sheet: String, Identifiable {
-        case eggBatch, waterChange, temperature, settings
+        case eggBatch, waterChange, temperature, photo, settings
         var id: String { rawValue }
     }
 

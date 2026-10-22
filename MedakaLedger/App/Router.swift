@@ -16,6 +16,7 @@ enum Route: Hashable {
     case tankLogs(Tank)
     case strain(Strain)
     case cohort(Cohort)
+    case lineage(Cohort)
     case breedingSet(BreedingSet)
     case archivedTanks
     case archivedStrains
@@ -38,6 +39,7 @@ private struct RouteDestination: View {
         case let .tankLogs(tank): TankLogsView(tank: tank)
         case let .strain(strain): StrainDetailView(strain: strain)
         case let .cohort(cohort): CohortDetailView(cohort: cohort)
+        case let .lineage(cohort): LineageView(cohort: cohort)
         case let .breedingSet(set): BreedingSetDetailView(breedingSet: set)
         case .archivedTanks: ArchivedTanksView()
         case .archivedStrains: ArchivedStrainsView()

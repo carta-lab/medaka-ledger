@@ -49,14 +49,10 @@ struct TankEditView: View {
             }
             .navigationTitle(model.isNew ? "容器を登録" : "容器を編集")
             .navigationBarTitleDisplayMode(.inline)
+            .bottomSaveBar(isEnabled: model.canSave, identifier: "saveTankButton") { save() }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") { save() }
-                        .disabled(!model.canSave)
-                        .accessibilityIdentifier("saveTankButton")
                 }
             }
             .alert(

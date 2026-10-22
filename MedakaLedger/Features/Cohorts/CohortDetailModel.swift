@@ -6,7 +6,7 @@ import SwiftData
 @Observable
 final class CohortDetailModel {
     enum Sheet: String, Identifiable {
-        case move, split, count, stage, merge, edit
+        case move, split, count, selection, stage, merge, edit
         var id: String { rawValue }
     }
 
@@ -15,6 +15,8 @@ final class CohortDetailModel {
     var isConfirmingCohortDeletion = false
     var eventPendingDeletion: CohortEvent?
     var isConfirmingEventDeletion = false
+    var selectionPendingDeletion: SelectionEvent?
+    var isConfirmingSelectionDeletion = false
     var error: UserFacingError?
     private var countBeforeSheet: Int?
 
@@ -33,6 +35,23 @@ final class CohortDetailModel {
     func end(_ cohort: Cohort, as status: CohortStatus, in context: ModelContext) {
         perform(context) { () throws(CohortOperations.OperationError) in
             try CohortOperations.changeStatus(cohort, to: status, date: Date(), in: context)
+        }
+    }
+
+    func askToDelete(_ selection: SelectionEvent) {
+        selectionPendingDeletion = selection
+        isConfirmingSelectionDeletion = true
+    }
+
+    /// 選別の記録だけを削除する。匹数や分割した群は戻らない（SelectionOperations）。
+    func delete(_ selection: SelectionEvent, in context: ModelContext) {
+        SelectionOperations.delete(selection, in: context)
+        selectionPendingDeletion = nil
+        do {
+            try context.save()
+        } catch {
+            context.rollback()
+            self.error = UserFacingError(error, title: String(localized: "削除できませんでした"))
         }
     }
 
