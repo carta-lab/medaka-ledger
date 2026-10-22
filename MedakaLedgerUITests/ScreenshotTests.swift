@@ -60,7 +60,7 @@ final class ScreenshotTests: XCTestCase {
                 lineageTab.tap()
                 sleepBriefly()
                 snapshot("09-系統詳細の血統図")
-                let firstRow = app.cells.element(boundBy: 1)
+                let firstRow = app.buttons.matching(identifier: "lineageRow").firstMatch
                 if firstRow.waitForExistence(timeout: 5) {
                     firstRow.tap()
                     sleepBriefly()

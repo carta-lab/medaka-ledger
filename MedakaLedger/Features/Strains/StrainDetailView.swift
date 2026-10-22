@@ -142,6 +142,7 @@ struct StrainDetailView: View {
                 NavigationLink(value: Route.lineage(cohort)) {
                     CohortSummaryRow(cohort: cohort, showsTank: true)
                 }
+                .accessibilityIdentifier("lineageRow")
             }
         } header: {
             Text("血統図を見る群")
