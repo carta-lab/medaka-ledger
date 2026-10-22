@@ -11,7 +11,7 @@ struct CohortCreateView: View {
     private let onFinish: () -> Void
 
     init(strain: Strain, isAfterStrainCreation: Bool, onFinish: @escaping () -> Void) {
-        _model = State(initialValue: CohortCreateModel(strain: strain))
+        _model = State(initialValue: CohortCreateModel(strain: strain, inheritsStrainDate: isAfterStrainCreation))
         self.isAfterStrainCreation = isAfterStrainCreation
         self.onFinish = onFinish
     }

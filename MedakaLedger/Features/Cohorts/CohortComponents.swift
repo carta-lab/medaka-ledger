@@ -121,7 +121,7 @@ enum CohortEventText {
     private static func countAfter(_ event: CohortEvent) -> Int? {
         switch event.kind {
         case .created:
-            return event.countDelta == 0 && event.previousCount == nil ? nil : event.countDelta
+            return event.reason == .recount ? event.countDelta : nil
         case .countChange where event.reason == .recount:
             return (event.previousCount ?? 0) + event.countDelta
         default:

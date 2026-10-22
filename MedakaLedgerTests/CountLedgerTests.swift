@@ -41,6 +41,17 @@ struct CountLedgerTests {
         #expect(event.countDelta == 12)
         #expect(event.previousCount == nil)
         #expect(event.toTank == tankA)
+        #expect(event.reason == .recount)
+    }
+
+    @Test func createdDistinguishesZeroFromUncounted() {
+        let zero = CountLedger.created(cohort(count: 0), date: day)
+        #expect(zero.countDelta == 0)
+        #expect(zero.reason == .recount)
+
+        let uncounted = CountLedger.created(cohort(count: nil), date: day)
+        #expect(uncounted.countDelta == 0)
+        #expect(uncounted.reason == nil)
     }
 
     // MARK: 移動

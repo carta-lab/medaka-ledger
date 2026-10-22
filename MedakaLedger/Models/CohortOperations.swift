@@ -8,12 +8,14 @@ enum CohortOperations {
     enum OperationError: LocalizedError, Equatable {
         case ledger(LedgerError)
         case sourceTankArchived
+        case tankArchived
         case missingCohort
 
         var errorDescription: String? {
             switch self {
             case let .ledger(error): error.message
             case .sourceTankArchived: String(localized: "移動元の容器がアーカイブされています。容器のアーカイブを解除してから削除してください。")
+            case .tankArchived: String(localized: "この群の容器がアーカイブされています。容器のアーカイブを解除してから削除してください。")
             case .missingCohort: String(localized: "群が見つかりません。")
             }
         }
@@ -151,6 +153,7 @@ enum CohortOperations {
         case .split, .merge:
             guard let partner = event.relatedCohortID.flatMap({ fetchCohort(id: $0, in: context) }) else {
                 // 相手の群が削除済みなら、こちらだけ戻す
+                if let blocker = revertBlocker(cohort, undoing: event, in: context) { throw blocker }
                 try revert(cohort, undoing: event, in: context)
                 context.delete(event)
                 return
@@ -163,16 +166,21 @@ enum CohortOperations {
             if event.kind == .split {
                 // countDelta の符号で元の群（マイナス）と分割先（プラス）を見分ける
                 let (sourceEvent, source, child) = event.countDelta < 0 ? (event, cohort, partner) : (partnerEvent, partner, cohort)
+                if let blocker = revertBlocker(source, undoing: sourceEvent, in: context) { throw blocker }
                 try revert(source, undoing: sourceEvent, in: context)
                 context.delete(sourceEvent)
                 context.delete(child)
             } else {
+                // 片方だけ戻ることがないよう、両方を確かめてから戻す
+                if let blocker = revertBlocker(cohort, undoing: event, in: context)
+                    ?? revertBlocker(partner, undoing: partnerEvent, in: context) { throw blocker }
                 try revert(cohort, undoing: event, in: context)
                 try revert(partner, undoing: partnerEvent, in: context)
                 context.delete(event)
                 context.delete(partnerEvent)
             }
         default:
+            if let blocker = revertBlocker(cohort, undoing: event, in: context) { throw blocker }
             try revert(cohort, undoing: event, in: context)
             context.delete(event)
         }
@@ -255,13 +263,22 @@ enum CohortOperations {
         cohort.hatchedAt = state.hatchedAt
     }
 
+    /// 取り消すとアーカイブ済みの容器に飼育中の群がいることになる場合は止める（DECISIONS.md H）。
+    private static func revertBlocker(_ cohort: Cohort, undoing event: CohortEvent, in context: ModelContext) -> OperationError? {
+        if event.kind == .move, let sourceID = event.fromTankID, fetchTank(id: sourceID, in: context)?.isArchived == true {
+            return .sourceTankArchived
+        }
+        if event.previousStatus == .active, !cohort.isActive, cohort.tank?.isArchived == true {
+            return .tankArchived
+        }
+        return nil
+    }
+
     private static func revert(_ cohort: Cohort, undoing event: CohortEvent, in context: ModelContext) throws(OperationError) {
         let ledgerEvent = ledgerEvent(from: event)
         if event.kind == .move {
             if let sourceID = event.fromTankID {
-                let source = fetchTank(id: sourceID, in: context)
-                if source?.isArchived == true { throw .sourceTankArchived }
-                cohort.tank = source
+                cohort.tank = fetchTank(id: sourceID, in: context)
             } else {
                 cohort.tank = nil
             }

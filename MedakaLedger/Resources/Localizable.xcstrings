@@ -70,6 +70,9 @@
     "この群にまとめる群": {
       "extractionState": "manual"
     },
+    "この群の容器がアーカイブされています。容器のアーカイブを解除してから削除してください。": {
+      "extractionState": "manual"
+    },
     "この群は削除されました": {
       "extractionState": "manual"
     },

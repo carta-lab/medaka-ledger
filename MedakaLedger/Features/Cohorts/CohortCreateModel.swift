@@ -16,9 +16,10 @@ final class CohortCreateModel {
     var note = ""
     var error: UserFacingError?
 
-    init(strain: Strain) {
+    /// 系統を作った直後は系統の入手日を引き継ぎ、それ以外は今日を初期値にする（CLAUDE.md：日付の初期値は今日）。
+    init(strain: Strain, inheritsStrainDate: Bool) {
         self.strain = strain
-        acquiredAt = strain.acquiredAt ?? Date()
+        acquiredAt = inheritsStrainDate ? (strain.acquiredAt ?? Date()) : Date()
     }
 
     func save(in context: ModelContext) throws {

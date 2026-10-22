@@ -166,6 +166,37 @@ struct CohortOperationsTests {
         }
     }
 
+    @Test func undoCannotReactivateCohortInArchivedTank() throws {
+        let tank = makeTank("A-1")
+        let cohort = makeCohort(count: 0, tank: tank, strain: makeStrain())
+        try CohortOperations.changeStatus(cohort, to: .lost, date: day, in: context)
+        tank.isArchived = true
+        try context.save()
+
+        let ended = try #require(cohort.timeline.first)
+        #expect(throws: CohortOperations.OperationError.tankArchived) {
+            try CohortOperations.deleteEvent(ended, in: context)
+        }
+        #expect(cohort.status == .lost)
+    }
+
+    @Test func mergeUndoIsBlockedWithoutChangingEitherCohort() throws {
+        let strain = makeStrain()
+        let keeper = makeCohort(count: 20, tank: makeTank("A-1"), strain: strain)
+        let otherTank = makeTank("B-1")
+        let other = makeCohort(count: 15, tank: otherTank, strain: strain)
+        try CohortOperations.merge(other, into: keeper, date: day, in: context)
+        otherTank.isArchived = true
+        try context.save()
+
+        let mergeEvent = try #require(keeper.timeline.first)
+        #expect(throws: CohortOperations.OperationError.tankArchived) {
+            try CohortOperations.deleteEvent(mergeEvent, in: context)
+        }
+        #expect(keeper.count == 35)
+        #expect(other.status == .merged)
+    }
+
     @Test func endingCohortCanBeUndone() throws {
         let cohort = makeCohort(count: 1, tank: makeTank("A-1"), strain: makeStrain())
         try CohortOperations.changeCount(cohort, change: .decrease(1, reason: .death), date: day, in: context)

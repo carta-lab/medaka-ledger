@@ -83,11 +83,13 @@ enum CountLedger {
         case adjust(Int)
     }
 
+    /// 作成の記録。匹数が分かっているときは reason を recount にして、0匹と未計数を見分ける（DECISIONS.md H）。
     static func created(_ state: CohortState, date: Date, note: String = "") -> LedgerEvent {
         LedgerEvent(
             kind: .created,
             date: date,
             countDelta: state.count ?? 0,
+            reason: state.count == nil ? nil : .recount,
             toTank: state.tank,
             previousCount: nil,
             previousStage: state.stage,
