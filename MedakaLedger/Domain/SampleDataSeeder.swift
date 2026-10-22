@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-// サンプルデータv0（ROADMAP.md 11/7、DECISIONS.md E、H）。容器6、系統2、群4。全て isSample = true。
+// サンプルデータ（ROADMAP.md 11/7、DECISIONS.md E、H）。容器6、系統2、群4に、親魚セット1、採卵ロット2、作業記録4（第2週）。全て isSample = true。
 // サンプルはFreeの上限に数えず、「サンプルを全削除」でまとめて消す。
 
 enum SampleDataSeeder {
@@ -61,6 +61,26 @@ enum SampleDataSeeder {
         try CohortOperations.changeCount(miyukiAdults, change: .recount(30), date: daysAgo(60), in: context)
         _ = try CohortOperations.split(miyukiAdults, amount: 10, to: tanks[5], label: "越冬用", date: daysAgo(30), in: context)
         try CohortOperations.changeStage(miyukiAdults, to: .adult, date: daysAgo(10), in: context)
+
+        // 繁殖（第2週）：楊貴妃の親魚セットと、育卵中の採卵ロット2件
+        let breedingSet = try BreedingOperations.createBreedingSet(
+            .init(
+                sire: yokihiAdults, dam: yokihiAdults, maleCount: 2, femaleCount: 4,
+                tank: tanks[0], startedAt: daysAgo(40), name: "", note: "", movesParents: false
+            ),
+            in: context
+        )
+        for (offset, eggs) in [(3, 40), (9, 60)] {
+            try BreedingOperations.recordEggBatch(
+                in: breedingSet, collectedAt: daysAgo(offset), eggCount: eggs,
+                container: tanks[2], containerName: "", waterTempC: nil, note: "", context: context
+            )
+        }
+
+        // 作業記録：A-1とA-2は20日前、B-1は60日前の水換え。A-3に水温
+        try MaintenanceOperations.record(on: [tanks[0], tanks[1]], kind: .waterChange, date: daysAgo(20), percent: 50, waterTempC: nil, note: "", in: context)
+        try MaintenanceOperations.record(on: [tanks[3]], kind: .waterChange, date: daysAgo(60), percent: 30, waterTempC: nil, note: "", in: context)
+        try MaintenanceOperations.record(on: [tanks[2]], kind: .temperature, date: daysAgo(2), percent: nil, waterTempC: 24, note: "", in: context)
 
         try context.save()
     }

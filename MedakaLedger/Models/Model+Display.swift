@@ -139,3 +139,97 @@ enum CohortText {
         date.formatted(.dateTime.month().day())
     }
 }
+
+// MARK: - 繁殖と作業記録
+
+extension SchemaV1.BreedingSet {
+    /// 一覧に出す名前。空なら「雄の系統×雌の系統 開始年月」（ARCHITECTURE.md 3.2）。
+    var displayName: String {
+        if !name.isEmpty { return name }
+        let sire = sireCohort?.strain?.breedName ?? "?"
+        let dam = damCohort?.strain?.breedName ?? "?"
+        let started = startedAt.formatted(.dateTime.year().month())
+        return "\(sire)×\(dam) \(started)"
+    }
+
+    var incubatingBatches: [EggBatch] {
+        (eggBatches ?? []).filter { $0.status == .incubating }
+    }
+
+    /// 採卵日の新しい順。
+    var sortedBatches: [EggBatch] {
+        (eggBatches ?? []).sorted { $0.collectedAt > $1.collectedAt }
+    }
+
+    static var activePredicate: Predicate<BreedingSet> {
+        #Predicate<BreedingSet> { $0.endedAt == nil }
+    }
+
+    static var endedPredicate: Predicate<BreedingSet> {
+        #Predicate<BreedingSet> { $0.endedAt != nil }
+    }
+}
+
+extension SchemaV1.EggBatch {
+    var status: EggBatchStatus {
+        get { EggBatchStatus(rawValue: statusRaw) ?? .incubating }
+        set { statusRaw = newValue.rawValue }
+    }
+
+    /// 親魚セットの名前と採卵日。通知や一覧の見出しに使う。
+    var title: String {
+        let name = breedingSet?.displayName ?? String(localized: "親魚セット未設定")
+        return "\(name) \(CohortText.shortDate(collectedAt))"
+    }
+
+    static var incubatingPredicate: Predicate<EggBatch> {
+        let incubating = EggBatchStatus.incubating.rawValue
+        return #Predicate<EggBatch> { $0.statusRaw == incubating }
+    }
+}
+
+extension SchemaV1.MaintenanceLog {
+    var kind: MaintenanceKind {
+        get { MaintenanceKind(rawValue: kindRaw) ?? .other }
+        set { kindRaw = newValue.rawValue }
+    }
+
+    /// 一覧と最近の記録に出す要点。
+    var summary: String {
+        switch kind {
+        case .waterChange:
+            percent.map { "\(kind.label) \($0.formatted())%" } ?? kind.label
+        case .temperature:
+            waterTempC.map { String(localized: "水温 \($0.formatted(.number.precision(.fractionLength(0...1))))℃") } ?? kind.label
+        default:
+            kind.label
+        }
+    }
+}
+
+extension SchemaV1.Tank {
+    /// 最終水換えの日。記録が無ければ nil。
+    var lastWaterChange: Date? {
+        (logs ?? []).filter { $0.kind == .waterChange }.map(\.date).max()
+    }
+
+    var recentLogs: [MaintenanceLog] {
+        (logs ?? []).sorted { $0.date > $1.date }
+    }
+}
+
+extension SchemaV1.MaintenanceLog {
+    static var recentDescriptor: FetchDescriptor<MaintenanceLog> {
+        var descriptor = FetchDescriptor<MaintenanceLog>(sortBy: [SortDescriptor(\MaintenanceLog.date, order: .reverse)])
+        descriptor.fetchLimit = 5
+        return descriptor
+    }
+}
+
+extension SchemaV1.EggBatch {
+    static var recentDescriptor: FetchDescriptor<EggBatch> {
+        var descriptor = FetchDescriptor<EggBatch>(sortBy: [SortDescriptor(\EggBatch.collectedAt, order: .reverse)])
+        descriptor.fetchLimit = 5
+        return descriptor
+    }
+}

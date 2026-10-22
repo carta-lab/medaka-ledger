@@ -4,7 +4,19 @@
     "%@　%@": {
       "extractionState": "manual"
     },
+    "%@〜%@": {
+      "extractionState": "manual"
+    },
+    "%@から": {
+      "extractionState": "manual"
+    },
+    "%@ごろ（±1日）": {
+      "extractionState": "manual"
+    },
     "%@で登録・%@": {
+      "extractionState": "manual"
+    },
+    "%@のロットが今日孵化予定です": {
       "extractionState": "manual"
     },
     "%@の群から%@を分けて登録": {
@@ -25,6 +37,15 @@
     "%@匹": {
       "extractionState": "manual"
     },
+    "%@日": {
+      "extractionState": "manual"
+    },
+    "%@日過ぎ": {
+      "extractionState": "manual"
+    },
+    "%@月": {
+      "extractionState": "manual"
+    },
     "%@（%@日目）": {
       "extractionState": "manual"
     },
@@ -38,6 +59,9 @@
       "extractionState": "manual"
     },
     "「%@」を登録しました": {
+      "extractionState": "manual"
+    },
+    "あと%@日": {
       "extractionState": "manual"
     },
     "あとで": {
@@ -55,7 +79,16 @@
     "うち雌（任意）": {
       "extractionState": "manual"
     },
+    "このロットから生まれた飼育中の群を選んでください。": {
+      "extractionState": "manual"
+    },
+    "このロットを廃棄しますか": {
+      "extractionState": "manual"
+    },
     "この容器に群はいません": {
+      "extractionState": "manual"
+    },
+    "この容器の記録": {
       "extractionState": "manual"
     },
     "この容器をアーカイブしますか": {
@@ -88,6 +121,12 @@
     "この群を終了しますか": {
       "extractionState": "manual"
     },
+    "この親魚セットは削除されました": {
+      "extractionState": "manual"
+    },
+    "この親魚セットを終了しますか": {
+      "extractionState": "manual"
+    },
     "この記録を削除しますか": {
       "extractionState": "manual"
     },
@@ -95,6 +134,9 @@
       "extractionState": "manual"
     },
     "すべてのデータを削除しますか": {
+      "extractionState": "manual"
+    },
+    "すべて見る": {
       "extractionState": "manual"
     },
     "そのまま": {
@@ -113,6 +155,9 @@
       "extractionState": "manual"
     },
     "まず系統を登録しましょう": {
+      "extractionState": "manual"
+    },
+    "まず親魚セットを組みましょう": {
       "extractionState": "manual"
     },
     "アーカイブ": {
@@ -143,6 +188,12 @@
       "extractionState": "manual"
     },
     "イベント": {
+      "extractionState": "manual"
+    },
+    "カップ名を入力": {
+      "extractionState": "manual"
+    },
+    "カップ名（任意）": {
       "extractionState": "manual"
     },
     "カップ（採卵用など）": {
@@ -211,7 +262,13 @@
     "ラベル": {
       "extractionState": "manual"
     },
+    "ラベル（任意）": {
+      "extractionState": "manual"
+    },
     "ラベル（例 親魚候補）": {
+      "extractionState": "manual"
+    },
+    "ロット": {
       "extractionState": "manual"
     },
     "・": {
@@ -245,6 +302,15 @@
       "extractionState": "manual"
     },
     "今の容器": {
+      "extractionState": "manual"
+    },
+    "今日": {
+      "extractionState": "manual"
+    },
+    "今日で終了": {
+      "extractionState": "manual"
+    },
+    "作業を記録": {
       "extractionState": "manual"
     },
     "作業記録": {
@@ -313,7 +379,16 @@
     "削除": {
       "extractionState": "manual"
     },
+    "削除された群": {
+      "extractionState": "manual"
+    },
     "削除できませんでした": {
+      "extractionState": "manual"
+    },
+    "割合は1から100の間で入れてください。": {
+      "extractionState": "manual"
+    },
+    "割合（％）": {
       "extractionState": "manual"
     },
     "匹": {
@@ -328,10 +403,19 @@
     "匹数が0になりました。": {
       "extractionState": "manual"
     },
+    "匹数を確かめてください。": {
+      "extractionState": "manual"
+    },
     "匹数（数えていなければ空のまま）": {
       "extractionState": "manual"
     },
     "卵": {
+      "extractionState": "manual"
+    },
+    "卵 %@個": {
+      "extractionState": "manual"
+    },
+    "卵の数（概数、任意）": {
       "extractionState": "manual"
     },
     "取消": {
@@ -349,10 +433,22 @@
     "同じ群どうしは統合できません。": {
       "extractionState": "manual"
     },
+    "同じ群を雄と雌の両方に選べます。": {
+      "extractionState": "manual"
+    },
     "同じ親魚セットから生まれた群どうし、または入手個体どうしだけ統合できます。": {
       "extractionState": "manual"
     },
     "名前（例 A-1）": {
+      "extractionState": "manual"
+    },
+    "名前（空なら自動）": {
+      "extractionState": "manual"
+    },
+    "品種名": {
+      "extractionState": "manual"
+    },
+    "品種名を入れてください。": {
       "extractionState": "manual"
     },
     "品種名（例 楊貴妃）": {
@@ -373,10 +469,46 @@
     "委託": {
       "extractionState": "manual"
     },
+    "子の系統": {
+      "extractionState": "manual"
+    },
+    "子の系統は「%@」に決まります。": {
+      "extractionState": "manual"
+    },
+    "子の系統は最初の孵化記録で決めます。": {
+      "extractionState": "manual"
+    },
+    "子の系統を決めてください。": {
+      "extractionState": "manual"
+    },
     "孵化": {
       "extractionState": "manual"
     },
     "孵化 %@": {
+      "extractionState": "manual"
+    },
+    "孵化を記録": {
+      "extractionState": "manual"
+    },
+    "孵化予定": {
+      "extractionState": "manual"
+    },
+    "孵化予定の通知も止まります。": {
+      "extractionState": "manual"
+    },
+    "孵化予定日": {
+      "extractionState": "manual"
+    },
+    "孵化予定日の朝にお知らせするため、次に通知の許可を求めます。": {
+      "extractionState": "manual"
+    },
+    "孵化予定日を計算できません": {
+      "extractionState": "manual"
+    },
+    "孵化予定日：%@": {
+      "extractionState": "manual"
+    },
+    "孵化数（概数、任意）": {
       "extractionState": "manual"
     },
     "孵化日": {
@@ -397,7 +529,13 @@
     "容器がありません": {
       "extractionState": "manual"
     },
+    "容器がありません。先に容器を登録しましょう。": {
+      "extractionState": "manual"
+    },
     "容器と系統を登録すると、群の記録をつけられます。": {
+      "extractionState": "manual"
+    },
+    "容器に水温を記録していると、その日ごとの水温で孵化予定日を計算します。": {
       "extractionState": "manual"
     },
     "容器を登録": {
@@ -407,6 +545,9 @@
       "extractionState": "manual"
     },
     "容器を編集": {
+      "extractionState": "manual"
+    },
+    "容器を選んでください。": {
       "extractionState": "manual"
     },
     "容器名・系統名で探す": {
@@ -433,6 +574,9 @@
     "廃棄": {
       "extractionState": "manual"
     },
+    "廃棄したロットには孵化を記録できません。": {
+      "extractionState": "manual"
+    },
     "後の記録があるため削除できません。計数修正か移動で直してください。": {
       "extractionState": "manual"
     },
@@ -445,22 +589,67 @@
     "採卵": {
       "extractionState": "manual"
     },
+    "採卵 卵%@個": {
+      "extractionState": "manual"
+    },
+    "採卵を記録": {
+      "extractionState": "manual"
+    },
+    "採卵を記録しました": {
+      "extractionState": "manual"
+    },
+    "採卵ロット": {
+      "extractionState": "manual"
+    },
+    "採卵ロットはまだありません": {
+      "extractionState": "manual"
+    },
+    "採卵日": {
+      "extractionState": "manual"
+    },
     "数え直した匹数": {
       "extractionState": "manual"
     },
     "数を確かめてください。": {
       "extractionState": "manual"
     },
+    "新しい系統": {
+      "extractionState": "manual"
+    },
+    "新しい群にする": {
+      "extractionState": "manual"
+    },
     "新しい群のラベル（任意）": {
+      "extractionState": "manual"
+    },
+    "既存の系統": {
+      "extractionState": "manual"
+    },
+    "既定の水温（℃）": {
       "extractionState": "manual"
     },
     "日付": {
       "extractionState": "manual"
     },
+    "早く孵った分と遅れた分は、同じ群に足すこともできます。": {
+      "extractionState": "manual"
+    },
+    "最初の孵化記録で決めます": {
+      "extractionState": "manual"
+    },
+    "最後の水換えからこの日数を超えた容器を、ホームで知らせます。": {
+      "extractionState": "manual"
+    },
     "最新の記録は左にスワイプして削除できます。匹数と容器が元に戻ります。": {
       "extractionState": "manual"
     },
+    "最終水換え": {
+      "extractionState": "manual"
+    },
     "最近の記録": {
+      "extractionState": "manual"
+    },
+    "期間": {
       "extractionState": "manual"
     },
     "期限を超えた容器はありません": {
@@ -490,7 +679,19 @@
     "水換え": {
       "extractionState": "manual"
     },
+    "水換え %@日前": {
+      "extractionState": "manual"
+    },
+    "水換え 今日": {
+      "extractionState": "manual"
+    },
     "水換えの期限超え": {
+      "extractionState": "manual"
+    },
+    "水換えの記録なし": {
+      "extractionState": "manual"
+    },
+    "水換えの警告": {
       "extractionState": "manual"
     },
     "水槽": {
@@ -499,7 +700,22 @@
     "水温": {
       "extractionState": "manual"
     },
+    "水温 %@℃": {
+      "extractionState": "manual"
+    },
     "水温の記録": {
+      "extractionState": "manual"
+    },
+    "水温を入れてください。": {
+      "extractionState": "manual"
+    },
+    "水温（℃、任意）": {
+      "extractionState": "manual"
+    },
+    "水温（℃、必須）": {
+      "extractionState": "manual"
+    },
+    "水温（任意。空なら%@℃）": {
       "extractionState": "manual"
     },
     "減った匹数": {
@@ -518,6 +734,15 @@
       "extractionState": "manual"
     },
     "産卵期": {
+      "extractionState": "manual"
+    },
+    "産卵期が近づいています": {
+      "extractionState": "manual"
+    },
+    "産卵期の月": {
+      "extractionState": "manual"
+    },
+    "産卵期はホームの並びと水換えの警告日数が変わります。産卵期の最初の月の前月15日に「親魚セットを組みましょう」とお知らせします。": {
       "extractionState": "manual"
     },
     "産卵期外": {
@@ -565,6 +790,18 @@
     "種類": {
       "extractionState": "manual"
     },
+    "稼働中": {
+      "extractionState": "manual"
+    },
+    "稼働中の親魚セットがありません。先に繁殖タブで親魚セットを組みましょう。": {
+      "extractionState": "manual"
+    },
+    "積算温度を水温で割った日数が、採卵日から孵化までの目安です。水温を入れなかったロットは、既定の水温で計算します。": {
+      "extractionState": "manual"
+    },
+    "積算温度（℃日）": {
+      "extractionState": "manual"
+    },
     "空き": {
       "extractionState": "manual"
     },
@@ -589,10 +826,25 @@
     "系統名・呼び名（任意）": {
       "extractionState": "manual"
     },
+    "系統名（任意）": {
+      "extractionState": "manual"
+    },
     "系統未設定": {
       "extractionState": "manual"
     },
+    "終了": {
+      "extractionState": "manual"
+    },
     "終了した群も表示": {
+      "extractionState": "manual"
+    },
+    "終了した親魚セットには採卵を記録できません。": {
+      "extractionState": "manual"
+    },
+    "終了する": {
+      "extractionState": "manual"
+    },
+    "終了すると、新しい採卵は記録できません。過去の記録は残ります。": {
       "extractionState": "manual"
     },
     "統合": {
@@ -643,6 +895,18 @@
     "育卵中": {
       "extractionState": "manual"
     },
+    "育卵中 %@": {
+      "extractionState": "manual"
+    },
+    "育卵中のロット": {
+      "extractionState": "manual"
+    },
+    "育卵中のロットはありません": {
+      "extractionState": "manual"
+    },
+    "育卵容器": {
+      "extractionState": "manual"
+    },
     "自店": {
       "extractionState": "manual"
     },
@@ -655,22 +919,43 @@
     "表現タグ": {
       "extractionState": "manual"
     },
+    "複数の容器を選ぶと、同じ内容を各容器に保存します。": {
+      "extractionState": "manual"
+    },
     "親": {
+      "extractionState": "manual"
+    },
+    "親の群が見つかりません。": {
+      "extractionState": "manual"
+    },
+    "親魚セット": {
       "extractionState": "manual"
     },
     "親魚セットから孵化": {
       "extractionState": "manual"
     },
-    "親魚セットと採卵の記録は、次の更新で使えるようになります。": {
+    "親魚セットがありません": {
       "extractionState": "manual"
     },
-    "親魚セットはまだありません": {
+    "親魚セットを組みましょう": {
+      "extractionState": "manual"
+    },
+    "親魚セットを組む": {
+      "extractionState": "manual"
+    },
+    "親魚セット未設定": {
       "extractionState": "manual"
     },
     "計数修正": {
       "extractionState": "manual"
     },
+    "記録の先": {
+      "extractionState": "manual"
+    },
     "記録はまだありません": {
+      "extractionState": "manual"
+    },
+    "設定": {
       "extractionState": "manual"
     },
     "譲渡": {
@@ -694,13 +979,55 @@
     "追加": {
       "extractionState": "manual"
     },
+    "選んでください": {
+      "extractionState": "manual"
+    },
     "針子": {
+      "extractionState": "manual"
+    },
+    "針子の容器": {
+      "extractionState": "manual"
+    },
+    "針子の容器を選んでください。": {
       "extractionState": "manual"
     },
     "閉じる": {
       "extractionState": "manual"
     },
+    "開始 %@": {
+      "extractionState": "manual"
+    },
+    "開始日": {
+      "extractionState": "manual"
+    },
+    "雄": {
+      "extractionState": "manual"
+    },
     "雄%@・雌%@": {
+      "extractionState": "manual"
+    },
+    "雄と雌の系統が違うので、子の系統をここで決めます。": {
+      "extractionState": "manual"
+    },
+    "雄と雌の群をこの容器へ移す": {
+      "extractionState": "manual"
+    },
+    "雄の匹数": {
+      "extractionState": "manual"
+    },
+    "雄の群": {
+      "extractionState": "manual"
+    },
+    "雄雌の匹数": {
+      "extractionState": "manual"
+    },
+    "雌": {
+      "extractionState": "manual"
+    },
+    "雌の匹数": {
+      "extractionState": "manual"
+    },
+    "雌の群": {
       "extractionState": "manual"
     },
     "雌雄の内訳": {
@@ -731,6 +1058,9 @@
       "extractionState": "manual"
     },
     "飼育中の群はありません": {
+      "extractionState": "manual"
+    },
+    "飼育中の群を選んでください。": {
       "extractionState": "manual"
     },
     "餌用": {

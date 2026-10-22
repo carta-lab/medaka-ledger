@@ -94,10 +94,12 @@ struct TankListView: View {
 }
 
 struct TankCard: View {
+    @Environment(AppSettings.self) private var settings
     let tank: Tank
 
     var body: some View {
         let cohorts = tank.activeCohorts
+        let water = TankWaterStatus(tank: tank, settings: settings)
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
                 Image(systemName: tank.kind.symbolName)
@@ -128,7 +130,18 @@ struct TankCard: View {
                 }
             }
         }
+        .padding(.bottom, 20)
         .frame(maxWidth: .infinity, minHeight: 88, alignment: .topLeading)
+        .overlay(alignment: .bottomLeading) {
+            Label {
+                Text(verbatim: water.text)
+            } icon: {
+                Image(systemName: "drop")
+            }
+            .font(.caption)
+            .foregroundStyle(water.isOverdue ? Theme.warning : .secondary)
+            .fontWeight(water.isOverdue ? .bold : .regular)
+        }
         .cardBackground()
         .contentShape(.rect)
     }
