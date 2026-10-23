@@ -61,10 +61,12 @@ struct LaunchOptions {
 
     static var current: LaunchOptions {
         let arguments = ProcessInfo.processInfo.arguments
-        let isUITest = arguments.contains("-uiTestSampleData")
+        let seeds = arguments.contains("-uiTestSampleData")
+        // -uiTestEmpty：サンプルなしの空のストア（初回の案内のスクリーンショット用）
+        let isUITest = seeds || arguments.contains("-uiTestEmpty")
         return LaunchOptions(
             usesInMemoryStore: isUITest,
-            seedsSampleData: isUITest,
+            seedsSampleData: seeds,
             isUITest: isUITest,
             grantsPro: arguments.contains("-uiTestPro")
         )

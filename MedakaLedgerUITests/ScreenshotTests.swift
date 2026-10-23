@@ -11,7 +11,7 @@ final class ScreenshotTests: XCTestCase {
     @MainActor
     func testCaptureMainScreens() {
         let app = XCUIApplication()
-        app.launchArguments = ["-uiTestSampleData", "-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
+        app.launchArguments = ["-uiTestSampleData", "-hasCompletedOnboarding", "YES", "-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
         app.launch()
 
         _ = app.navigationBars.firstMatch.waitForExistence(timeout: 10)
@@ -149,6 +149,93 @@ final class ScreenshotTests: XCTestCase {
             try screenshot.pngRepresentation.write(to: url)
         } catch {
             print("screenshot write failed: \(error)")
+        }
+    }
+
+    // MARK: - 第5週
+
+    /// 初回の案内（3ページ）。空のストアで、案内が済んでいない状態から始める。
+    @MainActor
+    func testCaptureOnboarding() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestEmpty", "-hasCompletedOnboarding", "NO", "-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
+        app.launch()
+
+        let next = app.buttons["onboardingNext"]
+        if next.waitForExistence(timeout: 10) {
+            snapshot("20-案内1")
+            next.tap()
+            sleepBriefly()
+            snapshot("21-案内2-容器")
+            if next.waitForExistence(timeout: 5) {
+                next.tap()
+                sleepBriefly()
+                let name = app.textFields["onboardingBreedName"]
+                if name.waitForExistence(timeout: 5) {
+                    name.tap()
+                    name.typeText("楊貴妃")
+                }
+                snapshot("22-案内3-系統")
+            }
+        }
+    }
+
+    /// Free：Paywall（設定のProから）。サンプルを入れた状態。
+    @MainActor
+    func testCaptureFreePaywall() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestSampleData", "-hasCompletedOnboarding", "YES", "-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
+        app.launch()
+
+        let settings = app.buttons["settingsButton"]
+        if settings.waitForExistence(timeout: 10) {
+            settings.tap()
+            let paywall = app.buttons["showPaywallButton"]
+            for _ in 0..<6 where !paywall.exists { app.swipeUp() }
+            snapshot("23-設定のPro")
+            if paywall.waitForExistence(timeout: 5) {
+                paywall.tap()
+                sleepBriefly()
+                snapshot("24-Paywall")
+            }
+        }
+    }
+
+    /// Pro：出品文、年別の集計、設定の雛形。
+    @MainActor
+    func testCaptureProScreens() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestSampleData", "-uiTestPro", "-hasCompletedOnboarding", "YES", "-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
+        app.launch()
+        _ = app.navigationBars.firstMatch.waitForExistence(timeout: 10)
+
+        tapTab(app, "販売")
+        let all = app.segmentedControls.buttons["全期間"]
+        if all.waitForExistence(timeout: 5) {
+            all.tap()
+            sleepBriefly()
+        }
+        snapshot("25-販売台帳のPro")
+
+        let menu = app.buttons["salesMenu"]
+        if menu.waitForExistence(timeout: 5) {
+            menu.tap()
+            let listing = app.buttons["listingMenuItem"]
+            if listing.waitForExistence(timeout: 5) {
+                listing.tap()
+                sleepBriefly()
+                let picker = app.buttons["listingCohortPicker"]
+                if picker.waitForExistence(timeout: 5) {
+                    picker.tap()
+                    sleepBriefly()
+                    let first = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "F1")).firstMatch
+                    if first.waitForExistence(timeout: 5) {
+                        first.tap()
+                        sleepBriefly()
+                    }
+                }
+                snapshot("26-出品文")
+            }
         }
     }
 }
