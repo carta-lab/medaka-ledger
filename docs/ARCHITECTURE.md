@@ -263,6 +263,8 @@ enum MaintenanceKind: String { case waterChange, topUp, cleaning, medication, te
 | `winterWaterChangeWarningDays` | Int | 45 | 産卵期外の水換え警告 |
 | `breedingSeasonMonths` | [Int] | [4,5,6,7,8,9] | 産卵期の月 |
 | `listingTemplate` | String | 既定の雛形 | 出品文テンプレ |
+| `listingGuaranteeText` | String | 空 | 出品文の `{死着保証}` に入る文（`DECISIONS.md` H 第5週） |
+| `listingNoticeText` | String | 空 | 出品文の `{注意事項}` に入る文 |
 | `hasCompletedOnboarding` | Bool | false | |
 | `lastBackupAt` | Date? | nil | バックアップ案内の判定 |
 
