@@ -7,6 +7,8 @@ import SwiftUI
 struct TankEditView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(ProStore.self) private var pro
+    @State private var gate = LimitGate()
     @Query(filter: Tank.unarchivedPredicate, sort: Tank.listSort) private var tanks: [Tank]
     @State private var model: TankEditModel
     @FocusState private var isNameFocused: Bool
@@ -50,6 +52,7 @@ struct TankEditView: View {
             .navigationTitle(model.isNew ? "容器を登録" : "容器を編集")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveTankButton") { save() }
+            .paywall(gate)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
@@ -74,7 +77,16 @@ struct TankEditView: View {
         }
     }
 
+    /// 新しい容器は、Freeの上限を確かめてから保存する（ARCHITECTURE.md 4.4）。編集は上限に関わらない。
     private func save() {
+        if model.isNew {
+            gate.attempt(.tanks, pro: pro, count: { LimitCounter.tanks(in: modelContext) }) { performSave() }
+        } else {
+            performSave()
+        }
+    }
+
+    private func performSave() {
         do {
             try model.save(in: modelContext)
             // 作成は「続けて登録」の確認を出すので、ここでは閉じない

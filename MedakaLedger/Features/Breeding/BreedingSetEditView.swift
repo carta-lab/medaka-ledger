@@ -7,6 +7,8 @@ import SwiftUI
 struct BreedingSetEditView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(ProStore.self) private var pro
+    @State private var gate = LimitGate()
     @Query(filter: Cohort.activePredicate, sort: \Cohort.createdAt) private var cohorts: [Cohort]
     @Query(filter: Tank.unarchivedPredicate, sort: Tank.listSort) private var tanks: [Tank]
     @State private var model = BreedingSetEditModel()
@@ -62,8 +64,11 @@ struct BreedingSetEditView: View {
             .navigationTitle("親魚セットを組む")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveBreedingSetButton") {
-                if model.save(in: modelContext) { dismiss() }
+                gate.attempt(.activeBreedingSets, pro: pro, count: { LimitCounter.activeBreedingSets(in: modelContext) }) {
+                    if model.save(in: modelContext) { dismiss() }
+                }
             }
+            .paywall(gate)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }

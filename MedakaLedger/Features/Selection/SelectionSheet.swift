@@ -8,6 +8,8 @@ import UIKit
 struct SelectionSheet: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(ProStore.self) private var pro
+    @State private var gate = LimitGate()
     @Query(filter: Tank.unarchivedPredicate, sort: Tank.listSort) private var tanks: [Tank]
     let cohort: Cohort
     @State private var model: SelectionModel
@@ -90,8 +92,12 @@ struct SelectionSheet: View {
             .navigationTitle("選別を記録")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveSelectionButton") {
-                if model.save(for: cohort, in: modelContext) { dismiss() }
+                // 選別に付ける写真は、新しい選別の記録に3枚まで（Free）
+                gate.attempt(.photosPerOwner, adding: model.photos.count, pro: pro, count: { 0 }) {
+                    if model.save(for: cohort, in: modelContext) { dismiss() }
+                }
             }
+            .paywall(gate)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
