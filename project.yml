@@ -29,6 +29,20 @@ targets:
     platform: iOS
     sources:
       - path: MedakaLedger
+    info:
+      # バックアップのファイル型（ARCHITECTURE.md 5.3）。生成された Info.plist に、下の INFOPLIST_KEY_* が足される
+      path: MedakaLedger/Info.plist
+      properties:
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: com.meldcarta.medakaledger.backup
+            UTTypeDescription: めだか台帳のバックアップ
+            UTTypeConformsTo:
+              - public.data
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - medakabackup
+              public.mime-type:
+                - application/x-medakabackup
     entitlements:
       path: MedakaLedger/MedakaLedger.entitlements
       properties:

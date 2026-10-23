@@ -75,8 +75,36 @@ extension HomeView {
         }
     }
 
+    /// 出品中の販売（SCREENS.md 2）。タップで販売の編集。
+    var listedSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("出品中")
+                    .font(.headline)
+                Spacer()
+                if listedSales.count > 5 {
+                    Button("すべて見る") { router.selectedTab = .sales }
+                        .font(.subheadline)
+                }
+            }
+            if listedSales.isEmpty {
+                Text("出品中の販売はありません")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            ForEach(listedSales.prefix(5)) { sale in
+                Button {
+                    model.editingSale = sale
+                } label: {
+                    SaleRow(record: SaleOperations.record(of: sale), title: sale.titleText)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
     var recentSection: some View {
-        let records = model.recentRecords(events: recentEvents, batches: recentBatches, logs: recentLogs)
+        let records = model.recentRecords(events: recentEvents, batches: recentBatches, logs: recentLogs, sales: recentSales)
         return VStack(alignment: .leading, spacing: 8) {
             Text("最近の記録")
                 .font(.headline)

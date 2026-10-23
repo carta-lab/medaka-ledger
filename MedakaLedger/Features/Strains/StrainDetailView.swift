@@ -1,7 +1,7 @@
 import SwiftData
 import SwiftUI
 
-// 系統詳細（SCREENS.md 4.3）。「群」「血統図」「写真」の切り替え。「販売」は第4週（DECISIONS.md B）。
+// 系統詳細（SCREENS.md 4.3）。「群」「血統図」「写真」「販売」の切り替え。
 
 struct StrainDetailView: View {
     @Environment(\.modelContext) private var modelContext
@@ -49,6 +49,8 @@ struct StrainDetailView: View {
                 lineageContent
             case .photos:
                 photosContent
+            case .sales:
+                salesContent
             }
         }
         .navigationTitle(strain.displayName)
@@ -80,6 +82,9 @@ struct StrainDetailView: View {
         }
         .sheet(isPresented: $model.isEditing) {
             StrainEditView(strain: strain)
+        }
+        .sheet(item: $model.editingSale) { sale in
+            SaleSheet(sale: sale)
         }
         .sheet(isPresented: $model.isAddingCohort) {
             NavigationStack {
@@ -164,6 +169,32 @@ struct StrainDetailView: View {
                         .padding(.vertical, 4)
                 } header: {
                     Text(verbatim: CohortText.generation(group.generation))
+                }
+            }
+        }
+    }
+
+    /// この系統の売上の累計と販売の一覧（SCREENS.md 4.3）。
+    @ViewBuilder
+    private var salesContent: some View {
+        let sales = (strain.sales ?? []).sorted { $0.date > $1.date }
+        if sales.isEmpty {
+            Section("販売") {
+                Text("この系統の販売はまだありません。群の詳細の「販売」から記録できます。")
+                    .foregroundStyle(.secondary)
+            }
+        } else {
+            Section("売上の累計") {
+                SalesSummaryRows(summary: SalesAggregations.summary(sales.map(SaleOperations.record(of:))))
+            }
+            Section("販売") {
+                ForEach(sales) { sale in
+                    Button {
+                        model.editingSale = sale
+                    } label: {
+                        SaleRow(record: SaleOperations.record(of: sale), title: sale.titleText)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }

@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-// サンプルデータ（ROADMAP.md 11/7、DECISIONS.md E、H）。容器6、系統2、群7（入手、分割、F1、F2）に、親魚セット3、採卵ロット4、選別3、作業記録4。全て isSample = true。
+// サンプルデータ（ROADMAP.md 11/7、DECISIONS.md E、H）。容器6、系統2、群7（入手、分割、F1、F2）に、親魚セット3、採卵ロット4、選別3、作業記録4、販売5。全て isSample = true。
 // サンプルはFreeの上限に数えず、「サンプルを全削除」でまとめて消す。
 
 enum SampleDataSeeder {
@@ -130,6 +130,27 @@ enum SampleDataSeeder {
         try MaintenanceOperations.record(on: [tanks[3]], kind: .waterChange, date: daysAgo(60), percent: 30, waterTempC: nil, note: "", in: context)
         try MaintenanceOperations.record(on: [tanks[2]], kind: .temperature, date: daysAgo(2), percent: nil, waterTempC: 24, note: "", in: context)
 
+        // 販売（第4週）：台帳の月別集計と状態の確認用。群の匹数は変えない
+        let salePlans: [(cohort: Cohort, daysAgo: Int, unit: SaleUnit, quantity: Int, unitPrice: Int, fee: Int, shipping: Int, channel: SaleChannel, status: SaleStatus, shipped: Int?)] = [
+            (yokihiAdults, 70, .fish, 2, 1500, 0, 0, .event, .sold, nil),
+            (f1, 40, .pair, 1, 8000, 800, 1200, .yahooAuction, .shipped, 38),
+            (f1, 25, .fish, 3, 1500, 0, 600, .ownShop, .sold, nil),
+            (miyukiAdults, 10, .fish, 5, 2000, 0, 0, .direct, .sold, nil),
+            (f2, 2, .pair, 2, 6000, 0, 0, .yahooAuction, .listed, nil),
+        ]
+        for plan in salePlans {
+            try SaleOperations.record(
+                .init(
+                    date: daysAgo(plan.daysAgo), cohort: plan.cohort, unit: plan.unit, quantity: plan.quantity,
+                    unitPrice: plan.unitPrice, totalPrice: plan.quantity * plan.unitPrice, fee: plan.fee,
+                    shippingCost: plan.shipping, channel: plan.channel, status: plan.status,
+                    shippedAt: plan.shipped.map(daysAgo)
+                ),
+                reducesCohort: false,
+                in: context
+            )
+        }
+
         try context.save()
     }
 
@@ -147,7 +168,8 @@ enum SampleDataSeeder {
         try context.save()
     }
 
-    static func deleteEverything(in context: ModelContext) throws {
+    /// すべて削除する。saves が false のときは保存しない（バックアップの置き換えで、読み込みが失敗したら巻き戻すため）。
+    static func deleteEverything(in context: ModelContext, saves: Bool = true) throws {
         try deleteAll(Photo.self, where: nil, in: context)
         try deleteAll(CohortEvent.self, where: nil, in: context)
         try deleteAll(SelectionEvent.self, where: nil, in: context)
@@ -158,7 +180,7 @@ enum SampleDataSeeder {
         try deleteAll(Cohort.self, where: nil, in: context)
         try deleteAll(Strain.self, where: nil, in: context)
         try deleteAll(Tank.self, where: nil, in: context)
-        try context.save()
+        if saves { try context.save() }
     }
 
     // MARK: - Private

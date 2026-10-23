@@ -233,3 +233,54 @@ extension SchemaV1.EggBatch {
         return descriptor
     }
 }
+
+// MARK: - 販売
+
+extension SchemaV1.Sale {
+    var unit: SaleUnit {
+        get { SaleUnit(rawValue: unitRaw) ?? .fish }
+        set { unitRaw = newValue.rawValue }
+    }
+
+    var channel: SaleChannel {
+        get { SaleChannel(rawValue: channelRaw) ?? .other }
+        set { channelRaw = newValue.rawValue }
+    }
+
+    var status: SaleStatus {
+        get { SaleStatus(rawValue: statusRaw) ?? .sold }
+        set { statusRaw = newValue.rawValue }
+    }
+
+    /// 「楊貴妃 F1」。品種名のスナップショットを使う。系統の指定が無い販売は「対象なし」。
+    var titleText: String {
+        guard !breedNameSnapshot.isEmpty else { return String(localized: "対象なし") }
+        return "\(breedNameSnapshot) \(CohortText.generation(generation))"
+    }
+
+    static var recentDescriptor: FetchDescriptor<Sale> {
+        var descriptor = FetchDescriptor<Sale>(sortBy: [SortDescriptor(\Sale.date, order: .reverse)])
+        descriptor.fetchLimit = 5
+        return descriptor
+    }
+
+    static var listedPredicate: Predicate<Sale> {
+        let listed = SaleStatus.listed.rawValue
+        return #Predicate<Sale> { $0.statusRaw == listed }
+    }
+}
+
+enum SaleText {
+    static func yen(_ amount: Int) -> String {
+        String(localized: "\(amount.formatted())円")
+    }
+
+    /// 「ペア×2」「卵×10」。
+    static func quantity(unit: SaleUnit, quantity: Int) -> String {
+        "\(unit.label)×\(quantity.formatted())"
+    }
+
+    static func month(year: Int, month: Int) -> String {
+        String(localized: "\(year.formatted(.number.grouping(.never)))年\(month.formatted())月")
+    }
+}

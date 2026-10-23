@@ -26,6 +26,7 @@ final class HomeModel {
 
     var activeSheet: Sheet?
     var hatchingBatch: EggBatch?
+    var editingSale: Sale?
     var isShowingDebugMenu = false
 
     /// 越冬中の群：屋外の容器にいる飼育中の群（DECISIONS.md E）。
@@ -64,7 +65,7 @@ final class HomeModel {
     }
 
     /// 最近の記録。種類ごとに最新5件を取得し、日付順に混ぜて5件にする（DECISIONS.md E、G 3-6）。
-    func recentRecords(events: [CohortEvent], batches: [EggBatch], logs: [MaintenanceLog]) -> [RecentRecord] {
+    func recentRecords(events: [CohortEvent], batches: [EggBatch], logs: [MaintenanceLog], sales: [Sale]) -> [RecentRecord] {
         let eventRecords = events.compactMap { event -> RecentRecord? in
             guard let cohort = event.cohort else { return nil }
             return RecentRecord(
@@ -96,6 +97,16 @@ final class HomeModel {
                 route: log.tank.map { .tank($0) }
             )
         }
-        return Aggregations.mergeRecent([eventRecords, batchRecords, logRecords], date: { $0.date }, limit: 5)
+        let saleRecords = sales.map { sale in
+            RecentRecord(
+                id: "sale-\(sale.id.uuidString)",
+                date: sale.date,
+                symbolName: "yensign.circle",
+                title: sale.titleText,
+                subtitle: "\(SaleText.quantity(unit: sale.unit, quantity: sale.quantity))・\(SaleText.yen(sale.totalPrice))・\(sale.status.label)",
+                route: sale.cohort.map { .cohort($0) } ?? sale.strain.map { .strain($0) }
+            )
+        }
+        return Aggregations.mergeRecent([eventRecords, batchRecords, logRecords, saleRecords], date: { $0.date }, limit: 5)
     }
 }

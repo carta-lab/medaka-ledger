@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 // ホーム（SCREENS.md 2）。今日やることと、注意が要る状態を一画面で見せる。
-// 出品中は第4週。増減のクイック操作は後の週。
+// 増減のクイック操作は後の週。
 
 struct HomeView: View {
     @Environment(AppSettings.self) var settings
@@ -11,6 +11,8 @@ struct HomeView: View {
     @Query(CohortEvent.recentDescriptor) var recentEvents: [CohortEvent]
     @Query(EggBatch.recentDescriptor) var recentBatches: [EggBatch]
     @Query(MaintenanceLog.recentDescriptor) var recentLogs: [MaintenanceLog]
+    @Query(Sale.recentDescriptor) var recentSales: [Sale]
+    @Query(filter: Sale.listedPredicate, sort: \Sale.date, order: .reverse) var listedSales: [Sale]
     @Query(filter: Cohort.activePredicate, sort: \Cohort.createdAt) var activeCohorts: [Cohort]
     @Query(filter: EggBatch.incubatingPredicate, sort: \EggBatch.collectedAt) var incubating: [EggBatch]
     @State var model = HomeModel()
@@ -33,6 +35,7 @@ struct HomeView: View {
                     quickActions
                 }
                 overdueSection
+                listedSection
                 recentSection
             }
             .padding(.horizontal, Theme.screenPadding)
@@ -70,6 +73,9 @@ struct HomeView: View {
         }
         .sheet(item: $model.hatchingBatch) { batch in
             HatchSheet(batch: batch)
+        }
+        .sheet(item: $model.editingSale) { sale in
+            SaleSheet(sale: sale)
         }
         #if DEBUG
         .sheet(isPresented: $model.isShowingDebugMenu) {

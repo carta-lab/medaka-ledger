@@ -8,6 +8,8 @@ enum AppTab: Hashable {
 @Observable
 final class Router {
     var selectedTab: AppTab = .home
+    /// バックアップを読み込んだあとに増やす。全ての画面を作り直し、消えたデータを開いたままの画面を残さない。
+    var dataEpoch = 0
 }
 
 /// 画面の遷移先。各タブの NavigationStack で routeDestinations() を付けて使う。

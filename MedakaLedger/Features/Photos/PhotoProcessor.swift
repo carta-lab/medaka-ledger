@@ -19,6 +19,15 @@ enum PhotoProcessor {
         return ProcessedPhoto(jpegData: jpeg, thumbnailData: thumbnailData, capturedAt: captureDate(of: source) ?? fallbackDate)
     }
 
+    /// 保存済みの写真（長辺1600px以下のJPEG）からサムネイルだけを作る。バックアップの読み込みで使う。
+    static func thumbnail(from data: Data) -> Data? {
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil),
+              let size = pixelSize(of: source),
+              let image = downsample(source, size: size, maxPixel: PhotoRules.thumbnailLongSide)
+        else { return nil }
+        return encode(image, qualities: [0.7], budget: Int.max)
+    }
+
     private static func pixelSize(of source: CGImageSource) -> (width: Int, height: Int)? {
         guard let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
               let width = properties[kCGImagePropertyPixelWidth] as? Int,

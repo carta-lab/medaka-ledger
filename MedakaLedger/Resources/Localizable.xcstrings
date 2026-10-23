@@ -16,6 +16,12 @@
     "%@で登録・%@": {
       "extractionState": "manual"
     },
+    "%@にする": {
+      "extractionState": "manual"
+    },
+    "%@に書き出したバックアップです。容器%@、系統%@、群%@、販売%@、写真%@。": {
+      "extractionState": "manual"
+    },
     "%@のロットが今日孵化予定です": {
       "extractionState": "manual"
     },
@@ -37,7 +43,22 @@
     "%@・%@": {
       "extractionState": "manual"
     },
+    "%@・%@・%@": {
+      "extractionState": "manual"
+    },
+    "%@件": {
+      "extractionState": "manual"
+    },
+    "%@円": {
+      "extractionState": "manual"
+    },
     "%@匹": {
+      "extractionState": "manual"
+    },
+    "%@年": {
+      "extractionState": "manual"
+    },
+    "%@年%@月": {
       "extractionState": "manual"
     },
     "%@日": {
@@ -73,6 +94,9 @@
     "3回目": {
       "extractionState": "manual"
     },
+    "CSVを書き出す": {
+      "extractionState": "manual"
+    },
     "NVボックス": {
       "extractionState": "manual"
     },
@@ -80,6 +104,12 @@
       "extractionState": "manual"
     },
     "　": {
+      "extractionState": "manual"
+    },
+    "「%@」は未計数なので、記録だけが残ります。": {
+      "extractionState": "manual"
+    },
+    "「%@」を%@匹から%@匹にします。": {
       "extractionState": "manual"
     },
     "「%@」を登録しました": {
@@ -103,6 +133,12 @@
     "うち雌（任意）": {
       "extractionState": "manual"
     },
+    "このバックアップは新しい版のアプリで作られています（版%@）。アプリを更新してから読み込んでください。": {
+      "extractionState": "manual"
+    },
+    "このファイルには、読み込めない場所を指す項目が含まれています。": {
+      "extractionState": "manual"
+    },
     "このロットから生まれた飼育中の群を選んでください。": {
       "extractionState": "manual"
     },
@@ -121,7 +157,13 @@
     "この容器をアーカイブしますか": {
       "extractionState": "manual"
     },
+    "この期間の販売はありません。期間を切り替えるか、販売を記録しましょう。": {
+      "extractionState": "manual"
+    },
     "この系統の群はまだありません": {
+      "extractionState": "manual"
+    },
+    "この系統の販売はまだありません。群の詳細の「販売」から記録できます。": {
       "extractionState": "manual"
     },
     "この系統をアーカイブしますか": {
@@ -157,6 +199,9 @@
     "この記録を削除しますか": {
       "extractionState": "manual"
     },
+    "この販売を削除しますか": {
+      "extractionState": "manual"
+    },
     "この選別の記録を削除しますか": {
       "extractionState": "manual"
     },
@@ -181,6 +226,9 @@
     "できませんでした": {
       "extractionState": "manual"
     },
+    "なし": {
+      "extractionState": "manual"
+    },
     "ほか%@群": {
       "extractionState": "manual"
     },
@@ -191,6 +239,15 @@
       "extractionState": "manual"
     },
     "まず親魚セットを組みましょう": {
+      "extractionState": "manual"
+    },
+    "まだありません": {
+      "extractionState": "manual"
+    },
+    "めだか台帳_%@": {
+      "extractionState": "manual"
+    },
+    "めだか台帳のバックアップとして読めませんでした。": {
       "extractionState": "manual"
     },
     "アーカイブ": {
@@ -271,13 +328,40 @@
     "データの保存場所を用意できませんでした。アプリを入れ直してもうまくいかない場合はお問い合わせください。": {
       "extractionState": "manual"
     },
+    "データの容量": {
+      "extractionState": "manual"
+    },
     "データを開けませんでした": {
       "extractionState": "manual"
     },
     "トリオ": {
       "extractionState": "manual"
     },
+    "トリオは1組を3匹として、群の匹数を減らします。": {
+      "extractionState": "manual"
+    },
     "トロ舟": {
+      "extractionState": "manual"
+    },
+    "バックアップと書き出し": {
+      "extractionState": "manual"
+    },
+    "バックアップのファイルを作れませんでした。空き容量を確かめてください。": {
+      "extractionState": "manual"
+    },
+    "バックアップはこの端末の外に保存してください。写真を含めないバックアップは小さくなりますが、追記でしか読み込めません。購入者メモもバックアップに入ります。": {
+      "extractionState": "manual"
+    },
+    "バックアップを書き出す（写真を含めない）": {
+      "extractionState": "manual"
+    },
+    "バックアップを書き出す（写真を含める）": {
+      "extractionState": "manual"
+    },
+    "バックアップを読み込みますか": {
+      "extractionState": "manual"
+    },
+    "バックアップを読み込む": {
       "extractionState": "manual"
     },
     "ヒレ": {
@@ -287,6 +371,9 @@
       "extractionState": "manual"
     },
     "ペア": {
+      "extractionState": "manual"
+    },
+    "ペアは1組を2匹として、群の匹数を減らします。": {
       "extractionState": "manual"
     },
     "ホーム": {
@@ -331,6 +418,9 @@
     "並べ替え": {
       "extractionState": "manual"
     },
+    "中止しました。": {
+      "extractionState": "manual"
+    },
     "今": {
       "extractionState": "manual"
     },
@@ -346,16 +436,28 @@
     "今と同じ状態です。": {
       "extractionState": "manual"
     },
+    "今のデータをすべて消して、バックアップの内容にします。元に戻せません。": {
+      "extractionState": "manual"
+    },
+    "今のデータを置き換えますか": {
+      "extractionState": "manual"
+    },
     "今の匹数": {
       "extractionState": "manual"
     },
     "今の容器": {
       "extractionState": "manual"
     },
+    "今年": {
+      "extractionState": "manual"
+    },
     "今日": {
       "extractionState": "manual"
     },
     "今日で終了": {
+      "extractionState": "manual"
+    },
+    "今月": {
       "extractionState": "manual"
     },
     "付け先": {
@@ -368,6 +470,9 @@
       "extractionState": "manual"
     },
     "代表写真": {
+      "extractionState": "manual"
+    },
+    "件数": {
       "extractionState": "manual"
     },
     "体型": {
@@ -424,16 +529,28 @@
     "入手日を記録する": {
       "extractionState": "manual"
     },
+    "全期間": {
+      "extractionState": "manual"
+    },
     "全滅": {
       "extractionState": "manual"
     },
     "写真": {
       "extractionState": "manual"
     },
+    "写真%@枚は本体が見つからず、読み込めませんでした。": {
+      "extractionState": "manual"
+    },
     "写真はありません": {
       "extractionState": "manual"
     },
     "写真はまだありません": {
+      "extractionState": "manual"
+    },
+    "写真は含まれていないので、追記だけできます。": {
+      "extractionState": "manual"
+    },
+    "写真を含まないバックアップは、置き換えでは読み込めません。追記を選んでください。": {
       "extractionState": "manual"
     },
     "写真を撮るためにカメラを使います": {
@@ -457,7 +574,13 @@
     "処分": {
       "extractionState": "manual"
     },
+    "処理しています": {
+      "extractionState": "manual"
+    },
     "出品中": {
+      "extractionState": "manual"
+    },
+    "出品中の販売はありません": {
       "extractionState": "manual"
     },
     "分けた先の群も消え、匹数が元に戻ります。": {
@@ -511,6 +634,15 @@
     "匹数（数えていなければ空のまま）": {
       "extractionState": "manual"
     },
+    "単位": {
+      "extractionState": "manual"
+    },
+    "単価": {
+      "extractionState": "manual"
+    },
+    "単価（円）": {
+      "extractionState": "manual"
+    },
     "卵": {
       "extractionState": "manual"
     },
@@ -520,7 +652,22 @@
     "卵の数（概数、任意）": {
       "extractionState": "manual"
     },
+    "卵は群の匹数を減らしません。": {
+      "extractionState": "manual"
+    },
     "取消": {
+      "extractionState": "manual"
+    },
+    "取消と出品中も含めて、状態の列に書き出します。ExcelやNumbersで開けます。": {
+      "extractionState": "manual"
+    },
+    "合計": {
+      "extractionState": "manual"
+    },
+    "合計が空のときは、数量×単価で計算します。値引きなどで違うときは、合計に入れてください。": {
+      "extractionState": "manual"
+    },
+    "合計（円）": {
       "extractionState": "manual"
     },
     "同じ世代の群どうしだけ統合できます。": {
@@ -542,6 +689,9 @@
       "extractionState": "manual"
     },
     "名前（空なら自動）": {
+      "extractionState": "manual"
+    },
+    "品種": {
       "extractionState": "manual"
     },
     "品種名": {
@@ -569,6 +719,12 @@
       "extractionState": "manual"
     },
     "増減": {
+      "extractionState": "manual"
+    },
+    "売上": {
+      "extractionState": "manual"
+    },
+    "売上の累計": {
       "extractionState": "manual"
     },
     "売約": {
@@ -640,6 +796,9 @@
     "容器": {
       "extractionState": "manual"
     },
+    "容器%@、系統%@、群%@、販売%@、写真%@を読み込みました。": {
+      "extractionState": "manual"
+    },
     "容器がありません": {
       "extractionState": "manual"
     },
@@ -676,6 +835,12 @@
     "容量（リットル）": {
       "extractionState": "manual"
     },
+    "対象": {
+      "extractionState": "manual"
+    },
+    "対象なし": {
+      "extractionState": "manual"
+    },
     "屋外": {
       "extractionState": "manual"
     },
@@ -683,6 +848,9 @@
       "extractionState": "manual"
     },
     "屋外の容器にいる群はありません": {
+      "extractionState": "manual"
+    },
+    "年別": {
       "extractionState": "manual"
     },
     "廃棄": {
@@ -704,6 +872,12 @@
       "extractionState": "manual"
     },
     "成魚": {
+      "extractionState": "manual"
+    },
+    "手数料": {
+      "extractionState": "manual"
+    },
+    "手数料（円）": {
       "extractionState": "manual"
     },
     "掃除": {
@@ -739,6 +913,18 @@
     "数を確かめてください。": {
       "extractionState": "manual"
     },
+    "数量": {
+      "extractionState": "manual"
+    },
+    "数量か金額が大きすぎます。数量は100万まで、金額は1兆円までです。": {
+      "extractionState": "manual"
+    },
+    "数量の分だけ、群の匹数を減らします。": {
+      "extractionState": "manual"
+    },
+    "数量は1以上で入れてください。": {
+      "extractionState": "manual"
+    },
     "新しい系統": {
       "extractionState": "manual"
     },
@@ -757,10 +943,16 @@
     "日付": {
       "extractionState": "manual"
     },
+    "日齢": {
+      "extractionState": "manual"
+    },
     "早く孵った分と遅れた分は、同じ群に足すこともできます。": {
       "extractionState": "manual"
     },
     "書き出す": {
+      "extractionState": "manual"
+    },
+    "書き出す件数": {
       "extractionState": "manual"
     },
     "書き出せませんでした": {
@@ -769,10 +961,16 @@
     "最初の孵化記録で決めます": {
       "extractionState": "manual"
     },
+    "最初の販売を記録しましょう": {
+      "extractionState": "manual"
+    },
     "最後の水換えからこの日数を超えた容器を、ホームで知らせます。": {
       "extractionState": "manual"
     },
     "最新の記録は左にスワイプして削除できます。匹数と容器が元に戻ります。": {
+      "extractionState": "manual"
+    },
+    "最終バックアップ": {
       "extractionState": "manual"
     },
     "最終水換え": {
@@ -862,7 +1060,13 @@
     "減った匹数": {
       "extractionState": "manual"
     },
+    "減らさない": {
+      "extractionState": "manual"
+    },
     "減らす": {
+      "extractionState": "manual"
+    },
+    "状態": {
       "extractionState": "manual"
     },
     "状態の変更": {
@@ -890,6 +1094,12 @@
       "extractionState": "manual"
     },
     "発泡スチロール": {
+      "extractionState": "manual"
+    },
+    "発送日": {
+      "extractionState": "manual"
+    },
+    "発送日を入れる": {
       "extractionState": "manual"
     },
     "発送済": {
@@ -926,6 +1136,9 @@
       "extractionState": "manual"
     },
     "稚魚まとめ": {
+      "extractionState": "manual"
+    },
+    "稚魚まとめは、入れた匹数だけ群の匹数を減らします。": {
       "extractionState": "manual"
     },
     "種類": {
@@ -976,6 +1189,12 @@
     "系統未設定": {
       "extractionState": "manual"
     },
+    "純額": {
+      "extractionState": "manual"
+    },
+    "純額 %@": {
+      "extractionState": "manual"
+    },
     "終了": {
       "extractionState": "manual"
     },
@@ -989,6 +1208,9 @@
       "extractionState": "manual"
     },
     "終了すると、新しい採卵は記録できません。過去の記録は残ります。": {
+      "extractionState": "manual"
+    },
+    "終了日": {
       "extractionState": "manual"
     },
     "結果": {
@@ -1024,7 +1246,13 @@
     "置き場所をまたいで動かすときは、容器の編集で置き場所を変えてください。": {
       "extractionState": "manual"
     },
+    "置き換える": {
+      "extractionState": "manual"
+    },
     "群": {
+      "extractionState": "manual"
+    },
+    "群から減らす匹数": {
       "extractionState": "manual"
     },
     "群が見つかりません。": {
@@ -1033,10 +1261,22 @@
     "群のタイムラインもすべて消えます。元に戻せません。": {
       "extractionState": "manual"
     },
+    "群の一覧": {
+      "extractionState": "manual"
+    },
+    "群の一覧をCSVで書き出す": {
+      "extractionState": "manual"
+    },
+    "群の匹数を減らしますか": {
+      "extractionState": "manual"
+    },
     "群を削除": {
       "extractionState": "manual"
     },
     "群を編集": {
+      "extractionState": "manual"
+    },
+    "群を選ぶと、系統と世代が入ります。群を選ばない販売は、系統だけ選べます。": {
       "extractionState": "manual"
     },
     "群を選ぶと、親魚セットをたどって、雄側と雌側の祖先を木で表示します。": {
@@ -1120,6 +1360,9 @@
     "記録だけが消えます。匹数と、分けた群は元に戻りません。": {
       "extractionState": "manual"
     },
+    "記録だけが消えます。群の匹数は元に戻りません。": {
+      "extractionState": "manual"
+    },
     "記録の先": {
       "extractionState": "manual"
     },
@@ -1132,16 +1375,43 @@
     "説明（任意）": {
       "extractionState": "manual"
     },
+    "読み込みました": {
+      "extractionState": "manual"
+    },
+    "読み込めませんでした": {
+      "extractionState": "manual"
+    },
     "譲渡": {
       "extractionState": "manual"
     },
     "販売": {
       "extractionState": "manual"
     },
+    "販売CSV": {
+      "extractionState": "manual"
+    },
+    "販売の編集": {
+      "extractionState": "manual"
+    },
     "販売の記録はまだありません": {
       "extractionState": "manual"
     },
-    "販売台帳は、次の更新で使えるようになります。": {
+    "販売を記録": {
+      "extractionState": "manual"
+    },
+    "販売台帳_%@_%@": {
+      "extractionState": "manual"
+    },
+    "販売（%@×%@）": {
+      "extractionState": "manual"
+    },
+    "販路": {
+      "extractionState": "manual"
+    },
+    "購入者メモ": {
+      "extractionState": "manual"
+    },
+    "購入者メモは、この端末とバックアップにだけ保存されます。": {
       "extractionState": "manual"
     },
     "越冬中の群": {
@@ -1156,6 +1426,18 @@
     "追加できない写真がありました": {
       "extractionState": "manual"
     },
+    "追記する": {
+      "extractionState": "manual"
+    },
+    "追記は、同じものを上書きして、無いものを足します。": {
+      "extractionState": "manual"
+    },
+    "送料": {
+      "extractionState": "manual"
+    },
+    "送料（円）": {
+      "extractionState": "manual"
+    },
     "選んでください": {
       "extractionState": "manual"
     },
@@ -1166,6 +1448,9 @@
       "extractionState": "manual"
     },
     "選別を記録": {
+      "extractionState": "manual"
+    },
+    "金額は0円以上で入れてください。": {
       "extractionState": "manual"
     },
     "針子": {
@@ -1211,6 +1496,9 @@
       "extractionState": "manual"
     },
     "雄雌の匹数": {
+      "extractionState": "manual"
+    },
+    "集計は売約と発送済の販売です。出品中と取消は入りません。": {
       "extractionState": "manual"
     },
     "雌": {

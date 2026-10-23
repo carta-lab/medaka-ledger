@@ -383,6 +383,7 @@ UTTypeは `com.meldcarta.medakaledger.backup` とし、`public.data` に適合�
 ```
 
 `manifest.json` のモデルはSwiftDataの属性をそのままキーにし、リレーションはIDで表す。
+日付はJSONEncoderの既定（2001-01-01 UTCからの秒数）で書き、サムネイルは読み込みのときに作り直す（`DECISIONS.md` H 第4週）。
 読み込みは `schemaVersion` を見て変換し、未知のバージョンは拒否する。
 読み込みモードは「置き換え」（全削除してから入れる）と「追記」（IDが同じものは上書き、なければ追加）。
 写真を含めない軽量版（manifest.jsonだけ）も選べる。軽量版は「追記」でだけ読み込める。
