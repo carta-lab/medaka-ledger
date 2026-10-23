@@ -10,6 +10,8 @@ final class Router {
     var selectedTab: AppTab = .home
     /// バックアップを読み込んだあとに増やす。全ての画面を作り直し、消えたデータを開いたままの画面を残さない。
     var dataEpoch = 0
+    /// 初回の案内を出す。起動時に、案内が済んでいなければ真にする。
+    var showsOnboarding = false
 }
 
 /// 画面の遷移先。各タブの NavigationStack で routeDestinations() を付けて使う。

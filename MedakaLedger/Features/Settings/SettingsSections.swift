@@ -88,7 +88,7 @@ struct ListingTemplateView: View {
 struct SampleDataSection: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Router.self) private var router
-    @Query(filter: #Predicate<Tank> { $0.isSample == true }) private var sampleTanks: [Tank]
+    @Query(filter: #Predicate<Tank> { $0.isSample == true }, sort: \Tank.createdAt) private var sampleTanks: [Tank]
     @State private var isWorking = false
     @State private var isConfirmingDelete = false
     @State private var error: UserFacingError?
@@ -100,25 +100,25 @@ struct SampleDataSection: View {
             }
             .disabled(isWorking || !sampleTanks.isEmpty)
             .accessibilityIdentifier("seedSampleDataButton")
+            .errorAlert($error)
             Button("サンプルデータを全削除", role: .destructive) {
                 isConfirmingDelete = true
             }
             .disabled(isWorking || sampleTanks.isEmpty)
             .accessibilityIdentifier("deleteSampleDataButton")
+            .confirmationDialog("サンプルデータを全削除しますか", isPresented: $isConfirmingDelete, titleVisibility: .visible) {
+                Button("削除", role: .destructive) {
+                    run { worker in try await worker.deleteSamples() }
+                }
+                Button("キャンセル", role: .cancel) {}
+            } message: {
+                Text("サンプルの容器、系統、群、記録、写真が消えます。元に戻せません。")
+            }
         } header: {
             Text("サンプルデータ")
         } footer: {
             Text("使い方を試すためのデータです。Freeの上限には数えません。自分の記録は消えません。")
         }
-        .confirmationDialog("サンプルデータを全削除しますか", isPresented: $isConfirmingDelete, titleVisibility: .visible) {
-            Button("削除", role: .destructive) {
-                run { worker in try await worker.deleteSamples() }
-            }
-            Button("キャンセル", role: .cancel) {}
-        } message: {
-            Text("サンプルの容器、系統、群、記録、写真が消えます。元に戻せません。")
-        }
-        .errorAlert($error)
     }
 
     private func run(_ operation: @escaping @Sendable (SampleDataActor) async throws -> Void) {

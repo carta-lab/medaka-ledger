@@ -4,7 +4,7 @@ import SwiftUI
 @main
 struct MedakaLedgerApp: App {
     @State private var settings: AppSettings
-    @State private var router = Router()
+    @State private var router: Router
     @State private var scheduler: NotificationScheduler
     @State private var pro: ProStore
     private let containerResult: Result<ModelContainer, any Error>
@@ -12,6 +12,9 @@ struct MedakaLedgerApp: App {
     init() {
         let settings = AppSettings()
         _settings = State(initialValue: settings)
+        let router = Router()
+        router.showsOnboarding = !settings.hasCompletedOnboarding
+        _router = State(initialValue: router)
         _scheduler = State(initialValue: NotificationScheduler(settings: settings))
         let launch = LaunchOptions.current
         _pro = State(initialValue: ProStore(backend: Self.makeBackend(launch)))
@@ -85,6 +88,11 @@ struct UITestProBackend: ProBackend {
 #endif
 
 struct RootView: View {
+    /// 案内の容器の名前の初期値のために、今ある容器の名前を取る。
+    private func existingTankNames() -> [String] {
+        ((try? modelContext.fetch(FetchDescriptor<Tank>(sortBy: Tank.listSort))) ?? []).map(\.name)
+    }
+
     @Environment(Router.self) private var router
     @Environment(NotificationScheduler.self) private var scheduler
     @Environment(ProStore.self) private var pro
@@ -111,6 +119,9 @@ struct RootView: View {
             }
         }
         .id(router.dataEpoch)
+        .fullScreenCover(isPresented: $router.showsOnboarding) {
+            OnboardingView(existingTankNames: existingTankNames())
+        }
         // 起動時とフォアグラウンドに戻ったとき、孵化予定の通知を計画し直す
         .task(id: scenePhase) {
             if scenePhase == .active {
