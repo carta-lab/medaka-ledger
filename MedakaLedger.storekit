@@ -1,7 +1,23 @@
 {
   "identifier": "54A15294-BC85-4BAF-B2D9-1F0C999F6CDD",
   "nonRenewingSubscriptions": [],
-  "products": [],
+  "products": [
+    {
+      "displayPrice": "1200",
+      "familyShareable": false,
+      "internalID": "6740001200",
+      "localizations": [
+        {
+          "description": "容器と系統の上限をなくし、血統図の全世代、年別集計、販売CSV、出品文を使えます。買い切りです。",
+          "displayName": "めだか台帳 Pro",
+          "locale": "ja"
+        }
+      ],
+      "productID": "com.meldcarta.medakaledger.pro",
+      "referenceName": "Pro",
+      "type": "NonConsumable"
+    }
+  ],
   "settings": {
     "_failTransactionsEnabled": false,
     "_locale": "ja_JP",
