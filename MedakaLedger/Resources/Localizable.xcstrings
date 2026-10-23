@@ -541,6 +541,9 @@
     "世代": {
       "extractionState": "manual"
     },
+    "世代が多いため、%@世代前までを表示しています": {
+      "extractionState": "manual"
+    },
     "並べ替え": {
       "extractionState": "manual"
     },

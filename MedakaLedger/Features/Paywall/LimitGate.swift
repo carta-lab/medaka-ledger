@@ -16,6 +16,8 @@ final class LimitGate {
     }
 
     var request: Request?
+    /// 購入できたあとに続ける操作。Paywallのシートが閉じ終わってから実行する。
+    @ObservationIgnored private var pendingContinuation: (@MainActor () -> Void)?
 
     /// 数を増やす保存の前に呼ぶ。count は確認が済んでから数える。
     func attempt(
@@ -53,13 +55,18 @@ final class LimitGate {
         request = Request(reason: reason, onPurchased: onPurchased)
     }
 
-    /// 購入できたとき。シートを閉じてから、止めていた操作を続ける。
+    /// 購入できたとき。シートを閉じる。止めていた操作は、閉じ終わってから paywallDismissed で続ける。
+    /// 閉じるアニメーションの途中で別のシートを開くと、開けないことがあるため。
     func completePurchase(_ request: Request) {
+        pendingContinuation = request.onPurchased
         self.request = nil
-        let continuation = request.onPurchased
-        Task { @MainActor in
-            continuation()
-        }
+    }
+
+    /// Paywallのシートが閉じ終わったとき。購入できていれば、止めていた操作を続ける。
+    func paywallDismissed() {
+        let continuation = pendingContinuation
+        pendingContinuation = nil
+        continuation?()
     }
 }
 
@@ -75,7 +82,7 @@ private struct PaywallPresentation: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .sheet(item: $gate.request) { request in
+            .sheet(item: $gate.request, onDismiss: { gate.paywallDismissed() }) { request in
                 PaywallView(reason: request.reason) {
                     gate.completePurchase(request)
                 }

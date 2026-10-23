@@ -1,5 +1,5 @@
 #!/bin/bash
-# XcodeのないLinuxで、Apple固有のフレームワークに依存しないロジック（Domain/、Export/ と列挙型）を
+# XcodeのないLinuxで、Apple固有のフレームワークに依存しないロジック（Domain/、Export/、Store/ と列挙型）を
 # Swift Testingで検証する。Dockerの swift イメージを使う。
 #   使い方: scripts/linux-check.sh
 # SwiftData、SwiftUI、UIKitを import するファイルは対象外（CIのmacOSでだけ検証する）。
@@ -16,7 +16,7 @@ is_portable() {
   ! grep -qE '^import (SwiftData|SwiftUI|UIKit|StoreKit|PhotosUI|Charts|XCTest|AppleArchive)' "$1"
 }
 
-for file in "$ROOT"/MedakaLedger/Domain/*.swift "$ROOT"/MedakaLedger/Export/*.swift "$ROOT"/MedakaLedger/Models/Enums.swift "$ROOT"/MedakaLedger/Models/Enums+Label.swift; do
+for file in "$ROOT"/MedakaLedger/Domain/*.swift "$ROOT"/MedakaLedger/Export/*.swift "$ROOT"/MedakaLedger/Store/*.swift "$ROOT"/MedakaLedger/Models/Enums.swift "$ROOT"/MedakaLedger/Models/Enums+Label.swift; do
   if is_portable "$file"; then cp "$file" "$WORK/Sources/MedakaLedger/"; fi
 done
 for file in "$ROOT"/MedakaLedgerTests/*.swift; do

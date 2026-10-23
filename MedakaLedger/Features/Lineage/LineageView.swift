@@ -40,7 +40,12 @@ struct LineageView: View {
                     )
                 }
                 .safeAreaInset(edge: .top) {
-                    if tree.hasTruncation, pro.status == .free {
+                    if tree.hasTruncation, pro.isPro {
+                        Text(verbatim: String(localized: "世代が多いため、\(tree.depth.formatted())世代前までを表示しています"))
+                            .font(.subheadline)
+                            .frame(maxWidth: .infinity, minHeight: Theme.minButtonHeight)
+                            .background(.bar)
+                    } else if tree.hasTruncation, pro.status == .free {
                         Button {
                             gate.present(reason: .feature(.fullLineage))
                         } label: {
