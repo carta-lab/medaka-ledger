@@ -2,12 +2,14 @@ import SwiftData
 import SwiftUI
 
 // 販売タブ（SCREENS.md 8.1）。期間の切り替えと集計、月ごとのセクションに販売の行。
-// Proの限定（年別集計、CSV）は第5週で ProStore をつなぐ。それまでは全て使える（DECISIONS.md H）。
+// Proの限定は、年別の集計、CSVの書き出し、出品文。確認が済むまでは出さない（DECISIONS.md G 3-10）。
 
 struct SalesView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(ProStore.self) private var pro
     @Query(sort: \Sale.date, order: .reverse) private var sales: [Sale]
     @State private var model = SalesModel()
+    @State private var gate = LimitGate()
 
     var body: some View {
         let ledger = model.ledger(for: sales)
@@ -37,11 +39,17 @@ struct SalesView: View {
                         Label("販売を記録", systemImage: "plus")
                     }
                     Button {
-                        model.isExporting = true
+                        gate.requirePro(.salesCSV, pro: pro) { model.isExporting = true }
                     } label: {
-                        Label("CSVを書き出す", systemImage: "square.and.arrow.up")
+                        Label("CSVを書き出す", systemImage: pro.isPro ? "square.and.arrow.up" : "lock")
                     }
                     .disabled(sales.isEmpty)
+                    Button {
+                        gate.requirePro(.listingText, pro: pro) { model.isShowingListing = true }
+                    } label: {
+                        Label("出品文を作る", systemImage: pro.isPro ? "text.badge.plus" : "lock")
+                    }
+                    .accessibilityIdentifier("listingMenuItem")
                 } label: {
                     Label("メニュー", systemImage: "plus.circle")
                 }
@@ -54,6 +62,10 @@ struct SalesView: View {
         .sheet(item: $model.editing) { sale in
             SaleSheet(sale: sale)
         }
+        .sheet(isPresented: $model.isShowingListing) {
+            ListingSheet()
+        }
+        .paywall(gate)
         .sheet(isPresented: $model.isExporting) {
             SalesExportSheet(records: sales.map(SaleOperations.record(of:)))
         }
@@ -86,7 +98,18 @@ struct SalesView: View {
                 Text("集計は売約と発送済の販売です。出品中と取消は入りません。")
             }
 
-            if model.period == .all {
+            if model.period == .all, pro.status == .free {
+                Section {
+                    Button {
+                        gate.present(reason: .feature(.yearlySummary))
+                    } label: {
+                        Label("年別の集計はProで見られます", systemImage: "lock")
+                    }
+                    .accessibilityIdentifier("yearlySummaryProButton")
+                }
+            }
+
+            if model.period == .all, pro.isPro {
                 let years = SalesAggregations.yearSummaries(ledger.records, calendar: .current)
                 if !years.isEmpty {
                     Section("年別") {

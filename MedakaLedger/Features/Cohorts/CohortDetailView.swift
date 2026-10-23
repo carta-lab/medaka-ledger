@@ -7,8 +7,10 @@ import SwiftUI
 struct CohortDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(ProStore.self) private var pro
     @Bindable var cohort: Cohort
     @State private var model = CohortDetailModel()
+    @State private var gate = LimitGate()
 
     var body: some View {
         if cohort.isDeleted {
@@ -48,6 +50,11 @@ struct CohortDetailView: View {
                         Label("段階の変更", systemImage: "chart.line.uptrend.xyaxis")
                     }
                     .disabled(!cohort.isActive)
+                    Button {
+                        gate.requirePro(.listingText, pro: pro) { model.open(.listing, cohort: cohort) }
+                    } label: {
+                        Label("出品文を作る", systemImage: pro.isPro ? "text.badge.plus" : "lock")
+                    }
                     NavigationLink(value: Route.lineage(cohort)) {
                         Label("血統図", systemImage: "list.bullet.indent")
                     }
@@ -87,6 +94,7 @@ struct CohortDetailView: View {
             case .stage: StageChangeSheet(cohort: cohort)
             case .merge: MergeCohortSheet(cohort: cohort)
             case .edit: CohortEditView(cohort: cohort)
+            case .listing: ListingSheet(cohort: cohort)
             }
         }
         .confirmationDialog("この群を終了しますか", isPresented: $model.isAskingToEnd, titleVisibility: .visible) {
@@ -133,6 +141,7 @@ struct CohortDetailView: View {
             Text("群のタイムラインもすべて消えます。元に戻せません。")
         }
         .errorAlert($model.error)
+        .paywall(gate)
     }
 
     private var summarySection: some View {

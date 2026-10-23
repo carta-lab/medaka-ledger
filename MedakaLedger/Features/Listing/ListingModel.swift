@@ -7,8 +7,14 @@ import UIKit
 @MainActor
 @Observable
 final class ListingModel {
-    var cohort: Cohort?
-    /// 消した行（組み立てた行の番号）。群を変えたら戻す。
+    /// 群を変えたら、消した行と「コピーしました」を戻す。
+    var cohort: Cohort? {
+        didSet {
+            removedLines = []
+            didCopy = false
+        }
+    }
+    /// 消した行（組み立てた行の番号）。
     private(set) var removedLines: Set<Int> = []
     var didCopy = false
 
@@ -23,12 +29,6 @@ final class ListingModel {
             input: ListingSource.input(for: cohort, settings: settings)
         )
         return text.components(separatedBy: "\n")
-    }
-
-    func select(_ cohort: Cohort?) {
-        self.cohort = cohort
-        removedLines = []
-        didCopy = false
     }
 
     func remove(_ index: Int) {

@@ -15,11 +15,12 @@ struct ListingSheet: View {
     }
 
     var body: some View {
+        @Bindable var model = model
         let lines = model.lines(settings: settings)
         NavigationStack {
             Form {
                 Section {
-                    Picker("群", selection: Binding(get: { model.cohort }, set: { model.select($0) })) {
+                    Picker("群", selection: $model.cohort) {
                         Text("選んでください").tag(Cohort?.none)
                         ForEach(cohorts) { cohort in
                             Text(verbatim: "\(cohort.strainName) \(cohort.generationLabel)・\(cohort.tankName)")
