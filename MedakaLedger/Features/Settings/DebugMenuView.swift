@@ -38,6 +38,7 @@ struct DebugMenuView: View {
                     ProgressView()
                 }
             }
+            .themedBackground()
             .navigationTitle("デバッグ")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -63,6 +63,7 @@ struct ListingSheet: View {
                     }
                 }
             }
+            .themedBackground()
             .navigationTitle("出品文")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(

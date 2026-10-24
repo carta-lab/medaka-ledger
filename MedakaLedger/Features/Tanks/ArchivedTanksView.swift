@@ -16,6 +16,7 @@ struct ArchivedTanksView: View {
                 }
             }
         }
+        .themedBackground()
         .navigationTitle("アーカイブ済みの容器")
     }
 }

@@ -61,6 +61,7 @@ struct BreedingSetEditView: View {
                     }
                 }
             }
+            .themedBackground()
             .navigationTitle("親魚セットを組む")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveBreedingSetButton") {

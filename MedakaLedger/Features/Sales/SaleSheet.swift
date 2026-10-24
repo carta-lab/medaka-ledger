@@ -23,6 +23,7 @@ struct SaleSheet: View {
                 statusSection
                 memoSection
             }
+            .themedBackground()
             .navigationTitle(model.isEditing ? "販売の編集" : "販売を記録")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveSaleButton") {

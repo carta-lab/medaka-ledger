@@ -57,6 +57,7 @@ struct CohortCreateView: View {
                     .lineLimit(2...6)
             }
         }
+        .themedBackground()
         .navigationTitle("入手個体の群を登録")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(isAfterStrainCreation)

@@ -16,6 +16,7 @@ struct ArchivedStrainsView: View {
                 }
             }
         }
+        .themedBackground()
         .navigationTitle("アーカイブ済みの系統")
     }
 }

@@ -49,6 +49,7 @@ struct StrainEditView: View {
                         .lineLimit(2...6)
                 }
             }
+            .themedBackground()
             .navigationTitle(model.isNew ? "系統を登録" : "系統を編集")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveStrainButton") { save() }

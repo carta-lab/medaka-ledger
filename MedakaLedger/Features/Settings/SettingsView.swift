@@ -73,6 +73,7 @@ struct SettingsView: View {
 
                 AboutSection()
             }
+            .themedBackground()
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

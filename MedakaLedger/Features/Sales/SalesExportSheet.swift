@@ -51,6 +51,7 @@ struct SalesExportSheet: View {
                     Text("取消と出品中も含めて、状態の列に書き出します。ExcelやNumbersで開けます。")
                 }
             }
+            .themedBackground()
             .navigationTitle("販売CSV")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar("書き出す", isEnabled: !selected.isEmpty && start <= end, identifier: "exportSalesCSVButton") {

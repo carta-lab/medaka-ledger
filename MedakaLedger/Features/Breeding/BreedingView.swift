@@ -38,6 +38,7 @@ struct BreedingView: View {
                 }
             }
         }
+        .themedBackground()
         .navigationTitle("繁殖")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

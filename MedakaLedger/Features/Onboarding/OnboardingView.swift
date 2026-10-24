@@ -33,6 +33,7 @@ struct OnboardingView: View {
                 .frame(maxHeight: .infinity)
                 actionBar
             }
+            .themedBackground()
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .paywall(gate)

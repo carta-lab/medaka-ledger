@@ -89,6 +89,7 @@ struct SelectionSheet: View {
                     PhotoAdder { model.photos.append(contentsOf: $0) }
                 }
             }
+            .themedBackground()
             .navigationTitle("選別を記録")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveSelectionButton") {

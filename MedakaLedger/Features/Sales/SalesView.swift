@@ -29,6 +29,7 @@ struct SalesView: View {
                 list(ledger, byID: byID)
             }
         }
+        .themedBackground()
         .navigationTitle("販売")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -178,7 +179,7 @@ struct SalesView: View {
                 } label: {
                     Label("取消", systemImage: "xmark.circle")
                 }
-                .tint(.gray)
+                .tint(.secondary)
             }
         }
     }

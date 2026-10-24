@@ -41,6 +41,7 @@ struct HomeView: View {
             .padding(.horizontal, Theme.screenPadding)
             .padding(.bottom, 24)
         }
+        .themedBackground()
         .navigationTitle("ホーム")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -90,8 +91,9 @@ struct HomeView: View {
                 .font(.title2.bold())
             Label(isBreedingSeason ? LocalizedStringKey("産卵期") : LocalizedStringKey("産卵期外"), systemImage: isBreedingSeason ? "sun.max" : "snowflake")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.white.opacity(0.8))
         }
+        .deepSurface()
         .padding(.top, 8)
     }
 

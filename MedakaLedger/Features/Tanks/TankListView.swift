@@ -48,6 +48,7 @@ struct TankListView: View {
                 }
             }
         }
+        .themedBackground()
         .navigationTitle("容器")
         .searchable(text: $model.searchText, prompt: Text("容器名・系統名で探す"))
         .toolbar {

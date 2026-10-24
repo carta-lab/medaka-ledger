@@ -33,6 +33,7 @@ struct CohortDetailView: View {
             PhotoSection(owner: .cohort(cohort))
             CohortTimelineSection(cohort: cohort, model: model)
         }
+        .themedBackground()
         .navigationTitle(cohort.strainName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

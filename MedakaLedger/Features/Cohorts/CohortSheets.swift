@@ -25,6 +25,7 @@ struct OperationForm<Content: View>: View {
             Form {
                 content()
             }
+            .themedBackground()
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: canSave, identifier: "saveOperationButton") {
