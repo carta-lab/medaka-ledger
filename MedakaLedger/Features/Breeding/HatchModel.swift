@@ -19,6 +19,8 @@ final class HatchModel {
     var newLineName = ""
     var existingStrain: Strain?
     var error: UserFacingError?
+    /// 保存できたあと、演出を出している間は true。二重に保存しないために使う。
+    var isCelebrating = false
 
     init(batch: EggBatch) {
         self.batch = batch
@@ -44,6 +46,12 @@ final class HatchModel {
         case .createNew: return !newBreedName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         case .existing: return existingStrain != nil
         }
+    }
+
+    /// 演出に使う、いま生まれた群の系統の見た目。
+    var resultLook: MedakaLook {
+        let strain = (batch.resultCohorts ?? []).max { $0.createdAt < $1.createdAt }?.strain ?? addTo?.strain
+        return strain?.look ?? .fallback
     }
 
     /// 保存できたら true。

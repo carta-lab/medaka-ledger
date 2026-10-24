@@ -67,6 +67,9 @@
     "%@匹": {
       "extractionState": "manual"
     },
+    "%@匹が孵りました": {
+      "extractionState": "manual"
+    },
     "%@年": {
       "extractionState": "manual"
     },
@@ -965,6 +968,9 @@
       "extractionState": "manual"
     },
     "孵化を記録": {
+      "extractionState": "manual"
+    },
+    "孵化を記録しました": {
       "extractionState": "manual"
     },
     "孵化予定": {

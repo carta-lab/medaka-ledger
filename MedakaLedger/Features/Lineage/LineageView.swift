@@ -134,6 +134,8 @@ private struct LineageNodeCard: View {
         let card = VStack(spacing: 4) {
             if let photo = cohort?.coverPhoto {
                 PhotoThumbnail(photo: photo, size: 40)
+            } else if let strain = cohort?.strain {
+                MedakaIcon(look: strain.look, size: 40, showsBackground: false)
             }
             Text(verbatim: node.info.strainName)
                 .font(.caption.bold())
