@@ -7,6 +7,8 @@ import UIKit
 struct QuickPhotoSheet: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(ProStore.self) private var pro
+    @State private var gate = LimitGate()
     @Query(filter: Cohort.activePredicate, sort: \Cohort.createdAt) private var cohorts: [Cohort]
     @Query(filter: Tank.unarchivedPredicate, sort: Tank.listSort) private var tanks: [Tank]
     @State private var model = QuickPhotoModel()
@@ -70,8 +72,14 @@ struct QuickPhotoSheet: View {
             .navigationTitle("写真を追加")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveQuickPhotoButton") {
-                if model.save(in: modelContext) { dismiss() }
+                gate.attempt(
+                    .photosPerOwner, adding: model.photos.count, pro: pro,
+                    count: { model.owner.map(LimitCounter.photos(of:)) ?? 0 }
+                ) {
+                    if model.save(in: modelContext) { dismiss() }
+                }
             }
+            .paywall(gate)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }

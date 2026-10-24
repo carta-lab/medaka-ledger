@@ -106,6 +106,11 @@ struct HomeView: View {
                 router.selectedTab = .tanks
             }
             .buttonStyle(LargeButtonStyle())
+            Button("最初の案内をもう一度見る") {
+                router.showsOnboarding = true
+            }
+            .frame(minHeight: Theme.minButtonHeight)
+            .accessibilityIdentifier("resumeOnboardingButton")
         }
         .cardBackground()
     }

@@ -1,14 +1,15 @@
 import SwiftData
 import SwiftUI
 
-// 設定。計算（孵化予定日と水換え警告に使う値）とバックアップと書き出し。
-// サンプル、Pro、用語の説明などは第5週。値を変えると孵化予定日は即時に再計算される（PRD.md F14）。
+// 設定（SCREENS.md 12）。計算、出品文の雛形、バックアップと書き出し、サンプルデータ、Pro、用語の説明、プライバシーポリシー。
+// 値を変えると孵化予定日は即時に再計算される（PRD.md F14）。
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(AppSettings.self) private var settings
     @Environment(NotificationScheduler.self) private var scheduler
+    @State private var gate = LimitGate()
     @State private var backup = BackupModel()
     @State private var usage: Int64?
 
@@ -62,7 +63,15 @@ struct SettingsView: View {
                     Text("産卵期はホームの並びと水換えの警告日数が変わります。産卵期の最初の月の前月15日に「親魚セットを組みましょう」とお知らせします。")
                 }
 
+                ListingSettingsSection(gate: gate)
+
                 BackupSection(model: backup, usage: usage)
+
+                SampleDataSection()
+
+                ProSection(gate: gate)
+
+                AboutSection()
             }
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
@@ -71,6 +80,7 @@ struct SettingsView: View {
                     Button("閉じる") { dismiss() }
                 }
             }
+            .paywall(gate)
             .modifier(BackupPresentations(model: backup) {
                 Task { await refreshUsage() }
             })

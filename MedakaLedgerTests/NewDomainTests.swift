@@ -67,6 +67,60 @@ struct LineageResolverTests {
         #expect(!full.hasTruncation)
     }
 
+    private func nodeCount(_ node: LineageNode?) -> Int {
+        guard let node else { return 0 }
+        return 1 + nodeCount(node.sire) + nodeCount(node.dam)
+    }
+
+    @Test func doublingChainIsCutToTheNodeBudget() throws {
+        // 雄と雌に同じ群を使う累代が21群続くと、重複を含めて200万ノードを超える
+        let ids = (0..<21).map { _ in UUID() }
+        var infos = [info(ids[0], "A", generation: 0)]
+        for index in 1..<21 {
+            infos.append(info(ids[index], "A", generation: index, sire: ids[index - 1], dam: ids[index - 1]))
+        }
+        let node = try #require(LineageResolver.resolve(root: ids[20], maxDepth: LineageResolver.absoluteMaxDepth, lookup: lookup(infos)))
+        #expect(nodeCount(node) <= LineageResolver.defaultNodeBudget)
+        #expect(node.depth >= 2)
+        #expect(node.hasTruncation)
+        // 予算に収まる最も深い世代まで出す（2^(深さ+1)-1 が300以下なら深さ7）
+        #expect(node.depth == 7)
+    }
+
+    @Test func linearChainKeepsTheFullDepth() throws {
+        // 親が片方だけの列は、枝が増えないので全世代を出す
+        let ids = (0..<21).map { _ in UUID() }
+        var infos = [info(ids[0], "A", generation: 0)]
+        for index in 1..<21 {
+            infos.append(info(ids[index], "A", generation: index, sire: ids[index - 1], dam: nil))
+        }
+        let node = try #require(LineageResolver.resolve(root: ids[20], maxDepth: LineageResolver.absoluteMaxDepth, lookup: lookup(infos)))
+        #expect(node.depth == 20)
+        #expect(nodeCount(node) == 21)
+        #expect(!node.hasTruncation)
+    }
+
+    @Test func freeDepthIsNeverReducedByTheBudget() throws {
+        let ids = (0..<6).map { _ in UUID() }
+        var infos = [info(ids[0], "A", generation: 0)]
+        for index in 1..<6 {
+            infos.append(info(ids[index], "A", generation: index, sire: ids[index - 1], dam: ids[index - 1]))
+        }
+        let node = try #require(LineageResolver.resolve(root: ids[5], maxDepth: 2, nodeBudget: 7, lookup: lookup(infos)))
+        #expect(node.depth == 2)
+        #expect(nodeCount(node) == 7)
+    }
+
+    @Test func tinyBudgetStillShowsTheParents() throws {
+        let ids = (0..<5).map { _ in UUID() }
+        var infos = [info(ids[0], "A", generation: 0)]
+        for index in 1..<5 {
+            infos.append(info(ids[index], "A", generation: index, sire: ids[index - 1], dam: ids[index - 1]))
+        }
+        let node = try #require(LineageResolver.resolve(root: ids[4], maxDepth: 20, nodeBudget: 1, lookup: lookup(infos)))
+        #expect(node.depth == 1)
+    }
+
     @Test func depthLimitByPlan() {
         #expect(LineageResolver.depthLimit(isPro: false) == 2)
         #expect(LineageResolver.depthLimit(isPro: true) == LineageResolver.absoluteMaxDepth)

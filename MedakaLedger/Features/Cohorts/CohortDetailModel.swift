@@ -6,7 +6,7 @@ import SwiftData
 @Observable
 final class CohortDetailModel {
     enum Sheet: String, Identifiable {
-        case move, split, count, selection, sale, stage, merge, edit
+        case move, split, count, selection, sale, stage, merge, edit, listing
         var id: String { rawValue }
     }
 

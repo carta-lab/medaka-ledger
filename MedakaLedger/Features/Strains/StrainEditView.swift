@@ -6,6 +6,8 @@ import SwiftUI
 struct StrainEditView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(ProStore.self) private var pro
+    @State private var gate = LimitGate()
     @Query(sort: \Strain.createdAt, order: .reverse) private var allStrains: [Strain]
     @State private var model: StrainEditModel
 
@@ -50,6 +52,7 @@ struct StrainEditView: View {
             .navigationTitle(model.isNew ? "系統を登録" : "系統を編集")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveStrainButton") { save() }
+            .paywall(gate)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") { dismiss() }
@@ -64,7 +67,16 @@ struct StrainEditView: View {
         }
     }
 
+    /// 新しい系統は、Freeの上限を確かめてから保存する（ARCHITECTURE.md 4.4）。編集は上限に関わらない。
     private func save() {
+        if model.isNew {
+            gate.attempt(.strains, pro: pro, count: { LimitCounter.strains(in: modelContext) }) { performSave() }
+        } else {
+            performSave()
+        }
+    }
+
+    private func performSave() {
         do {
             try model.save(in: modelContext)
             if !model.isNew {

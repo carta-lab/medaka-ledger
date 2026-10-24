@@ -67,7 +67,9 @@ struct PhotoViewing: Identifiable {
 /// 付け先ごとの写真の枠（List の中に置く）。追加の入口と、写真の格子。
 struct PhotoSection: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(ProStore.self) private var pro
     let owner: PhotoOwner
+    @State private var gate = LimitGate()
     @State private var error: UserFacingError? = nil
 
     var body: some View {
@@ -80,7 +82,12 @@ struct PhotoSection: View {
                 PhotoGrid(photos: photos)
                     .padding(.vertical, 4)
             }
-            PhotoAdder { processed in add(processed) }
+            PhotoAdder { processed in
+                gate.attempt(.photosPerOwner, adding: processed.count, pro: pro, count: { LimitCounter.photos(of: owner) }) {
+                    add(processed)
+                }
+            }
+            .paywall(gate)
         } header: {
             Text("写真")
         }

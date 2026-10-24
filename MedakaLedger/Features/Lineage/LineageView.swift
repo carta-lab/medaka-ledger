@@ -2,12 +2,13 @@ import SwiftData
 import SwiftUI
 
 // 血統図（SCREENS.md 11、PRD.md F10）。選んだ群を一番下に置き、上へ雄側と雌側の親を世代ごとに並べる木。
-// ピンチで拡大縮小、ノードのタップで群詳細へ。Freeは2世代まで。
+// ピンチで拡大縮小、ノードのタップで群詳細へ。Freeは2世代まで、Proは全世代。
+// Proの確認が済むまでは、Freeの深さで描く（DECISIONS.md G 3-10）。
 
 struct LineageView: View {
+    @Environment(ProStore.self) private var pro
     let cohort: Cohort
-    /// TODO(要確認): Proの権利は第5週のProStoreで決まる。それまではFreeの上限（2世代）で表示する。
-    private let isPro = false
+    @State private var gate = LimitGate()
     @State private var scale: CGFloat = 1
     @State private var contentSize: CGSize = .zero
     @GestureState private var pinch: CGFloat = 1
@@ -17,7 +18,7 @@ struct LineageView: View {
     private static let tabBarClearance: CGFloat = 96
 
     var body: some View {
-        let maxDepth = LineageResolver.depthLimit(isPro: isPro)
+        let maxDepth = LineageResolver.depthLimit(isPro: pro.isPro)
         let tree = LineageSource.tree(for: cohort, maxDepth: maxDepth)
         let cohorts = LineageSource.cohorts(from: cohort, maxDepth: maxDepth)
         Group {
@@ -39,12 +40,22 @@ struct LineageView: View {
                     )
                 }
                 .safeAreaInset(edge: .top) {
-                    if tree.hasTruncation {
-                        Label("Proで全世代を表示", systemImage: "lock")
+                    if tree.hasTruncation, pro.isPro {
+                        Text(verbatim: String(localized: "世代が多いため、\(tree.depth.formatted())世代前までを表示しています"))
                             .font(.subheadline)
-                            .padding(8)
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, minHeight: Theme.minButtonHeight)
                             .background(.bar)
+                    } else if tree.hasTruncation, pro.status == .free {
+                        Button {
+                            gate.present(reason: .feature(.fullLineage))
+                        } label: {
+                            Label("Proで全世代を表示", systemImage: "lock")
+                                .font(.subheadline)
+                                .frame(maxWidth: .infinity, minHeight: Theme.minButtonHeight)
+                                .background(.bar)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("lineageProButton")
                     }
                 }
             } else {
@@ -53,6 +64,7 @@ struct LineageView: View {
         }
         .navigationTitle("血統図")
         .navigationBarTitleDisplayMode(.inline)
+        .paywall(gate)
     }
 
     /// 拡大縮小した大きさの枠に木を入れる。scaleEffect は配置の大きさを変えないので、枠を倍率に合わせて、全体までスクロールできるようにする。

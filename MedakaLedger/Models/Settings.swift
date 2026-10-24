@@ -13,6 +13,8 @@ final class AppSettings {
         static let winterWaterChangeWarningDays = "winterWaterChangeWarningDays"
         static let breedingSeasonMonths = "breedingSeasonMonths"
         static let listingTemplate = "listingTemplate"
+        static let listingGuaranteeText = "listingGuaranteeText"
+        static let listingNoticeText = "listingNoticeText"
         static let hasCompletedOnboarding = "hasCompletedOnboarding"
         static let lastBackupAt = "lastBackupAt"
     }
@@ -30,6 +32,8 @@ final class AppSettings {
             Key.winterWaterChangeWarningDays: 45,
             Key.breedingSeasonMonths: Self.defaultBreedingSeasonMonths,
             Key.listingTemplate: "",
+            Key.listingGuaranteeText: "",
+            Key.listingNoticeText: "",
             Key.hasCompletedOnboarding: false,
         ])
     }
@@ -65,6 +69,23 @@ final class AppSettings {
     var listingTemplate: String {
         get { access(keyPath: \.listingTemplate); return defaults.string(forKey: Key.listingTemplate) ?? "" }
         set { withMutation(keyPath: \.listingTemplate) { defaults.set(newValue, forKey: Key.listingTemplate) } }
+    }
+
+    /// 出品文に差し込む死着保証の文（`{死着保証}`）。空なら、その行は出さない。
+    var listingGuaranteeText: String {
+        get { access(keyPath: \.listingGuaranteeText); return defaults.string(forKey: Key.listingGuaranteeText) ?? "" }
+        set { withMutation(keyPath: \.listingGuaranteeText) { defaults.set(newValue, forKey: Key.listingGuaranteeText) } }
+    }
+
+    /// 出品文に差し込む注意事項の文（`{注意事項}`）。
+    var listingNoticeText: String {
+        get { access(keyPath: \.listingNoticeText); return defaults.string(forKey: Key.listingNoticeText) ?? "" }
+        set { withMutation(keyPath: \.listingNoticeText) { defaults.set(newValue, forKey: Key.listingNoticeText) } }
+    }
+
+    /// 雛形。空なら既定の雛形を使う。
+    var effectiveListingTemplate: String {
+        listingTemplate.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? ListingTextBuilder.defaultTemplate : listingTemplate
     }
 
     var hasCompletedOnboarding: Bool {

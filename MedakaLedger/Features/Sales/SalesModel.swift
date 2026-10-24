@@ -11,6 +11,7 @@ final class SalesModel {
     var isAdding = false
     var editing: Sale?
     var isExporting = false
+    var isShowingListing = false
     var salePendingDeletion: Sale?
     var isConfirmingDeletion = false
     var error: UserFacingError?
