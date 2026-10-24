@@ -48,10 +48,10 @@ struct HatchCelebration: View {
             .overlay(Ellipse().stroke(Theme.accent, lineWidth: 2))
             .frame(width: 40, height: 52)
             .rotationEffect(.degrees(isWobbling ? 9 : -9))
-            .animation(.easeInOut(duration: 0.15).repeatCount(6, autoreverses: true), value: isWobbling)
+            .animation(motion(.easeInOut(duration: 0.15).repeatCount(6, autoreverses: true)), value: isWobbling)
             .scaleEffect(isHatched ? 1.7 : 1)
             .opacity(isHatched ? 0 : 1)
-            .animation(.easeOut(duration: 0.3), value: isHatched)
+            .animation(motion(.easeOut(duration: 0.3)), value: isHatched)
     }
 
     private var ripples: some View {
@@ -62,7 +62,7 @@ struct HatchCelebration: View {
                     .frame(width: 60, height: 60)
                     .scaleEffect(isHatched ? 4 : 0.3)
                     .opacity(isHatched ? 0 : 0.6)
-                    .animation(.easeOut(duration: 1.2).delay(Double(index) * 0.25), value: isHatched)
+                    .animation(motion(.easeOut(duration: 1.2).delay(Double(index) * 0.25)), value: isHatched)
             }
         }
     }
@@ -80,9 +80,14 @@ struct HatchCelebration: View {
                     .scaleEffect(isHatched ? 1 : 0.2)
                     .offset(x: isHatched ? dx : 0, y: isHatched ? dy : 0)
                     .opacity(isHatched ? 1 : 0)
-                    .animation(.spring(response: 0.6, dampingFraction: 0.6).delay(Double(index) * 0.04), value: isHatched)
+                    .animation(motion(.spring(response: 0.6, dampingFraction: 0.6).delay(Double(index) * 0.04)), value: isHatched)
             }
         }
+    }
+
+    /// 視差効果を減らす設定のときは、動かさずに結果だけを見せる。
+    private func motion(_ animation: Animation) -> Animation? {
+        reduceMotion ? nil : animation
     }
 
     private func run() async {
