@@ -1,6 +1,6 @@
 import SwiftUI
 
-// テーマ（DECISIONS.md 付録1）。アクセント色は Assets の AccentColor（朱赤）。
+// テーマ（DECISIONS.md 付録1）。色は全て Assets の色セット（ライトとダークを別に設計）。
 
 enum Theme {
     static let cornerRadius: CGFloat = 12
@@ -9,8 +9,12 @@ enum Theme {
     static let minButtonHeight: CGFloat = 48
 
     static let accent = Color.accentColor
-    static let warning = Color.red
-    static let done = Color.green
+    static let background = Color("ThemeBackground")
+    static let surface = Color("ThemeSurface")
+    static let deep = Color("ThemeDeep")
+    static let warning = Color("ThemeWarning")
+    static let caution = Color("ThemeAmber")
+    static let done = Color("ThemeDone")
 }
 
 /// 主要な操作のボタン。高さ48pt以上（CLAUDE.md UIの決まり）。
@@ -28,7 +32,7 @@ struct LargeButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity, minHeight: Theme.minButtonHeight)
             .padding(.horizontal, 8)
             .foregroundStyle(prominent ? Color.white : Theme.accent)
-            .background(prominent ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.fill.tertiary), in: .rect(cornerRadius: Theme.cornerRadius))
+            .background(prominent ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(Theme.accent.opacity(0.12)), in: .rect(cornerRadius: Theme.cornerRadius))
             .opacity(isEnabled ? (configuration.isPressed ? 0.7 : 1) : 0.4)
     }
 }
@@ -39,11 +43,40 @@ struct CardBackground: ViewModifier {
         content
             .padding(Theme.cardPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.fill.quaternary, in: .rect(cornerRadius: Theme.cornerRadius))
+            .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius))
+            .overlay(RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(Theme.accent.opacity(0.18), lineWidth: 1))
+    }
+}
+
+/// 画面の背景。淡い水色（ダークは深い青黒）。リストとフォームの既定の背景は隠す。
+struct ThemedBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .scrollContentBackground(.hidden)
+            .background(Theme.background)
+    }
+}
+
+/// ホームの見出しなど、深い青緑の面。文字は白。
+struct DeepSurface: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(Color.white)
+            .padding(Theme.cardPadding + 4)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Theme.deep, in: .rect(cornerRadius: Theme.cornerRadius))
     }
 }
 
 extension View {
+    func themedBackground() -> some View {
+        modifier(ThemedBackground())
+    }
+
+    func deepSurface() -> some View {
+        modifier(DeepSurface())
+    }
+
     func cardBackground() -> some View {
         modifier(CardBackground())
     }

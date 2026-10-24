@@ -53,6 +53,7 @@ struct StrainDetailView: View {
                 salesContent
             }
         }
+        .themedBackground()
         .navigationTitle(strain.displayName)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

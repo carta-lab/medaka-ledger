@@ -62,6 +62,7 @@ struct LineageView: View {
                 ContentUnavailableView("血統を表示できません", systemImage: "exclamationmark.triangle")
             }
         }
+        .themedBackground()
         .navigationTitle("血統図")
         .navigationBarTitleDisplayMode(.inline)
         .paywall(gate)

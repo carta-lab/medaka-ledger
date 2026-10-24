@@ -39,6 +39,7 @@ struct GlossaryView: View {
             .padding(.vertical, 2)
             .accessibilityElement(children: .combine)
         }
+        .themedBackground()
         .navigationTitle("用語の説明")
         .navigationBarTitleDisplayMode(.inline)
     }

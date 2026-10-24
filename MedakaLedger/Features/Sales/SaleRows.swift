@@ -42,9 +42,9 @@ struct SaleStatusBadge: View {
 
     private var foreground: Color {
         switch status {
-        case .listed: .orange
+        case .listed: Theme.caution
         case .sold: Theme.accent
-        case .shipped: .green
+        case .shipped: Theme.done
         case .cancelled: .secondary
         }
     }

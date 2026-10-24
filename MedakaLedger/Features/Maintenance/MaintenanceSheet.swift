@@ -73,6 +73,7 @@ struct MaintenanceSheet: View {
                     }
                 }
             }
+            .themedBackground()
             .navigationTitle("作業を記録")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveMaintenanceButton") {

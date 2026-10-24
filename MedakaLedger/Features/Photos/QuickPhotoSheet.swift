@@ -69,6 +69,7 @@ struct QuickPhotoSheet: View {
                     Text("写真を選んで、付け先を選ぶと保存できます。")
                 }
             }
+            .themedBackground()
             .navigationTitle("写真を追加")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveQuickPhotoButton") {

@@ -49,6 +49,7 @@ struct EggBatchSheet: View {
                         .lineLimit(2...6)
                 }
             }
+            .themedBackground()
             .navigationTitle("採卵を記録")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveEggBatchButton") {

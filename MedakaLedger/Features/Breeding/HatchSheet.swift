@@ -65,6 +65,7 @@ struct HatchSheet: View {
                         .lineLimit(2...6)
                 }
             }
+            .themedBackground()
             .navigationTitle("孵化を記録")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveHatchButton") {

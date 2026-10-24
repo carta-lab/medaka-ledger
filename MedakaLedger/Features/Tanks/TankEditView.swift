@@ -49,6 +49,7 @@ struct TankEditView: View {
                         .lineLimit(2...6)
                 }
             }
+            .themedBackground()
             .navigationTitle(model.isNew ? "容器を登録" : "容器を編集")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveTankButton") { save() }

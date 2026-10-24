@@ -73,6 +73,7 @@ struct ListingTemplateView: View {
                 Text("{注意事項} に入る文です。空なら、その行は出しません。")
             }
         }
+        .themedBackground()
         .navigationTitle("出品文の雛形")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {

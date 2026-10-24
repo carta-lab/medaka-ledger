@@ -33,6 +33,7 @@ struct StrainListView: View {
                 }
             }
         }
+        .themedBackground()
         .navigationTitle("系統")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {

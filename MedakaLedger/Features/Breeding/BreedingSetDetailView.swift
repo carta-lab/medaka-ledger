@@ -66,6 +66,7 @@ struct BreedingSetDetailView: View {
                 }
             }
         }
+        .themedBackground()
         .navigationTitle(breedingSet.displayName)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $model.isRecordingBatch) {

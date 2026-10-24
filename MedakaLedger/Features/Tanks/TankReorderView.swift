@@ -28,6 +28,7 @@ struct TankReorderView: View {
                 }
             }
             .environment(\.editMode, .constant(.active))
+            .themedBackground()
             .navigationTitle("並べ替え")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

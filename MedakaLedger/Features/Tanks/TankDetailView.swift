@@ -75,6 +75,7 @@ struct TankDetailView: View {
                 Text("作業記録")
             }
         }
+        .themedBackground()
         .navigationTitle(tank.name)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

@@ -35,6 +35,7 @@ struct PrivacyPolicyView: View {
                 "アプリを削除すると、この端末の記録は消えます。書き出したバックアップは消えません。"
             )
         }
+        .themedBackground()
         .navigationTitle("プライバシーポリシー")
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -58,6 +58,7 @@ struct PaywallView: View {
                     }
                 }
             }
+            .themedBackground()
             .navigationTitle("Pro")
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaInset(edge: .bottom) { purchaseBar }

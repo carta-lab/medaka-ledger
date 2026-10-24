@@ -73,6 +73,7 @@ struct TankLogsView: View {
             }
             MaintenanceLogRows(logs: logs)
         }
+        .themedBackground()
         .navigationTitle(Text(verbatim: String(localized: "\(tank.name)の作業記録")))
         .navigationBarTitleDisplayMode(.inline)
     }
