@@ -69,10 +69,11 @@ struct HatchSheet: View {
             .navigationTitle("孵化を記録")
             .navigationBarTitleDisplayMode(.inline)
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveHatchButton") {
+                guard !model.isCelebrating else { return }
                 if model.save(in: modelContext) {
-                    // 先に閉じて、二重に保存されないようにする。通知の計画し直しは閉じた後で行う
+                    // 演出が閉じるまで、画面を演出で覆って二重に保存されないようにする
+                    model.isCelebrating = true
                     let context = modelContext
-                    dismiss()
                     Task { await scheduler.reschedule(in: context) }
                 }
             }
@@ -82,6 +83,12 @@ struct HatchSheet: View {
                 }
             }
             .errorAlert($model.error)
+        }
+        .overlay {
+            if model.isCelebrating {
+                HatchCelebration(count: model.hatchedCount, look: model.resultLook) { dismiss() }
+                    .transition(.opacity)
+            }
         }
     }
 

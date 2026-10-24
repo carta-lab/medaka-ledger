@@ -99,6 +99,7 @@ struct HomeView: View {
 
     private var gettingStarted: some View {
         VStack(alignment: .leading, spacing: 12) {
+            MedakaIcon(look: MedakaLook(shape: .standard, palette: .orange, hasSparkle: false, hasLongFin: false), size: 56)
             Text("まず容器を登録しましょう")
                 .font(.headline)
             Text("容器と系統を登録すると、群の記録をつけられます。")

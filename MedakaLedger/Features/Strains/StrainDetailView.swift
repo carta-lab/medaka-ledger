@@ -12,9 +12,12 @@ struct StrainDetailView: View {
         let cohorts = model.visibleCohorts(of: strain)
         List {
             Section {
-                if !strain.traitTags.isEmpty {
-                    Text(verbatim: strain.traitTags.joined(separator: "・"))
-                        .foregroundStyle(Theme.accent)
+                HStack(spacing: 12) {
+                    MedakaIcon(look: strain.look, size: 56)
+                    if !strain.traitTags.isEmpty {
+                        Text(verbatim: strain.traitTags.joined(separator: "・"))
+                            .foregroundStyle(Theme.accent)
+                    }
                 }
                 if !strain.source.isEmpty {
                     InfoRow(title: "入手元", value: strain.source)
