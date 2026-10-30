@@ -1909,6 +1909,12 @@
     "飼育中でない群は操作できません。": {
       "extractionState": "manual"
     },
+    "飼育中の匹数": {
+      "extractionState": "manual"
+    },
+    "飼育中の群": {
+      "extractionState": "manual"
+    },
     "飼育中の群 %@・%@匹": {
       "extractionState": "manual"
     },

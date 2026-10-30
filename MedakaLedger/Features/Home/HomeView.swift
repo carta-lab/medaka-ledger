@@ -86,14 +86,14 @@ struct HomeView: View {
     }
 
     private func header(isBreedingSeason: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(verbatim: Date.now.formatted(.dateTime.month().day().weekday()))
-                .font(.title2.bold())
-            Label(isBreedingSeason ? LocalizedStringKey("産卵期") : LocalizedStringKey("産卵期外"), systemImage: isBreedingSeason ? "sun.max" : "snowflake")
-                .font(.subheadline)
-                .foregroundStyle(Color.white.opacity(0.8))
+        VStack(spacing: 12) {
+            HomeHero(isBreedingSeason: isBreedingSeason)
+            HomeStats(
+                tankCount: tanks.count,
+                tally: Aggregations.tally(counts: activeCohorts.map(\.count)),
+                incubatingCount: incubating.count
+            )
         }
-        .deepSurface()
         .padding(.top, 8)
     }
 
@@ -155,23 +155,23 @@ struct HomeView: View {
                 Button {
                     model.activeSheet = .eggBatch
                 } label: {
-                    Label("採卵", systemImage: "circle.grid.3x3")
+                    Label("採卵", systemImage: "circle.grid.3x3.fill")
                 }
-                .buttonStyle(LargeButtonStyle(prominent: false))
+                .buttonStyle(TileButtonStyle(color: Theme.Tile.amber))
                 .accessibilityIdentifier("quickEggBatch")
                 Button {
                     model.activeSheet = .waterChange
                 } label: {
-                    Label("水換え", systemImage: "drop")
+                    Label("水換え", systemImage: "drop.fill")
                 }
-                .buttonStyle(LargeButtonStyle(prominent: false))
+                .buttonStyle(TileButtonStyle(color: Theme.Tile.teal))
                 .accessibilityIdentifier("quickWaterChange")
                 Button {
                     model.activeSheet = .photo
                 } label: {
-                    Label("写真", systemImage: "camera")
+                    Label("写真", systemImage: "camera.fill")
                 }
-                .buttonStyle(LargeButtonStyle(prominent: false))
+                .buttonStyle(TileButtonStyle(color: Theme.Tile.coral))
                 .accessibilityIdentifier("quickPhoto")
                 disabledQuickAction("増減", systemImage: "plusminus")
             }
@@ -183,7 +183,7 @@ struct HomeView: View {
         } label: {
             Label(title, systemImage: systemImage)
         }
-        .buttonStyle(LargeButtonStyle(prominent: false))
+        .buttonStyle(TileButtonStyle(color: Theme.Tile.blue))
         .disabled(true)
     }
 }
