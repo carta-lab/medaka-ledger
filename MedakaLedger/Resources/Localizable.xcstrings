@@ -394,9 +394,6 @@
     "キャンセル": {
       "extractionState": "manual"
     },
-    "クイック操作": {
-      "extractionState": "manual"
-    },
     "コピー": {
       "extractionState": "manual"
     },
@@ -659,6 +656,9 @@
       "extractionState": "manual"
     },
     "保存できませんでした": {
+      "extractionState": "manual"
+    },
+    "個": {
       "extractionState": "manual"
     },
     "元に戻せません。端末の写真ライブラリにある写真は消えません。": {
@@ -1693,6 +1693,9 @@
     "計数修正": {
       "extractionState": "manual"
     },
+    "記録する": {
+      "extractionState": "manual"
+    },
     "記録だけが消えます。匹数と、分けた群は元に戻りません。": {
       "extractionState": "manual"
     },
@@ -1907,9 +1910,6 @@
       "extractionState": "manual"
     },
     "飼育中でない群は操作できません。": {
-      "extractionState": "manual"
-    },
-    "飼育中の匹数": {
       "extractionState": "manual"
     },
     "飼育中の群": {
