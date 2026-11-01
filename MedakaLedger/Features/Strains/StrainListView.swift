@@ -74,7 +74,7 @@ struct StrainRow: View {
             if let photo = strain.coverPhoto {
                 PhotoThumbnail(photo: photo, size: 48)
             } else {
-                MedakaIcon(look: strain.look, size: 48)
+                MedakaIcon(look: strain.look, size: 48, scalesWithText: false)
             }
             rowText(strain: strain, tally: tally)
         }

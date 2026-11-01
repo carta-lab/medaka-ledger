@@ -238,4 +238,45 @@ final class ScreenshotTests: XCTestCase {
             }
         }
     }
+
+    // MARK: - ダークモードと大きな文字
+
+    /// ダークモード：ホーム、容器一覧、群詳細。
+    @MainActor
+    func testCaptureDarkMode() {
+        // 端末の外観の切り替えも、-AppleInterfaceStyle も効かなかったので、アプリに専用の引数を持たせた
+        captureAppearance(prefix: "30-ダーク", extra: ["-uiTestDark"])
+    }
+
+    /// 文字を最大級に大きくした状態：ホーム、容器一覧、群詳細。
+    @MainActor
+    func testCaptureLargeText() {
+        captureAppearance(prefix: "40-大文字", extra: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXL"])
+    }
+
+    @MainActor
+    private func captureAppearance(prefix: String, extra: [String]) {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestSampleData", "-hasCompletedOnboarding", "YES", "-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"] + extra
+        app.launch()
+        _ = app.navigationBars.firstMatch.waitForExistence(timeout: 10)
+        snapshot("\(prefix)-ホーム")
+
+        tapTab(app, "容器")
+        snapshot("\(prefix)-容器一覧")
+
+        tapTab(app, "系統")
+        snapshot("\(prefix)-系統一覧")
+        let strainRow = app.buttons["strainRow.楊貴妃"]
+        if strainRow.waitForExistence(timeout: 5) {
+            strainRow.tap()
+            sleepBriefly()
+            let cohortRow = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "cohortRow.")).firstMatch
+            if cohortRow.waitForExistence(timeout: 5) {
+                cohortRow.tap()
+                sleepBriefly()
+                snapshot("\(prefix)-群詳細")
+            }
+        }
+    }
 }
