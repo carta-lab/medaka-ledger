@@ -89,29 +89,38 @@ struct LineageView: View {
 }
 
 /// 木の一部（ノードと、その上に並ぶ雄側と雌側の親）。自分自身を呼んで祖先へ続ける。
+/// 親と子は、家系図のように線でつなぐ。線の位置は、親の枝の幅を測って決める。
 private struct LineageBranch: View {
     let node: LineageNode
     let cohorts: [UUID: Cohort]
     let rootID: UUID
+    @State private var sireWidth: CGFloat = 0
+    @State private var damWidth: CGFloat = 0
+
+    private static let gap: CGFloat = 8
 
     var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 0) {
             if node.sire != nil || node.dam != nil {
-                HStack(alignment: .bottom, spacing: 8) {
-                    parent(node.sire, role: "雄")
-                    parent(node.dam, role: "雌")
+                HStack(alignment: .bottom, spacing: Self.gap) {
+                    parent(node.sire, role: "雄", isSire: true)
+                    parent(node.dam, role: "雌", isSire: false)
                 }
-                Image(systemName: "arrow.down")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .accessibilityHidden(true)
+                LineageConnector(
+                    sireWidth: node.sire == nil ? nil : sireWidth,
+                    damWidth: node.dam == nil ? nil : damWidth,
+                    gap: Self.gap
+                )
+                .stroke(Theme.accent.opacity(0.5), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round))
+                .frame(height: 20)
+                .accessibilityHidden(true)
             }
             LineageNodeCard(node: node, cohort: cohorts[node.info.id], isRoot: node.info.id == rootID)
         }
     }
 
     @ViewBuilder
-    private func parent(_ parent: LineageNode?, role: LocalizedStringKey) -> some View {
+    private func parent(_ parent: LineageNode?, role: LocalizedStringKey, isSire: Bool) -> some View {
         if let parent {
             VStack(spacing: 4) {
                 Text(role)
@@ -119,7 +128,43 @@ private struct LineageBranch: View {
                     .foregroundStyle(.secondary)
                 LineageBranch(node: parent, cohorts: cohorts, rootID: rootID)
             }
+            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width in
+                if isSire { sireWidth = width } else { damWidth = width }
+            }
         }
+    }
+}
+
+/// 雄と雌の親の中心から、子へ下ろす線。親が1匹だけなら、まっすぐ下ろす。
+private struct LineageConnector: Shape {
+    let sireWidth: CGFloat?
+    let damWidth: CGFloat?
+    let gap: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        var xs: [CGFloat] = []
+        var total: CGFloat = 0
+        if let sireWidth {
+            xs.append(sireWidth / 2)
+            total += sireWidth
+        }
+        if let damWidth {
+            xs.append(total + (sireWidth == nil ? 0 : gap) + damWidth / 2)
+            total += (sireWidth == nil ? 0 : gap) + damWidth
+        }
+        guard let first = xs.first, let last = xs.last else { return Path() }
+        let stem = total / 2
+        let midY = rect.midY
+        var path = Path()
+        for x in xs {
+            path.move(to: CGPoint(x: rect.minX + x, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.minX + x, y: midY))
+        }
+        path.move(to: CGPoint(x: rect.minX + first, y: midY))
+        path.addLine(to: CGPoint(x: rect.minX + last, y: midY))
+        path.move(to: CGPoint(x: rect.minX + stem, y: midY))
+        path.addLine(to: CGPoint(x: rect.minX + stem, y: rect.maxY))
+        return path
     }
 }
 
@@ -149,10 +194,11 @@ private struct LineageNodeCard: View {
         .padding(8)
         // 祖先を2世代まで出すと4つ並ぶので、狭い画面に収まる幅にする（文字が大きいときは縦に伸びる）
         .frame(width: 80)
-        .background(.fill.quaternary, in: .rect(cornerRadius: Theme.cornerRadius))
+        .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius))
         .overlay {
+            // 縁の色は系統の色。交配で色の違う系統が混ざる様子が、図の上で見える
             RoundedRectangle(cornerRadius: Theme.cornerRadius)
-                .stroke(isRoot ? Theme.accent : .clear, lineWidth: 2)
+                .stroke(isRoot ? Theme.accent : outline, lineWidth: isRoot ? 3 : 1.5)
         }
 
         if let cohort {
@@ -161,6 +207,10 @@ private struct LineageNodeCard: View {
         } else {
             card
         }
+    }
+
+    private var outline: Color {
+        (cohort?.strain?.look.palette ?? .plain).outline
     }
 
     private var detail: String {

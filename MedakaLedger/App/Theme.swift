@@ -15,6 +15,42 @@ enum Theme {
     static let warning = Color("ThemeWarning")
     static let caution = Color("ThemeAmber")
     static let done = Color("ThemeDone")
+
+    /// 白文字を載せる塗りの色（ホームの数字とクイック操作）。どれも白との対比4.5以上。
+    enum Tile {
+        static let teal = Color("TileTeal")
+        static let blue = Color("TileBlue")
+        static let coral = Color("TileCoral")
+        static let amber = Color("TileAmber")
+    }
+}
+
+/// 色で塗ったタイルのボタン。アイコンを上、文字を下に置く。高さ48pt以上。
+struct TileButtonStyle: ButtonStyle {
+    let color: Color
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .labelStyle(TileLabelStyle())
+            .foregroundStyle(Color.white)
+            .frame(maxWidth: .infinity, minHeight: 88)
+            .background(color, in: .rect(cornerRadius: Theme.cornerRadius))
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .opacity(isEnabled ? 1 : 0.45)
+    }
+}
+
+private struct TileLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        VStack(spacing: 6) {
+            configuration.icon
+                .font(.title2)
+            configuration.title
+                .font(.headline)
+        }
+        .padding(.vertical, 12)
+    }
 }
 
 /// 主要な操作のボタン。高さ48pt以上（CLAUDE.md UIの決まり）。

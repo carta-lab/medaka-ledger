@@ -26,6 +26,17 @@ extension MedakaLook.Palette {
     }
 }
 
+extension MedakaLook.Palette {
+    /// 図の縁取りに使う色。白や銀のように地の色と近いものは、見える濃さにする。
+    var outline: Color {
+        switch self {
+        case .white, .silver, .plain: Color.secondary.opacity(0.6)
+        case .redWhite, .tricolor: MedakaLook.Palette.vermilion.color
+        default: color
+        }
+    }
+}
+
 /// めだかの体の部分。右向き。
 private struct MedakaPart: Shape {
     enum Part { case body, tail, dorsal, anal }
