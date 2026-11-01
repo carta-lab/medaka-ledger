@@ -67,6 +67,16 @@ jobs:
           path: build/xcodebuild.log
           retention-days: 7
 
+      - name: Upload screenshots
+        # 手動実行ではPRに貼れないので、成果物として残す
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: screenshots
+          retention-days: 7
+          if-no-files-found: ignore
+
       - name: Post screenshots to PR
         # 取り消された実行では投稿しない（新しい実行と競合する）。forkのPRはトークンが読み取り専用なので投稿しない
         if: ${{ !cancelled() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
