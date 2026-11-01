@@ -8,6 +8,7 @@ struct MedakaLedgerApp: App {
     @State private var scheduler: NotificationScheduler
     @State private var pro: ProStore
     private let containerResult: Result<ModelContainer, any Error>
+    private let forcesDark: Bool
 
     init() {
         Appearance.apply()
@@ -25,6 +26,7 @@ struct MedakaLedgerApp: App {
             try? SampleDataSeeder.seed(into: container.mainContext)
         }
         containerResult = result
+        forcesDark = launch.forcesDark
     }
 
     private static func makeBackend(_ launch: LaunchOptions) -> any ProBackend {
@@ -41,6 +43,7 @@ struct MedakaLedgerApp: App {
             case let .success(container):
                 RootView()
                     .tint(Theme.accent)
+                    .preferredColorScheme(forcesDark ? .dark : nil)
                     .modelContainer(container)
                     .environment(settings)
                     .environment(router)
@@ -60,6 +63,8 @@ struct LaunchOptions {
     var isUITest: Bool
     /// -uiTestPro：Proを持った状態で起動する（UIテストのスクリーンショット用）。
     var grantsPro: Bool
+    /// -uiTestDark：ダークモードで起動する（UIテストのスクリーンショット用）。端末の外観の切り替えは効かなかった。
+    var forcesDark: Bool
 
     static var current: LaunchOptions {
         let arguments = ProcessInfo.processInfo.arguments
@@ -70,7 +75,8 @@ struct LaunchOptions {
             usesInMemoryStore: isUITest,
             seedsSampleData: seeds,
             isUITest: isUITest,
-            grantsPro: arguments.contains("-uiTestPro")
+            grantsPro: arguments.contains("-uiTestPro"),
+            forcesDark: isUITest && arguments.contains("-uiTestDark")
         )
     }
 }
