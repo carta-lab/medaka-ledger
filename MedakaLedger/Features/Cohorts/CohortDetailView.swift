@@ -204,7 +204,9 @@ struct CohortDetailView: View {
                 }
                 actionButton("販売", systemImage: "yensign.circle", sheet: .sale)
             }
-            .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+            // ボタンが自分で紙の面と罫線を持つので、行の白い面は消す
+            .listRowBackground(Color.clear)
         }
     }
 

@@ -192,6 +192,8 @@ struct AboutSection: View {
             LabeledContent("バージョン") {
                 Text(verbatim: version)
             }
+        } footer: {
+            Text("めだか台帳は記録の道具です。税務や法務の判断はしません。積算温度などの数値は目安です。")
         }
     }
 }
