@@ -244,7 +244,10 @@ final class ScreenshotTests: XCTestCase {
     /// ダークモード：ホーム、容器一覧、群詳細。
     @MainActor
     func testCaptureDarkMode() {
-        captureAppearance(prefix: "30-ダーク", extra: ["-AppleInterfaceStyle", "Dark"])
+        // 起動引数では切り替わらないので、端末の外観を変える。終わったら戻す
+        XCUIDevice.shared.appearance = .dark
+        defer { XCUIDevice.shared.appearance = .unspecified }
+        captureAppearance(prefix: "30-ダーク", extra: [])
     }
 
     /// 文字を最大級に大きくした状態：ホーム、容器一覧、群詳細。
@@ -265,6 +268,7 @@ final class ScreenshotTests: XCTestCase {
         snapshot("\(prefix)-容器一覧")
 
         tapTab(app, "系統")
+        snapshot("\(prefix)-系統一覧")
         let strainRow = app.buttons["strainRow.楊貴妃"]
         if strainRow.waitForExistence(timeout: 5) {
             strainRow.tap()

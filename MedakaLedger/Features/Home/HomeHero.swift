@@ -76,7 +76,7 @@ private struct PondSketch: View {
                     .frame(width: side * 0.22, height: side * 0.22)
                     .position(x: side * 0.30, y: side * 0.66)
                 ForEach(Array(Self.fish.enumerated()), id: \.offset) { _, item in
-                    MedakaIcon(look: item.look, size: item.size, showsBackground: false)
+                    MedakaIcon(look: item.look, size: item.size, showsBackground: false, scalesWithText: false)
                         .rotationEffect(.degrees(item.angle))
                         .position(x: side * item.x, y: side * item.y)
                 }

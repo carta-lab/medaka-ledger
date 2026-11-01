@@ -91,10 +91,12 @@ struct MedakaIcon: View {
     let look: MedakaLook
     var size: CGFloat = 40
     var showsBackground = true
+    /// 一覧の目印は文字に合わせて大きくする。図の中に置く飾りは、枠からはみ出さないよう合わせない。
+    var scalesWithText = true
     @ScaledMetric(relativeTo: .body) private var scale: CGFloat = 1
 
     var body: some View {
-        let side = size * scale
+        let side = size * (scalesWithText ? scale : 1)
         let color = look.palette.color
         ZStack {
             if showsBackground {
