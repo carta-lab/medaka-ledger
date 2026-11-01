@@ -69,7 +69,7 @@ struct OnboardingView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 Text("容器、系統、世代、採卵、販売を、つなげて記録します。")
-                    .font(.title3.bold())
+                    .font(Typeface.heading(22, relativeTo: .title3))
                 VStack(alignment: .leading, spacing: 12) {
                     flowRow("square.grid.2x2", "容器", "どこで飼っているか")
                     flowRow("list.bullet.rectangle", "系統と群", "何の、何世代目が、何匹いるか")

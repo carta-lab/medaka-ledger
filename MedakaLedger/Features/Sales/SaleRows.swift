@@ -64,7 +64,8 @@ struct SalesSummaryRows: View {
         InfoRow(title: "送料", value: SaleText.yen(summary.shipping))
         LabeledContent("純額") {
             Text(verbatim: SaleText.yen(summary.net))
-                .font(.headline)
+                .font(Typeface.heading(19, relativeTo: .headline))
+                .monospacedDigit()
         }
         InfoRow(title: "件数", value: String(localized: "\(summary.count.formatted())件"))
     }

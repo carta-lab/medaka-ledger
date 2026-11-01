@@ -10,6 +10,7 @@ struct MedakaLedgerApp: App {
     private let containerResult: Result<ModelContainer, any Error>
 
     init() {
+        Appearance.apply()
         let settings = AppSettings()
         _settings = State(initialValue: settings)
         let router = Router()

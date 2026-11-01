@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // テーマ（DECISIONS.md 付録1）。主題は「飼育者の台帳」。生成りの紙に墨の文字、藍に近い青緑のインク、朱の判子。
 // 色は全て Assets の色セット（ライトとダークを別に設計）。
@@ -27,6 +28,24 @@ enum Typeface {
     /// 端末に入っているヒラギノ明朝。Dynamic Type に追従する。
     static func heading(_ size: CGFloat, relativeTo style: Font.TextStyle) -> Font {
         .custom("HiraMinProN-W6", size: size, relativeTo: style)
+    }
+}
+
+/// 全画面の題（ナビゲーションバー）を明朝にする。Dynamic Type に合わせて大きさが変わる。
+enum Appearance {
+    @MainActor
+    static func apply() {
+        func scaled(_ size: CGFloat, _ style: UIFont.TextStyle) -> UIFont? {
+            guard let font = UIFont(name: "HiraMinProN-W6", size: size) else { return nil }
+            return UIFontMetrics(forTextStyle: style).scaledFont(for: font)
+        }
+        let bar = UINavigationBar.appearance()
+        if let large = scaled(32, .largeTitle) {
+            bar.largeTitleTextAttributes = [.font: large]
+        }
+        if let inline = scaled(17, .headline) {
+            bar.titleTextAttributes = [.font: inline]
+        }
     }
 }
 
