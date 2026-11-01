@@ -47,10 +47,11 @@ private struct DrawnWater: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isSwimming = false
 
+    /// 日付の文字は左下に来るので、めだかは右上の半分にだけ置く（文字が大きくても重ならない）。
     private static let fish: [(look: MedakaLook, x: CGFloat, y: CGFloat, size: CGFloat)] = [
-        (MedakaLook(shape: .standard, palette: .vermilion, hasSparkle: false, hasLongFin: false), 0.62, 0.30, 46),
-        (MedakaLook(shape: .hikari, palette: .silver, hasSparkle: true, hasLongFin: false), 0.80, 0.52, 38),
-        (MedakaLook(shape: .standard, palette: .orange, hasSparkle: false, hasLongFin: true), 0.50, 0.62, 32),
+        (MedakaLook(shape: .standard, palette: .vermilion, hasSparkle: false, hasLongFin: false), 0.60, 0.22, 46),
+        (MedakaLook(shape: .hikari, palette: .silver, hasSparkle: true, hasLongFin: false), 0.80, 0.44, 38),
+        (MedakaLook(shape: .standard, palette: .orange, hasSparkle: false, hasLongFin: true), 0.86, 0.16, 32),
     ]
 
     var body: some View {
