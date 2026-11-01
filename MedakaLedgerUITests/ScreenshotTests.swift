@@ -246,7 +246,7 @@ final class ScreenshotTests: XCTestCase {
     func testCaptureDarkMode() {
         // 起動引数では切り替わらないので、端末の外観を変える。終わったら戻す
         XCUIDevice.shared.appearance = .dark
-        defer { XCUIDevice.shared.appearance = .unspecified }
+        defer { XCUIDevice.shared.appearance = .light }
         captureAppearance(prefix: "30-ダーク", extra: [])
     }
 
