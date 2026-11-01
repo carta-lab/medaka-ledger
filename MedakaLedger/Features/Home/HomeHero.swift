@@ -87,13 +87,13 @@ private struct PondSketch: View {
     }
 }
 
-/// 切れ込みのある浮き葉。
+/// 切れ込みのある浮き葉。切れ込みは細く、葉の中心まで。
 private struct LilyPad: Shape {
     func path(in rect: CGRect) -> Path {
         let center = CGPoint(x: rect.midX, y: rect.midY)
         var path = Path()
         path.move(to: center)
-        path.addArc(center: center, radius: min(rect.width, rect.height) / 2, startAngle: .degrees(18), endAngle: .degrees(342), clockwise: false)
+        path.addArc(center: center, radius: min(rect.width, rect.height) / 2, startAngle: .degrees(8), endAngle: .degrees(352), clockwise: false)
         path.closeSubpath()
         return path
     }

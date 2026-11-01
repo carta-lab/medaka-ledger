@@ -43,6 +43,8 @@ struct HomeView: View {
         }
         .themedBackground()
         .navigationTitle("ホーム")
+        // 日付の見出しを主役にするため、画面の名前は小さく出す
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
