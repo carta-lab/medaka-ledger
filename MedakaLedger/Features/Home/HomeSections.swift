@@ -8,8 +8,7 @@ extension HomeView {
     func hatchDueSection(_ entries: [BatchEntry]) -> some View {
         if !entries.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
-                Text("孵化予定")
-                    .font(.headline)
+                SectionHeading("孵化予定")
                 ForEach(entries) { entry in
                     Button {
                         model.hatchingBatch = entry.batch
@@ -24,10 +23,7 @@ extension HomeView {
 
     func incubatingSection(_ entries: [BatchEntry]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text("育卵中")
-                    .font(.headline)
-                Spacer()
+            SectionHeading(title: "育卵中") {
                 if entries.count > 5 {
                     Button("すべて見る") { router.selectedTab = .breeding }
                         .font(.subheadline)
@@ -52,8 +48,7 @@ extension HomeView {
     var overdueSection: some View {
         let overdue = model.overdueTanks(tanks, settings: settings)
         return VStack(alignment: .leading, spacing: 8) {
-            Text("水換えの期限超え")
-                .font(.headline)
+            SectionHeading("水換えの期限超え")
             if overdue.isEmpty {
                 Text("期限を超えた容器はありません")
                     .font(.subheadline)
@@ -78,10 +73,7 @@ extension HomeView {
     /// 出品中の販売（SCREENS.md 2）。タップで販売の編集。
     var listedSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text("出品中")
-                    .font(.headline)
-                Spacer()
+            SectionHeading(title: "出品中") {
                 if listedSales.count > 5 {
                     Button("すべて見る") { router.selectedTab = .sales }
                         .font(.subheadline)
@@ -106,8 +98,7 @@ extension HomeView {
     var recentSection: some View {
         let records = model.recentRecords(events: recentEvents, batches: recentBatches, logs: recentLogs, sales: recentSales)
         return VStack(alignment: .leading, spacing: 8) {
-            Text("最近の記録")
-                .font(.headline)
+            SectionHeading("最近の記録")
             if records.isEmpty {
                 Text("記録はまだありません")
                     .font(.subheadline)

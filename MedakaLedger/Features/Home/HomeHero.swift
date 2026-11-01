@@ -1,127 +1,204 @@
 import SwiftUI
-import UIKit
 
-// ホームの見出し（DECISIONS.md 付録1、J）。水面の上に日付と季節を置く。
-// Assets に HomeHero の画像があれば写真を、無ければ水面を描いて使う（IMAGES.md）。
+// ホームの見出し（DECISIONS.md 付録1、J）。台帳の一枚目のように、日付を明朝で大きく書き、季節を判子で押す。
+// 右に、真上から見た睡蓮鉢を線で描く。動かさない。
 
 struct HomeHero: View {
     let isBreedingSeason: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(verbatim: Date.now.formatted(.dateTime.year()))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Text(verbatim: Date.now.formatted(.dateTime.month().day()))
+                    .font(Typeface.heading(40, relativeTo: .largeTitle))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                Text(verbatim: Date.now.formatted(.dateTime.weekday(.wide)))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                SeasonStamp(isBreedingSeason: isBreedingSeason)
+                    .padding(.top, 10)
+            }
             Spacer(minLength: 0)
-            Text(verbatim: Date.now.formatted(.dateTime.month().day().weekday()))
-                .font(.largeTitle.bold())
-            Label(isBreedingSeason ? LocalizedStringKey("産卵期") : LocalizedStringKey("産卵期外"), systemImage: isBreedingSeason ? "sun.max.fill" : "snowflake")
-                .font(.subheadline.bold())
-                .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .background(Color.white.opacity(0.2), in: .capsule)
+            PondSketch()
+                .frame(width: 128, height: 128)
         }
-        .foregroundStyle(Color.white)
-        .padding(Theme.cardPadding + 4)
-        .frame(maxWidth: .infinity, minHeight: 200, alignment: .bottomLeading)
-        .background { WaterSurface() }
-        .clipShape(.rect(cornerRadius: Theme.cornerRadius + 4))
+        .padding(.top, 8)
         .accessibilityElement(children: .combine)
     }
 }
 
-/// 水面。写真があれば写真に、文字が読める暗さの影を重ねる。無ければ、深い青緑の水に光の揺らぎとめだかを描く。
-struct WaterSurface: View {
+/// 季節の判子。朱の枠に明朝の文字。わずかに傾けて、手で押した印にする。
+private struct SeasonStamp: View {
+    let isBreedingSeason: Bool
+
     var body: some View {
-        if let photo = UIImage(named: "HomeHero") {
-            Image(uiImage: photo)
-                .resizable()
-                .scaledToFill()
-                .overlay(LinearGradient(colors: [.clear, Color.black.opacity(0.55)], startPoint: .top, endPoint: .bottom))
-                .accessibilityHidden(true)
-        } else {
-            DrawnWater()
-        }
+        Text(isBreedingSeason ? LocalizedStringKey("産卵期") : LocalizedStringKey("産卵期外"))
+            .font(Typeface.heading(15, relativeTo: .subheadline))
+            .foregroundStyle(Theme.stamp)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .overlay(RoundedRectangle(cornerRadius: 4).stroke(Theme.stamp, lineWidth: 1.5))
+            .rotationEffect(.degrees(-3))
     }
 }
 
-/// 写真の無いときの水面。光の揺らぎは静止、めだかだけがゆっくり泳ぐ。視差効果を減らす設定では泳がない。
-private struct DrawnWater: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var isSwimming = false
-
-    private static let fish: [(look: MedakaLook, x: CGFloat, y: CGFloat, size: CGFloat)] = [
-        (MedakaLook(shape: .standard, palette: .vermilion, hasSparkle: false, hasLongFin: false), 0.62, 0.30, 46),
-        (MedakaLook(shape: .hikari, palette: .silver, hasSparkle: true, hasLongFin: false), 0.80, 0.52, 38),
-        (MedakaLook(shape: .standard, palette: .orange, hasSparkle: false, hasLongFin: true), 0.50, 0.62, 32),
+/// 真上から見た睡蓮鉢。縁は二重の細い線、水は淡いインク、浮き葉とめだか。
+private struct PondSketch: View {
+    private static let fish: [(look: MedakaLook, x: CGFloat, y: CGFloat, angle: Double, size: CGFloat)] = [
+        (MedakaLook(shape: .standard, palette: .vermilion, hasSparkle: false, hasLongFin: false), 0.42, 0.58, -24, 44),
+        (MedakaLook(shape: .hikari, palette: .silver, hasSparkle: true, hasLongFin: false), 0.62, 0.38, 150, 36),
     ]
 
     var body: some View {
         GeometryReader { proxy in
-            let size = proxy.size
+            let side = min(proxy.size.width, proxy.size.height)
             ZStack {
-                LinearGradient(colors: [Theme.Tile.teal, Theme.deep], startPoint: .topTrailing, endPoint: .bottomLeading)
-                // 水を通った光の揺らぎ
-                ForEach(0..<5, id: \.self) { index in
-                    Ellipse()
-                        .fill(Color.white.opacity(0.07))
-                        .frame(width: size.width * 0.5, height: size.height * 0.35)
-                        .rotationEffect(.degrees(Double(index) * 31))
-                        .position(x: size.width * (0.25 + 0.17 * CGFloat(index)), y: size.height * (0.2 + 0.13 * CGFloat(index % 3)))
-                }
-                // 水面の波紋
-                ForEach(0..<3, id: \.self) { index in
-                    Circle()
-                        .stroke(Color.white.opacity(0.18 - Double(index) * 0.05), lineWidth: 1.5)
-                        .frame(width: 70 + CGFloat(index) * 60, height: 70 + CGFloat(index) * 60)
-                        .position(x: size.width * 0.82, y: size.height * 0.28)
-                }
-                ForEach(Array(Self.fish.enumerated()), id: \.offset) { index, item in
+                Circle().fill(Theme.accent.opacity(0.08))
+                    .padding(side * 0.08)
+                Circle().stroke(Color.primary.opacity(0.55), lineWidth: 1.5)
+                Circle().stroke(Color.primary.opacity(0.3), lineWidth: 0.8)
+                    .padding(side * 0.08)
+                LilyPad().fill(Theme.done.opacity(0.45))
+                    .frame(width: side * 0.26, height: side * 0.26)
+                    .rotationEffect(.degrees(30))
+                    .position(x: side * 0.68, y: side * 0.70)
+                LilyPad().fill(Theme.done.opacity(0.3))
+                    .frame(width: side * 0.16, height: side * 0.16)
+                    .rotationEffect(.degrees(-80))
+                    .position(x: side * 0.30, y: side * 0.32)
+                // 水面の小さな波紋
+                Circle().trim(from: 0.05, to: 0.4)
+                    .stroke(Theme.accent.opacity(0.45), style: StrokeStyle(lineWidth: 1, lineCap: .round))
+                    .frame(width: side * 0.22, height: side * 0.22)
+                    .position(x: side * 0.30, y: side * 0.66)
+                ForEach(Array(Self.fish.enumerated()), id: \.offset) { _, item in
                     MedakaIcon(look: item.look, size: item.size, showsBackground: false)
-                        .position(x: size.width * item.x, y: size.height * item.y)
-                        .offset(x: isSwimming ? CGFloat(12 + index * 6) : 0, y: isSwimming ? CGFloat(index % 2 == 0 ? -4 : 4) : 0)
+                        .rotationEffect(.degrees(item.angle))
+                        .position(x: side * item.x, y: side * item.y)
                 }
             }
+            .frame(width: side, height: side)
         }
         .accessibilityHidden(true)
-        .onAppear {
-            guard !reduceMotion else { return }
-            withAnimation(.easeInOut(duration: 4).repeatForever(autoreverses: true)) {
-                isSwimming = true
-            }
-        }
     }
 }
 
-/// ホームの数字。容器、飼育中の群、匹数、育卵中のロット。
-struct HomeStats: View {
+/// 切れ込みのある浮き葉。切れ込みは細く、葉の中心まで。
+private struct LilyPad: Shape {
+    func path(in rect: CGRect) -> Path {
+        let center = CGPoint(x: rect.midX, y: rect.midY)
+        var path = Path()
+        path.move(to: center)
+        path.addArc(center: center, radius: min(rect.width, rect.height) / 2, startAngle: .degrees(8), endAngle: .degrees(352), clockwise: false)
+        path.closeSubpath()
+        return path
+    }
+}
+
+/// 台帳の頭の行。容器、飼育中の群、匹数、育卵中を、二重線の下に数字で並べる。
+/// 文字が大きいときは2行2列にする。
+struct HomeLedgerSummary: View {
     let tankCount: Int
     let tally: CohortTally
     let incubatingCount: Int
 
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-            tile(tankCount.formatted(), "容器", systemImage: "square.grid.2x2.fill", color: Theme.Tile.teal)
-            tile(tally.cohortCount.formatted(), "飼育中の群", systemImage: "fish.fill", color: Theme.Tile.blue)
-            tile(tally.fishCount.formatted() + (tally.hasUncounted ? "+" : ""), "飼育中の匹数", systemImage: "number", color: Theme.Tile.coral)
-            tile(incubatingCount.formatted(), "育卵中のロット", systemImage: "circle.grid.3x3.fill", color: Theme.Tile.amber)
+        VStack(spacing: 0) {
+            VStack(spacing: 2) {
+                Rectangle().fill(Color.primary.opacity(0.5)).frame(height: 1.5)
+                Rectangle().fill(Theme.rule).frame(height: 1)
+            }
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 0) {
+                    ForEach(Array(cells.enumerated()), id: \.offset) { index, cell in
+                        if index > 0 {
+                            Rectangle().fill(Theme.rule).frame(width: 1)
+                        }
+                        cellView(cell)
+                    }
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                Grid(alignment: .leading, horizontalSpacing: 0, verticalSpacing: 8) {
+                    GridRow {
+                        cellView(cells[0])
+                        cellView(cells[1])
+                    }
+                    GridRow {
+                        cellView(cells[2])
+                        cellView(cells[3])
+                    }
+                }
+            }
+            .padding(.vertical, 10)
+            Rectangle().fill(Theme.rule).frame(height: 1)
         }
+        .accessibilityElement(children: .combine)
     }
 
-    private func tile(_ value: String, _ title: LocalizedStringKey, systemImage: String, color: Color) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Image(systemName: systemImage)
-                .font(.subheadline)
-                .opacity(0.85)
-            Text(verbatim: value)
-                .font(.system(.title, design: .rounded).bold())
+    private struct Cell {
+        var title: LocalizedStringKey
+        var value: String
+        var unit: LocalizedStringKey
+    }
+
+    private var cells: [Cell] {
+        [
+            Cell(title: "容器", value: tankCount.formatted(), unit: "個"),
+            Cell(title: "飼育中の群", value: tally.cohortCount.formatted(), unit: "群"),
+            Cell(title: "匹数", value: tally.fishCount.formatted() + (tally.hasUncounted ? "+" : ""), unit: "匹"),
+            Cell(title: "育卵中", value: incubatingCount.formatted(), unit: "ロット"),
+        ]
+    }
+
+    private func cellView(_ cell: Cell) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(cell.title)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.6)
-            Text(title)
-                .font(.caption.bold())
-                .opacity(0.9)
+            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                Text(verbatim: cell.value)
+                    .font(Typeface.heading(24, relativeTo: .title2))
+                    .monospacedDigit()
+                    .lineLimit(1)
+                Text(cell.unit)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
         }
-        .foregroundStyle(Color.white)
-        .padding(Theme.cardPadding)
+        .padding(.horizontal, 10)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(color, in: .rect(cornerRadius: Theme.cornerRadius))
-        .accessibilityElement(children: .combine)
+    }
+}
+
+/// クイック操作のボタン。紙の面に罫線の縁、細いインクの記号の下に名前。
+struct InkActionStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .labelStyle(InkActionLabelStyle())
+            .frame(maxWidth: .infinity, minHeight: 72)
+            .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius))
+            .overlay(RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(Theme.rule, lineWidth: 1))
+            .opacity(isEnabled ? (configuration.isPressed ? 0.6 : 1) : 0.4)
+    }
+}
+
+private struct InkActionLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        VStack(spacing: 6) {
+            configuration.icon
+                .font(.title2.weight(.light))
+                .foregroundStyle(Theme.accent)
+            configuration.title
+                .font(.subheadline.bold())
+                .foregroundStyle(.primary)
+        }
+        .padding(.vertical, 10)
     }
 }

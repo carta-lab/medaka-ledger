@@ -43,6 +43,8 @@ struct HomeView: View {
         }
         .themedBackground()
         .navigationTitle("ホーム")
+        // 日付の見出しを主役にするため、画面の名前は小さく出す
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -88,7 +90,7 @@ struct HomeView: View {
     private func header(isBreedingSeason: Bool) -> some View {
         VStack(spacing: 12) {
             HomeHero(isBreedingSeason: isBreedingSeason)
-            HomeStats(
+            HomeLedgerSummary(
                 tankCount: tanks.count,
                 tally: Aggregations.tally(counts: activeCohorts.map(\.count)),
                 incubatingCount: incubating.count
@@ -101,7 +103,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             MedakaIcon(look: MedakaLook(shape: .standard, palette: .orange, hasSparkle: false, hasLongFin: false), size: 56)
             Text("まず容器を登録しましょう")
-                .font(.headline)
+                .font(Typeface.heading(19, relativeTo: .headline))
             Text("容器と系統を登録すると、群の記録をつけられます。")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -130,8 +132,7 @@ struct HomeView: View {
             .buttonStyle(LargeButtonStyle(prominent: false))
             .accessibilityIdentifier("temperatureButton")
 
-            Text("越冬中の群")
-                .font(.headline)
+            SectionHeading("越冬中の群")
             if cohorts.isEmpty {
                 Text("屋外の容器にいる群はありません")
                     .font(.subheadline)
@@ -149,29 +150,28 @@ struct HomeView: View {
 
     private var quickActions: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("クイック操作")
-                .font(.headline)
+            SectionHeading("記録する")
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
                 Button {
                     model.activeSheet = .eggBatch
                 } label: {
-                    Label("採卵", systemImage: "circle.grid.3x3.fill")
+                    Label("採卵", systemImage: "circle.grid.3x3")
                 }
-                .buttonStyle(TileButtonStyle(color: Theme.Tile.amber))
+                .buttonStyle(InkActionStyle())
                 .accessibilityIdentifier("quickEggBatch")
                 Button {
                     model.activeSheet = .waterChange
                 } label: {
-                    Label("水換え", systemImage: "drop.fill")
+                    Label("水換え", systemImage: "drop")
                 }
-                .buttonStyle(TileButtonStyle(color: Theme.Tile.teal))
+                .buttonStyle(InkActionStyle())
                 .accessibilityIdentifier("quickWaterChange")
                 Button {
                     model.activeSheet = .photo
                 } label: {
-                    Label("写真", systemImage: "camera.fill")
+                    Label("写真", systemImage: "camera")
                 }
-                .buttonStyle(TileButtonStyle(color: Theme.Tile.coral))
+                .buttonStyle(InkActionStyle())
                 .accessibilityIdentifier("quickPhoto")
                 disabledQuickAction("増減", systemImage: "plusminus")
             }
@@ -183,7 +183,7 @@ struct HomeView: View {
         } label: {
             Label(title, systemImage: systemImage)
         }
-        .buttonStyle(TileButtonStyle(color: Theme.Tile.blue))
+        .buttonStyle(InkActionStyle())
         .disabled(true)
     }
 }
