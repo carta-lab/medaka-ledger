@@ -10,7 +10,8 @@ enum Theme {
     static let screenPadding: CGFloat = 16
     static let minButtonHeight: CGFloat = 48
 
-    static let accent = Color.accentColor
+    /// アセットを名前で直接読む。システムの既定色（青）に戻らないようにする。
+    static let accent = Color("AccentColor")
     static let background = Color("ThemeBackground")
     static let surface = Color("ThemeSurface")
     static let deep = Color("ThemeDeep")

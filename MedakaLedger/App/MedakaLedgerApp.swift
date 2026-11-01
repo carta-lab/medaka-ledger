@@ -40,6 +40,7 @@ struct MedakaLedgerApp: App {
             switch containerResult {
             case let .success(container):
                 RootView()
+                    .tint(Theme.accent)
                     .modelContainer(container)
                     .environment(settings)
                     .environment(router)
