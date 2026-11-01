@@ -18,7 +18,7 @@ struct PaywallView: View {
                 if let message = reason.message {
                     Section {
                         Text(verbatim: message)
-                            .font(.headline)
+                            .font(Typeface.heading(17, relativeTo: .headline))
                     }
                 }
                 Section {

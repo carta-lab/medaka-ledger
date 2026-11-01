@@ -24,7 +24,7 @@ struct HatchCelebration: View {
                 }
                 .frame(width: 260, height: 200)
                 Text(verbatim: message)
-                    .font(.title3.bold())
+                    .font(Typeface.heading(22, relativeTo: .title3))
                     .multilineTextAlignment(.center)
             }
             .padding(Theme.screenPadding)

@@ -150,7 +150,7 @@ struct CohortDetailView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
                     Text(verbatim: cohort.generationLabel)
-                        .font(.title2.bold())
+                        .font(Typeface.heading(24, relativeTo: .title2))
                     if !cohort.label.isEmpty {
                         Text(verbatim: cohort.label)
                             .font(.title3)
@@ -165,7 +165,7 @@ struct CohortDetailView: View {
                     }
                 }
                 Text(verbatim: cohort.countText)
-                    .font(.largeTitle.bold())
+                    .font(Typeface.heading(40, relativeTo: .largeTitle))
                     .accessibilityIdentifier("cohortCount")
                 if let sex = cohort.sexText {
                     Text(verbatim: sex)

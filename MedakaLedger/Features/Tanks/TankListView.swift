@@ -29,7 +29,7 @@ struct TankListView: View {
                         ForEach(sections) { section in
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(verbatim: section.title)
-                                    .font(.headline)
+                                    .font(Typeface.heading(18, relativeTo: .headline))
                                     .foregroundStyle(section.isUnset ? .secondary : .primary)
                                 LazyVGrid(columns: columns, spacing: 12) {
                                     ForEach(section.items) { tank in
