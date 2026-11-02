@@ -132,13 +132,17 @@ struct RootView: View {
         .fullScreenCover(isPresented: $router.showsOnboarding) {
             OnboardingView(existingTankNames: existingTankNames())
         }
-        // 起動時とフォアグラウンドに戻ったとき、孵化予定の通知を計画し直す
+        // 起動時とフォアグラウンドに戻ったとき、通知を計画し直す。
+        // 画面から離れる直前（非アクティブ）にも計画し直す。群の完売、アーカイブ、削除、販売などで通知の対象が
+        // 変わっても、離れたあとに古い通知が残らない。バックグラウンドでは時間が足りないことがあるので、その手前で行う
         .task(id: scenePhase) {
             if scenePhase == .active {
                 await scheduler.reschedule(in: modelContext)
                 // Proの権利を確かめ直す。返金や別の端末での購入を拾う（PRD.md F13）
                 await pro.start()
                 await pro.refresh()
+            } else if scenePhase == .inactive {
+                await scheduler.reschedule(in: modelContext)
             }
         }
     }
