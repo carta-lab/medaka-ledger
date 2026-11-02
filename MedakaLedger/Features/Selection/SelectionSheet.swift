@@ -9,6 +9,7 @@ struct SelectionSheet: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(ProStore.self) private var pro
+    @Environment(NotificationScheduler.self) private var scheduler
     @State private var gate = LimitGate()
     @Query(filter: Tank.unarchivedPredicate, sort: Tank.listSort) private var tanks: [Tank]
     let cohort: Cohort
@@ -95,7 +96,12 @@ struct SelectionSheet: View {
             .bottomSaveBar(isEnabled: model.canSave, identifier: "saveSelectionButton") {
                 // 選別に付ける写真は、新しい選別の記録に3枚まで（Free）
                 gate.attempt(.photosPerOwner, adding: model.photos.count, pro: pro, count: { 0 }) {
-                    if model.save(for: cohort, in: modelContext) { dismiss() }
+                    if model.save(for: cohort, in: modelContext) {
+                        let context = modelContext
+                        dismiss()
+                        // 記録した回は、目安日の通知から外す
+                        Task { await scheduler.reschedule(in: context) }
+                    }
                 }
             }
             .paywall(gate)

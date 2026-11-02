@@ -265,6 +265,8 @@ enum MaintenanceKind: String { case waterChange, topUp, cleaning, medication, te
 | `listingTemplate` | String | 既定の雛形 | 出品文テンプレ |
 | `listingGuaranteeText` | String | 空 | 出品文の `{死着保証}` に入る文（`DECISIONS.md` H 第5週） |
 | `listingNoticeText` | String | 空 | 出品文の `{注意事項}` に入る文 |
+| `selectionReminderEnabled` | Bool | true | 選別の目安日を朝8時に知らせるか（DECISIONS.md K） |
+| `selectionReminderDays` | [Int] | [21, 49, 84] | 孵化日から数えた、1回目、2回目、3回目の目安日。各1から365。範囲外は既定に戻す |
 | `hasCompletedOnboarding` | Bool | false | |
 | `lastBackupAt` | Date? | nil | バックアップ案内の判定 |
 
