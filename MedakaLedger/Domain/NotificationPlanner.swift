@@ -1,6 +1,6 @@
 import Foundation
 
-// ローカル通知の予約計画（SCREENS.md 14、DECISIONS.md F、G 3-9）。
+// ローカル通知の予約計画（SCREENS.md 14、DECISIONS.md F、G 3-9、K）。
 // 文言はここでは作らず、種類と値だけを返す（文言は Notifications/NotificationScheduler.swift）。
 
 struct HatchNotificationInput: Equatable, Sendable {
@@ -13,6 +13,8 @@ struct PlannedNotification: Equatable, Sendable {
     enum Kind: Equatable, Sendable {
         case hatch(name: String)
         case seasonStart
+        /// 選別の目安日。その日の先頭の群の名前、群の数、孵化からの日数。
+        case selectionDue(firstName: String, cohortCount: Int, days: Int)
     }
 
     var identifier: String

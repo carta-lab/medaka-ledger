@@ -12,6 +12,8 @@ final class AppSettings {
         static let waterChangeWarningDays = "waterChangeWarningDays"
         static let winterWaterChangeWarningDays = "winterWaterChangeWarningDays"
         static let breedingSeasonMonths = "breedingSeasonMonths"
+        static let selectionReminderEnabled = "selectionReminderEnabled"
+        static let selectionReminderDays = "selectionReminderDays"
         static let listingTemplate = "listingTemplate"
         static let listingGuaranteeText = "listingGuaranteeText"
         static let listingNoticeText = "listingNoticeText"
@@ -31,6 +33,8 @@ final class AppSettings {
             Key.waterChangeWarningDays: 14,
             Key.winterWaterChangeWarningDays: 45,
             Key.breedingSeasonMonths: Self.defaultBreedingSeasonMonths,
+            Key.selectionReminderEnabled: true,
+            Key.selectionReminderDays: SelectionReminderPlanner.defaultDays,
             Key.listingTemplate: "",
             Key.listingGuaranteeText: "",
             Key.listingNoticeText: "",
@@ -64,6 +68,21 @@ final class AppSettings {
             return defaults.array(forKey: Key.breedingSeasonMonths) as? [Int] ?? Self.defaultBreedingSeasonMonths
         }
         set { withMutation(keyPath: \.breedingSeasonMonths) { defaults.set(newValue, forKey: Key.breedingSeasonMonths) } }
+    }
+
+    /// 選別の目安日を朝8時に知らせるか（DECISIONS.md K）。
+    var selectionReminderEnabled: Bool {
+        get { access(keyPath: \.selectionReminderEnabled); return defaults.bool(forKey: Key.selectionReminderEnabled) }
+        set { withMutation(keyPath: \.selectionReminderEnabled) { defaults.set(newValue, forKey: Key.selectionReminderEnabled) } }
+    }
+
+    /// 孵化日から数えた、1回目、2回目、3回目の目安日。範囲外の値は既定に戻して返す。
+    var selectionReminderDays: [Int] {
+        get {
+            access(keyPath: \.selectionReminderDays)
+            return SelectionReminderPlanner.normalizedDays(defaults.array(forKey: Key.selectionReminderDays) as? [Int] ?? [])
+        }
+        set { withMutation(keyPath: \.selectionReminderDays) { defaults.set(newValue, forKey: Key.selectionReminderDays) } }
     }
 
     var listingTemplate: String {

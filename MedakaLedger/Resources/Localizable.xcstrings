@@ -40,6 +40,12 @@
     "%@の群に統合しました": {
       "extractionState": "manual"
     },
+    "%@は、孵化から%@日です。選別の目安日です": {
+      "extractionState": "manual"
+    },
+    "%@ほか%@群が、選別の目安日です": {
+      "extractionState": "manual"
+    },
     "%@を%@へ分けました": {
       "extractionState": "manual"
     },
@@ -68,6 +74,9 @@
       "extractionState": "manual"
     },
     "%@匹が孵りました": {
+      "extractionState": "manual"
+    },
+    "%@回目": {
       "extractionState": "manual"
     },
     "%@年": {
@@ -967,6 +976,9 @@
     "孵化 %@": {
       "extractionState": "manual"
     },
+    "孵化から%@日": {
+      "extractionState": "manual"
+    },
     "孵化したばかりの、体長5ミリ前後の稚魚です。": {
       "extractionState": "manual"
     },
@@ -998,6 +1010,9 @@
       "extractionState": "manual"
     },
     "孵化日": {
+      "extractionState": "manual"
+    },
+    "孵化日から数えたこの日数の朝8時に、選別を記録していない群を知らせます。日数は目安で、育ち方によって変わります。過ぎた目安日は知らせません。": {
       "extractionState": "manual"
     },
     "孵化済みのロットをタップすると、遅れて孵った分を記録できます。": {
@@ -1829,6 +1844,12 @@
       "extractionState": "manual"
     },
     "選別で残さなかった個体のことです。餌用、格安販売、別容器、処分から行き先を選びます。": {
+      "extractionState": "manual"
+    },
+    "選別の目安日": {
+      "extractionState": "manual"
+    },
+    "選別の目安日を知らせる": {
       "extractionState": "manual"
     },
     "選別を記録": {

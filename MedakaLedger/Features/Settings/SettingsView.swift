@@ -63,6 +63,8 @@ struct SettingsView: View {
                     Text("産卵期はホームの並びと水換えの警告日数が変わります。産卵期の最初の月の前月15日に「親魚セットを組みましょう」とお知らせします。")
                 }
 
+                selectionReminderSection(settings: settings)
+
                 ListingSettingsSection(gate: gate)
 
                 BackupSection(model: backup, usage: usage)
@@ -94,6 +96,39 @@ struct SettingsView: View {
                 Task { await scheduler.reschedule(in: modelContext) }
             }
         }
+    }
+
+    /// 選別の目安日の通知。孵化日から数えた日数は目安で、群の育ち方に合わせて変えられる（DECISIONS.md K）。
+    @ViewBuilder
+    private func selectionReminderSection(settings: AppSettings) -> some View {
+        @Bindable var settings = settings
+        Section {
+            Toggle("選別の目安日を知らせる", isOn: $settings.selectionReminderEnabled)
+                .accessibilityIdentifier("selectionReminderToggle")
+            if settings.selectionReminderEnabled {
+                ForEach(0..<3, id: \.self) { index in
+                    Stepper {
+                        LabeledContent(String(localized: "\(index + 1)回目")) {
+                            Text(verbatim: String(localized: "孵化から\(settings.selectionReminderDays[index].formatted())日"))
+                        }
+                    } onIncrement: {
+                        changeReminderDay(index, by: 1, settings: settings)
+                    } onDecrement: {
+                        changeReminderDay(index, by: -1, settings: settings)
+                    }
+                }
+            }
+        } header: {
+            Text("選別の目安日")
+        } footer: {
+            Text("孵化日から数えたこの日数の朝8時に、選別を記録していない群を知らせます。日数は目安で、育ち方によって変わります。過ぎた目安日は知らせません。")
+        }
+    }
+
+    private func changeReminderDay(_ index: Int, by step: Int, settings: AppSettings) {
+        var days = settings.selectionReminderDays
+        days[index] = min(max(days[index] + step, SelectionReminderPlanner.dayRange.lowerBound), SelectionReminderPlanner.dayRange.upperBound)
+        settings.selectionReminderDays = days
     }
 
     private func refreshUsage() async {
