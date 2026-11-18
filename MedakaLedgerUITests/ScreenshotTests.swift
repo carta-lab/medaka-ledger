@@ -278,5 +278,17 @@ final class ScreenshotTests: XCTestCase {
                 snapshot("\(prefix)-群詳細")
             }
         }
+        tapTab(app, "繁殖")
+        snapshot("\(prefix)-繁殖")
+        tapTab(app, "販売")
+        snapshot("\(prefix)-販売")
+        tapTab(app, "ホーム")
+        let settings = app.buttons["settingsButton"]
+        XCTAssertTrue(settings.waitForExistence(timeout: 5))
+        settings.tap()
+        sleepBriefly()
+        snapshot("\(prefix)-設定")
+
     }
 }
+
