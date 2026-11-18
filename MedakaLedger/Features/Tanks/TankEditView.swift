@@ -20,34 +20,38 @@ struct TankEditView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    TextField("名前（例 A-1）", text: $model.name)
-                        .focused($isNameFocused)
-                        .accessibilityIdentifier("tankNameField")
-                    Picker("種類", selection: $model.kind) {
-                        ForEach(TankKind.allCases, id: \.self) { kind in
-                            Label(kind.label, systemImage: kind.symbolName).tag(kind)
+                Group {
+                    EntryHeading(title: "容器の情報", subtitle: "名前と置き場所を、いつもの呼び方で。", systemImage: "square.grid.2x2")
+                    Section {
+                        TextField("名前（例 A-1）", text: $model.name)
+                            .focused($isNameFocused)
+                            .accessibilityIdentifier("tankNameField")
+                        Picker("種類", selection: $model.kind) {
+                            ForEach(TankKind.allCases, id: \.self) { kind in
+                                Label(kind.label, systemImage: kind.symbolName).tag(kind)
+                            }
+                        }
+                        TextField("容量（リットル）", text: $model.capacityText)
+                            .keyboardType(.decimalPad)
+                    }
+                    Section("置き場所") {
+                        Picker("屋外か室内か", selection: $model.placement) {
+                            ForEach(Placement.allCases, id: \.self) { placement in
+                                Text(verbatim: placement.label).tag(placement)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        TextField("棚、列など（例 棚A）", text: $model.location)
+                        SuggestionChips(suggestions: model.locationSuggestions(from: tanks)) { location in
+                            model.location = location
                         }
                     }
-                    TextField("容量（リットル）", text: $model.capacityText)
-                        .keyboardType(.decimalPad)
-                }
-                Section("置き場所") {
-                    Picker("屋外か室内か", selection: $model.placement) {
-                        ForEach(Placement.allCases, id: \.self) { placement in
-                            Text(verbatim: placement.label).tag(placement)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    TextField("棚、列など（例 棚A）", text: $model.location)
-                    SuggestionChips(suggestions: model.locationSuggestions(from: tanks)) { location in
-                        model.location = location
+                    Section("メモ") {
+                        TextField("メモ", text: $model.note, axis: .vertical)
+                            .lineLimit(2...6)
                     }
                 }
-                Section("メモ") {
-                    TextField("メモ", text: $model.note, axis: .vertical)
-                        .lineLimit(2...6)
-                }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle(model.isNew ? "容器を登録" : "容器を編集")
@@ -100,3 +104,4 @@ struct TankEditView: View {
         }
     }
 }
+

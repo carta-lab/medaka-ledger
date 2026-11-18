@@ -67,7 +67,8 @@ struct BottomSaveBar: ViewModifier {
             .padding(.horizontal, Theme.screenPadding)
             .padding(.vertical, 8)
             .frame(maxWidth: .infinity)
-            .background(.bar)
+            .background(Theme.background)
+            .overlay(alignment: .top) { Rectangle().fill(Theme.rule).frame(height: 0.5) }
         }
     }
 }
@@ -151,8 +152,8 @@ struct SuggestionChips: View {
                             Text(verbatim: suggestion)
                                 .font(.subheadline)
                                 .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(.fill.tertiary, in: .capsule)
+                                .frame(minHeight: 44)
+                                .background(Theme.wash, in: .rect(cornerRadius: 6))
                         }
                         .buttonStyle(.plain)
                     }
@@ -173,3 +174,4 @@ struct InfoRow: View {
         }
     }
 }
+

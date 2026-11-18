@@ -2,9 +2,10 @@ import SwiftData
 import SwiftUI
 
 // ホーム（SCREENS.md 2）。今日やることと、注意が要る状態を一画面で見せる。
-// 増減のクイック操作は後の週。
+// v2 は静かな水景と、既存の記録への入口を一枚にまとめる。
 
 struct HomeView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(AppSettings.self) var settings
     @Environment(Router.self) var router
     @Query(filter: Tank.unarchivedPredicate, sort: Tank.listSort) var tanks: [Tank]
@@ -21,26 +22,24 @@ struct HomeView: View {
         let isBreedingSeason = settings.isBreedingSeason()
         let entries = BatchPredictionInfo.sortedByRemaining(incubating, settings: settings)
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 28) {
                 header(isBreedingSeason: isBreedingSeason)
-                VStack(alignment: .leading, spacing: 24) {
-                    if tanks.isEmpty {
-                        gettingStarted
-                    }
-                    if isBreedingSeason {
-                        quickActions
-                        hatchDueSection(model.hatchDue(from: entries))
-                        incubatingSection(entries)
-                    } else {
-                        wintering
-                        quickActions
-                    }
-                    overdueSection
-                    listedSection
-                    recentSection
+                if tanks.isEmpty {
+                    gettingStarted
                 }
-                .padding(.horizontal, Theme.screenPadding)
+                if !isBreedingSeason { temperatureAction }
+                quickActions
+                if isBreedingSeason {
+                    hatchDueSection(model.hatchDue(from: entries))
+                    incubatingSection(entries)
+                } else {
+                    wintering
+                }
+                overdueSection
+                listedSection
+                recentSection
             }
+            .padding(.horizontal, Theme.screenPadding)
             .padding(.bottom, 24)
         }
         .themedBackground()
@@ -74,6 +73,7 @@ struct HomeView: View {
             case .temperature: MaintenanceSheet(kind: .temperature)
             case .photo: QuickPhotoSheet()
             case .settings: SettingsView()
+            case .count: QuickCountSheet()
             }
         }
         .sheet(item: $model.hatchingBatch) { batch in
@@ -90,15 +90,15 @@ struct HomeView: View {
     }
 
     private func header(isBreedingSeason: Bool) -> some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             HomeHero(isBreedingSeason: isBreedingSeason)
             HomeLedgerSummary(
                 tankCount: tanks.count,
                 tally: Aggregations.tally(counts: activeCohorts.map(\.count)),
                 incubatingCount: incubating.count
             )
-            .padding(.horizontal, Theme.screenPadding)
         }
+        .padding(.top, 8)
     }
 
     private var gettingStarted: some View {
@@ -122,18 +122,20 @@ struct HomeView: View {
         .cardBackground()
     }
 
-    /// 産卵期外は見出しの直後に水温の記録と越冬中の群を出す（DECISIONS.md E）。
+    private var temperatureAction: some View {
+        Button {
+            model.activeSheet = .temperature
+        } label: {
+            Label("水温の記録", systemImage: "thermometer.medium")
+        }
+        .buttonStyle(LargeButtonStyle(prominent: false))
+        .accessibilityIdentifier("temperatureButton")
+    }
+
+    /// 産卵期外は水温の入口を上に出し、屋外の飼育中の群をまとめる。
     private var wintering: some View {
         let cohorts = model.winteringCohorts(from: activeCohorts)
         return VStack(alignment: .leading, spacing: 12) {
-            Button {
-                model.activeSheet = .temperature
-            } label: {
-                Label("水温の記録", systemImage: "thermometer.medium")
-            }
-            .buttonStyle(LargeButtonStyle(prominent: false))
-            .accessibilityIdentifier("temperatureButton")
-
             SectionHeading("越冬中の群")
             if cohorts.isEmpty {
                 Text("屋外の容器にいる群はありません")
@@ -153,7 +155,8 @@ struct HomeView: View {
     private var quickActions: some View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeading("記録する")
-            LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12),
+                                     count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 12) {
                 Button {
                     model.activeSheet = .eggBatch
                 } label: {
@@ -175,17 +178,14 @@ struct HomeView: View {
                 }
                 .buttonStyle(InkActionStyle())
                 .accessibilityIdentifier("quickPhoto")
-                disabledQuickAction("増減", systemImage: "plusminus")
+                Button {
+                    model.activeSheet = .count
+                } label: {
+                    Label("増減", systemImage: "plusminus")
+                }
+                .buttonStyle(InkActionStyle())
+                .accessibilityIdentifier("quickCount")
             }
         }
-    }
-
-    private func disabledQuickAction(_ title: LocalizedStringKey, systemImage: String) -> some View {
-        Button {
-        } label: {
-            Label(title, systemImage: systemImage)
-        }
-        .buttonStyle(InkActionStyle())
-        .disabled(true)
     }
 }

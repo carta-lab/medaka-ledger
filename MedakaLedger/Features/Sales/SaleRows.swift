@@ -7,31 +7,23 @@ struct SaleRow: View {
     let title: String
 
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-            Text(verbatim: CohortText.shortDate(record.date))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .frame(minWidth: 52, alignment: .leading)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(verbatim: title)
-                    .font(.headline)
-                    .lineLimit(2)
-                HStack(spacing: 6) {
-                    Text(verbatim: "\(SaleText.quantity(unit: record.unit, quantity: record.quantity))　\(record.channel.label)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 10) {
+            Text(verbatim: title).font(.headline.weight(.medium))
+            Text(verbatim: "\(CohortText.shortDate(record.date)) · \(SaleText.quantity(unit: record.unit, quantity: record.quantity)) · \(record.channel.label)")
+                .font(.caption).foregroundStyle(Theme.muted)
+            ViewThatFits(in: .horizontal) {
+                HStack {
                     SaleStatusBadge(status: record.status)
+                    Spacer(minLength: 8)
+                    Text(verbatim: SaleText.yen(record.totalPrice)).font(.body.weight(.medium)).monospacedDigit()
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    SaleStatusBadge(status: record.status)
+                    Text(verbatim: SaleText.yen(record.totalPrice)).font(.body.weight(.medium)).monospacedDigit()
                 }
             }
-            Spacer(minLength: 8)
-            Text(verbatim: SaleText.yen(record.totalPrice))
-                .font(.headline)
-                .monospacedDigit()
-            Image(systemName: "chevron.right")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.tertiary)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 8)
         .accessibilityElement(children: .combine)
     }
 }
@@ -40,12 +32,7 @@ struct SaleStatusBadge: View {
     let status: SaleStatus
 
     var body: some View {
-        Text(verbatim: status.label)
-            .font(.caption.bold())
-            .padding(.horizontal, 8)
-            .padding(.vertical, 2)
-            .foregroundStyle(foreground)
-            .background(background, in: .capsule)
+        LedgerStatus(text: status.label, color: foreground)
     }
 
     private var foreground: Color {
@@ -57,72 +44,9 @@ struct SaleStatusBadge: View {
         }
     }
 
-    private var background: Color {
-        foreground.opacity(0.15)
-    }
 }
 
 /// 売上、手数料、送料、純額、件数。
-/// 売上を大きく、手数料、送料、純額を下に並べる集計の札。
-struct SalesSummaryCard: View {
-    let summary: SalesSummary
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("売上")
-                    .font(Typeface.heading(17, relativeTo: .headline))
-                Spacer(minLength: 8)
-                Text(verbatim: String(localized: "\(summary.count.formatted())件"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Text(verbatim: SaleText.yen(summary.revenue))
-                .font(Typeface.heading(40, relativeTo: .largeTitle))
-                .foregroundStyle(Theme.accent)
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
-            Rectangle().fill(Theme.rule).frame(height: 1)
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .top, spacing: 0) {
-                    figure("手数料", summary.fee)
-                    divider
-                    figure("送料", summary.shipping)
-                    divider
-                    figure("純額", summary.net)
-                }
-                VStack(alignment: .leading, spacing: 8) {
-                    figure("手数料", summary.fee)
-                    figure("送料", summary.shipping)
-                    figure("純額", summary.net)
-                }
-            }
-        }
-        .cardBackground()
-        .accessibilityElement(children: .combine)
-    }
-
-    private var divider: some View {
-        Rectangle().fill(Theme.rule).frame(width: 1).padding(.vertical, 2)
-    }
-
-    private func figure(_ title: LocalizedStringKey, _ amount: Int) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Text(verbatim: SaleText.yen(amount))
-                .font(Typeface.heading(18, relativeTo: .headline))
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        }
-        .padding(.horizontal, 12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-}
-
 struct SalesSummaryRows: View {
     let summary: SalesSummary
 
@@ -148,3 +72,4 @@ extension SalesPeriod {
         }
     }
 }
+

@@ -17,49 +17,53 @@ struct BreedingSetEditView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    Picker("系統で絞り込む", selection: $strainFilter) {
-                        Text("すべての系統").tag(Strain?.none)
-                        ForEach(strainsOfCohorts) { strain in
-                            Text(verbatim: strain.displayName).tag(Optional(strain))
+                Group {
+                    EntryHeading(title: "親魚セット", subtitle: "雄と雌の群を選び、採卵を始める準備を。", systemImage: "arrow.triangle.branch")
+                    Section {
+                        Picker("系統で絞り込む", selection: $strainFilter) {
+                            Text("すべての系統").tag(Strain?.none)
+                            ForEach(strainsOfCohorts) { strain in
+                                Text(verbatim: strain.displayName).tag(Optional(strain))
+                            }
+                        }
+                        cohortPicker("雄の群", selection: $model.sire)
+                        cohortPicker("雌の群", selection: $model.dam)
+                    } footer: {
+                        Text("雄の群と雌の群を選ぶと保存できます。同じ群を雄と雌の両方に選べます。")
+                    }
+
+                    Section("匹数") {
+                        IntField("雄の匹数", value: $model.maleCount)
+                        IntField("雌の匹数", value: $model.femaleCount)
+                    }
+
+                    Section {
+                        Picker("容器", selection: $model.tank) {
+                            Text("容器未設定").tag(Tank?.none)
+                            ForEach(tanks) { tank in
+                                Text(verbatim: tank.name).tag(Optional(tank))
+                            }
+                        }
+                        if model.canOfferMove {
+                            Toggle("雄と雌の群をこの容器へ移す", isOn: $model.movesParents)
+                        }
+                        DatePicker("開始日", selection: $model.startedAt, displayedComponents: .date)
+                    }
+
+                    Section {
+                        TextField("名前（空なら自動）", text: $model.name)
+                        TextField("メモ", text: $model.note, axis: .vertical)
+                            .lineLimit(2...6)
+                    }
+
+                    if let message = model.offspringMessage {
+                        Section("子の系統") {
+                            Text(verbatim: message)
+                                .font(.subheadline)
                         }
                     }
-                    cohortPicker("雄の群", selection: $model.sire)
-                    cohortPicker("雌の群", selection: $model.dam)
-                } footer: {
-                    Text("雄の群と雌の群を選ぶと保存できます。同じ群を雄と雌の両方に選べます。")
                 }
-
-                Section("匹数") {
-                    IntField("雄の匹数", value: $model.maleCount)
-                    IntField("雌の匹数", value: $model.femaleCount)
-                }
-
-                Section {
-                    Picker("容器", selection: $model.tank) {
-                        Text("容器未設定").tag(Tank?.none)
-                        ForEach(tanks) { tank in
-                            Text(verbatim: tank.name).tag(Optional(tank))
-                        }
-                    }
-                    if model.canOfferMove {
-                        Toggle("雄と雌の群をこの容器へ移す", isOn: $model.movesParents)
-                    }
-                    DatePicker("開始日", selection: $model.startedAt, displayedComponents: .date)
-                }
-
-                Section {
-                    TextField("名前（空なら自動）", text: $model.name)
-                    TextField("メモ", text: $model.note, axis: .vertical)
-                        .lineLimit(2...6)
-                }
-
-                if let message = model.offspringMessage {
-                    Section("子の系統") {
-                        Text(verbatim: message)
-                            .font(.subheadline)
-                    }
-                }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle("親魚セットを組む")
@@ -101,3 +105,4 @@ struct BreedingSetEditView: View {
         }
     }
 }
+

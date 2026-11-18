@@ -20,58 +20,62 @@ struct MaintenanceSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    Picker("種類", selection: $model.kind) {
-                        ForEach(MaintenanceKind.allCases, id: \.self) { kind in
-                            Text(verbatim: kind.label).tag(kind)
-                        }
-                    }
-                    DatePicker("日付", selection: $model.date, displayedComponents: .date)
-                    if model.kind == .waterChange {
-                        IntField("割合（％）", value: $model.percent)
-                    }
-                    TextField(
-                        model.kind == .temperature ? LocalizedStringKey("水温（℃、必須）") : LocalizedStringKey("水温（℃、任意）"),
-                        text: $model.waterTempText
-                    )
-                    .keyboardType(.decimalPad)
-                    TextField("メモ", text: $model.note, axis: .vertical)
-                        .lineLimit(1...4)
-                }
-
-                Section {
-                    if tanks.isEmpty {
-                        Text("容器がありません。先に容器を登録しましょう。")
-                            .foregroundStyle(.secondary)
-                    }
-                    ForEach(model.isTankLocked ? model.initialTanks : tanks) { tank in
-                        Button {
-                            model.toggle(tank)
-                        } label: {
-                            HStack {
-                                Label(tank.name, systemImage: tank.kind.symbolName)
-                                Spacer()
-                                if model.isSelected(tank) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(Theme.accent)
-                                } else {
-                                    Image(systemName: "circle")
-                                        .foregroundStyle(.secondary)
-                                }
+                Group {
+                    EntryHeading(title: "水辺のお手入れ", subtitle: "容器と作業を選んで、日々の変化を残す。", systemImage: "drop")
+                    Section {
+                        Picker("種類", selection: $model.kind) {
+                            ForEach(MaintenanceKind.allCases, id: \.self) { kind in
+                                Text(verbatim: kind.label).tag(kind)
                             }
-                            .contentShape(.rect)
                         }
-                        .buttonStyle(.plain)
-                        .disabled(model.isTankLocked)
-                        .accessibilityAddTraits(model.isSelected(tank) ? .isSelected : [])
+                        DatePicker("日付", selection: $model.date, displayedComponents: .date)
+                        if model.kind == .waterChange {
+                            IntField("割合（％）", value: $model.percent)
+                        }
+                        TextField(
+                            model.kind == .temperature ? LocalizedStringKey("水温（℃、必須）") : LocalizedStringKey("水温（℃、任意）"),
+                            text: $model.waterTempText
+                        )
+                        .keyboardType(.decimalPad)
+                        TextField("メモ", text: $model.note, axis: .vertical)
+                            .lineLimit(1...4)
                     }
-                } header: {
-                    Text("容器")
-                } footer: {
-                    if !model.isTankLocked {
-                        Text("複数の容器を選ぶと、同じ内容を各容器に保存します。")
+
+                    Section {
+                        if tanks.isEmpty {
+                            Text("容器がありません。先に容器を登録しましょう。")
+                                .foregroundStyle(.secondary)
+                        }
+                        ForEach(model.isTankLocked ? model.initialTanks : tanks) { tank in
+                            Button {
+                                model.toggle(tank)
+                            } label: {
+                                HStack {
+                                    Label(tank.name, systemImage: tank.kind.symbolName)
+                                    Spacer()
+                                    if model.isSelected(tank) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundStyle(Theme.accent)
+                                    } else {
+                                        Image(systemName: "circle")
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                                .contentShape(.rect)
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(model.isTankLocked)
+                            .accessibilityAddTraits(model.isSelected(tank) ? .isSelected : [])
+                        }
+                    } header: {
+                        Text("容器")
+                    } footer: {
+                        if !model.isTankLocked {
+                            Text("複数の容器を選ぶと、同じ内容を各容器に保存します。")
+                        }
                     }
                 }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle("作業を記録")
@@ -93,3 +97,4 @@ struct MaintenanceSheet: View {
         }
     }
 }
+

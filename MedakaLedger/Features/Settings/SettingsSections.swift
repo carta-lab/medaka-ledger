@@ -37,41 +37,44 @@ struct ListingTemplateView: View {
     var body: some View {
         @Bindable var settings = settings
         Form {
-            Section {
-                TextEditor(text: $settings.listingTemplate)
-                    .frame(minHeight: 240)
-                    .font(.body.monospaced())
-                    .accessibilityIdentifier("listingTemplateEditor")
-                Button("既定の雛形に戻す") {
-                    settings.listingTemplate = ListingTextBuilder.defaultTemplate
+            Group {
+                Section {
+                    TextEditor(text: $settings.listingTemplate)
+                        .frame(minHeight: 240)
+                        .font(.body.monospaced())
+                        .accessibilityIdentifier("listingTemplateEditor")
+                    Button("既定の雛形に戻す") {
+                        settings.listingTemplate = ListingTextBuilder.defaultTemplate
+                    }
+                } header: {
+                    Text("雛形")
+                } footer: {
+                    Text("{品種} のように波括弧で囲んだ語が、群の情報に置き換わります。情報が入っていない語を含む行は、行ごと省きます。1行に語を1つずつ置くと、項目ごとに省けます。")
                 }
-            } header: {
-                Text("雛形")
-            } footer: {
-                Text("{品種} のように波括弧で囲んだ語が、群の情報に置き換わります。情報が入っていない語を含む行は、行ごと省きます。1行に語を1つずつ置くと、項目ごとに省けます。")
+                Section {
+                    Text(verbatim: ListingTextBuilder.placeholders.map { "{\($0)}" }.joined(separator: "　"))
+                        .font(.subheadline)
+                } header: {
+                    Text("使える語")
+                }
+                Section {
+                    TextField("死着保証の文", text: $settings.listingGuaranteeText, axis: .vertical)
+                        .lineLimit(2...6)
+                } header: {
+                    Text("死着保証")
+                } footer: {
+                    Text("{死着保証} に入る文です。空なら、その行は出しません。")
+                }
+                Section {
+                    TextField("注意事項の文", text: $settings.listingNoticeText, axis: .vertical)
+                        .lineLimit(2...6)
+                } header: {
+                    Text("注意事項")
+                } footer: {
+                    Text("{注意事項} に入る文です。空なら、その行は出しません。")
+                }
             }
-            Section {
-                Text(verbatim: ListingTextBuilder.placeholders.map { "{\($0)}" }.joined(separator: "　"))
-                    .font(.subheadline)
-            } header: {
-                Text("使える語")
-            }
-            Section {
-                TextField("死着保証の文", text: $settings.listingGuaranteeText, axis: .vertical)
-                    .lineLimit(2...6)
-            } header: {
-                Text("死着保証")
-            } footer: {
-                Text("{死着保証} に入る文です。空なら、その行は出しません。")
-            }
-            Section {
-                TextField("注意事項の文", text: $settings.listingNoticeText, axis: .vertical)
-                    .lineLimit(2...6)
-            } header: {
-                Text("注意事項")
-            } footer: {
-                Text("{注意事項} に入る文です。空なら、その行は出しません。")
-            }
+            .ledgerRow()
         }
         .themedBackground()
         .navigationTitle("出品文の雛形")
@@ -197,3 +200,4 @@ struct AboutSection: View {
         }
     }
 }
+

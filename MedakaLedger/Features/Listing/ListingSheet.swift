@@ -19,49 +19,53 @@ struct ListingSheet: View {
         let lines = model.lines(settings: settings)
         NavigationStack {
             Form {
-                Section {
-                    Picker("群", selection: $model.cohort) {
-                        Text("選んでください").tag(Cohort?.none)
-                        ForEach(cohorts) { cohort in
-                            Text(verbatim: "\(cohort.strainName) \(cohort.generationLabel)・\(cohort.tankName)")
-                                .tag(Optional(cohort))
-                        }
-                    }
-                    .pickerStyle(.navigationLink)
-                    .accessibilityIdentifier("listingCohortPicker")
-                } footer: {
-                    if model.cohort == nil {
-                        Text("群を選ぶと、出品文を組み立てます。")
-                    }
-                }
-
-                if !lines.isEmpty {
+                Group {
+                    EntryHeading(title: "出品文", subtitle: "記録から文を組み立て、必要な行を選ぶ。", systemImage: "text.alignleft")
                     Section {
-                        ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
-                            if !model.removedLines.contains(index) {
-                                HStack(alignment: .firstTextBaseline) {
-                                    Text(verbatim: line.isEmpty ? " " : line)
-                                    Spacer(minLength: 8)
-                                    Button {
-                                        model.remove(index)
-                                    } label: {
-                                        Label("この行を消す", systemImage: "minus.circle")
-                                            .labelStyle(.iconOnly)
-                                    }
-                                    .buttonStyle(.borderless)
-                                    .accessibilityLabel(Text(verbatim: String(localized: "「\(line)」の行を消す")))
-                                }
+                        Picker("群", selection: $model.cohort) {
+                            Text("選んでください").tag(Cohort?.none)
+                            ForEach(cohorts) { cohort in
+                                Text(verbatim: "\(cohort.strainName) \(cohort.generationLabel)・\(cohort.tankName)")
+                                    .tag(Optional(cohort))
                             }
                         }
-                        if !model.removedLines.isEmpty {
-                            Button("消した行を戻す") { model.restoreAll() }
-                        }
-                    } header: {
-                        Text("出品文")
+                        .pickerStyle(.navigationLink)
+                        .accessibilityIdentifier("listingCohortPicker")
                     } footer: {
-                        Text("情報が入っていない項目は、行ごと省いています。雛形は設定で変えられます。")
+                        if model.cohort == nil {
+                            Text("群を選ぶと、出品文を組み立てます。")
+                        }
+                    }
+
+                    if !lines.isEmpty {
+                        Section {
+                            ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
+                                if !model.removedLines.contains(index) {
+                                    HStack(alignment: .firstTextBaseline) {
+                                        Text(verbatim: line.isEmpty ? " " : line)
+                                        Spacer(minLength: 8)
+                                        Button {
+                                            model.remove(index)
+                                        } label: {
+                                            Label("この行を消す", systemImage: "minus.circle")
+                                                .labelStyle(.iconOnly)
+                                        }
+                                        .buttonStyle(.borderless)
+                                        .accessibilityLabel(Text(verbatim: String(localized: "「\(line)」の行を消す")))
+                                    }
+                                }
+                            }
+                            if !model.removedLines.isEmpty {
+                                Button("消した行を戻す") { model.restoreAll() }
+                            }
+                        } header: {
+                            Text("出品文")
+                        } footer: {
+                            Text("情報が入っていない項目は、行ごと省いています。雛形は設定で変えられます。")
+                        }
                     }
                 }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle("出品文")
@@ -81,3 +85,4 @@ struct ListingSheet: View {
         }
     }
 }
+

@@ -4,6 +4,7 @@ import SwiftUI
 // 系統詳細（SCREENS.md 4.3）。「群」「血統図」「写真」「販売」の切り替え。
 
 struct StrainDetailView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.modelContext) private var modelContext
     @Bindable var strain: Strain
     @State private var model = StrainDetailModel()
@@ -11,53 +12,59 @@ struct StrainDetailView: View {
     var body: some View {
         let cohorts = model.visibleCohorts(of: strain)
         List {
-            Section {
-                HStack(spacing: 12) {
-                    MedakaIcon(look: strain.look, size: 56)
-                    if !strain.traitTags.isEmpty {
-                        Text(verbatim: strain.traitTags.joined(separator: "・"))
-                            .foregroundStyle(Theme.accent)
+            Group {
+                Section {
+                    HStack(spacing: 12) {
+                        if let photo = strain.coverPhoto {
+                            PhotoThumbnail(photo: photo, size: 72)
+                        } else {
+                            MedakaIcon(look: strain.look, size: 72, scalesWithText: false)
+                        }
+                        if !strain.traitTags.isEmpty {
+                            Text(verbatim: strain.traitTags.joined(separator: "・"))
+                                .foregroundStyle(Theme.accent)
+                        }
+                    }
+                    if !strain.source.isEmpty {
+                        InfoRow(title: "入手元", value: strain.source)
+                    }
+                    if let acquiredAt = strain.acquiredAt {
+                        InfoRow(title: "入手日", value: CohortText.date(acquiredAt))
+                    }
+                    if !strain.note.isEmpty {
+                        Text(verbatim: strain.note)
+                            .font(.subheadline)
+                    }
+                    if strain.isArchived {
+                        Label("アーカイブ済み", systemImage: "archivebox")
+                            .foregroundStyle(.secondary)
                     }
                 }
-                if !strain.source.isEmpty {
-                    InfoRow(title: "入手元", value: strain.source)
-                }
-                if let acquiredAt = strain.acquiredAt {
-                    InfoRow(title: "入手日", value: CohortText.date(acquiredAt))
-                }
-                if !strain.note.isEmpty {
-                    Text(verbatim: strain.note)
-                        .font(.subheadline)
-                }
-                if strain.isArchived {
-                    Label("アーカイブ済み", systemImage: "archivebox")
-                        .foregroundStyle(.secondary)
-                }
-            }
 
-            Section {
-                Picker("表示", selection: $model.tab) {
-                    ForEach(StrainDetailModel.Tab.allCases) { tab in
-                        Text(tab.title).tag(tab)
+                Section {
+                    if dynamicTypeSize.isAccessibilitySize {
+                        tabPicker.pickerStyle(.menu)
+                    } else {
+                        tabPicker.pickerStyle(.segmented)
                     }
                 }
-                .pickerStyle(.segmented)
-                .accessibilityIdentifier("strainTabPicker")
-            }
 
-            switch model.tab {
-            case .cohorts:
-                cohortsContent(cohorts)
-            case .lineage:
-                lineageContent
-            case .photos:
-                photosContent
-            case .sales:
-                salesContent
+                switch model.tab {
+                case .cohorts:
+                    cohortsContent(cohorts)
+                case .lineage:
+                    lineageContent
+                case .photos:
+                    photosContent
+                case .sales:
+                    salesContent
+                }
             }
+            .ledgerRow()
         }
         .themedBackground()
         .navigationTitle(strain.displayName)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -104,6 +111,15 @@ struct StrainDetailView: View {
             Text(verbatim: model.archiveMessage(for: strain))
         }
         .errorAlert($model.error)
+    }
+
+    private var tabPicker: some View {
+        Picker("表示", selection: $model.tab) {
+            ForEach(StrainDetailModel.Tab.allCases) { tab in
+                Text(tab.title).tag(tab)
+            }
+        }
+        .accessibilityIdentifier("strainTabPicker")
     }
 
     @ViewBuilder
@@ -226,3 +242,4 @@ struct StrainDetailView: View {
         return header
     }
 }
+

@@ -10,9 +10,12 @@ struct ArchivedTanksView: View {
                 ContentUnavailableView("アーカイブ済みの容器はありません", systemImage: "archivebox")
             } else {
                 List(tanks) { tank in
-                    NavigationLink(value: Route.tank(tank)) {
-                        Label(tank.name, systemImage: tank.kind.symbolName)
+                    Group {
+                        NavigationLink(value: Route.tank(tank)) {
+                            Label(tank.name, systemImage: tank.kind.symbolName)
+                        }
                     }
+                    .ledgerRow()
                 }
             }
         }
@@ -20,3 +23,4 @@ struct ArchivedTanksView: View {
         .navigationTitle("アーカイブ済みの容器")
     }
 }
+

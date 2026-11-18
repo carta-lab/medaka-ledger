@@ -21,33 +21,37 @@ struct EggBatchSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                setSection
-                Section {
-                    DatePicker("採卵日", selection: $model.collectedAt, displayedComponents: .date)
-                    IntField("卵の数（概数、任意）", value: $model.eggCount)
-                }
-                Section {
-                    Picker("育卵容器", selection: $model.container) {
-                        Text("カップ名を入力").tag(Tank?.none)
-                        ForEach(tanks) { tank in
-                            Text(verbatim: tank.name).tag(Optional(tank))
+                Group {
+                    EntryHeading(title: "採卵の記録", subtitle: "今日の卵を、次の世代につなげる。", systemImage: "circle.dotted")
+                    setSection
+                    Section {
+                        DatePicker("採卵日", selection: $model.collectedAt, displayedComponents: .date)
+                        IntField("卵の数（概数、任意）", value: $model.eggCount)
+                    }
+                    Section {
+                        Picker("育卵容器", selection: $model.container) {
+                            Text("カップ名を入力").tag(Tank?.none)
+                            ForEach(tanks) { tank in
+                                Text(verbatim: tank.name).tag(Optional(tank))
+                            }
                         }
+                        if model.container == nil {
+                            TextField("カップ名（任意）", text: $model.containerName)
+                        }
+                        TextField(
+                            "水温（任意。空なら\(settings.defaultWaterTempC.formatted())℃）",
+                            text: $model.waterTempText
+                        )
+                        .keyboardType(.decimalPad)
+                    } footer: {
+                        Text("容器に水温を記録していると、その日ごとの水温で孵化予定日を計算します。")
                     }
-                    if model.container == nil {
-                        TextField("カップ名（任意）", text: $model.containerName)
+                    Section {
+                        TextField("メモ", text: $model.note, axis: .vertical)
+                            .lineLimit(2...6)
                     }
-                    TextField(
-                        "水温（任意。空なら\(settings.defaultWaterTempC.formatted())℃）",
-                        text: $model.waterTempText
-                    )
-                    .keyboardType(.decimalPad)
-                } footer: {
-                    Text("容器に水温を記録していると、その日ごとの水温で孵化予定日を計算します。")
                 }
-                Section {
-                    TextField("メモ", text: $model.note, axis: .vertical)
-                        .lineLimit(2...6)
-                }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle("採卵を記録")
@@ -96,3 +100,4 @@ struct EggBatchSheet: View {
         }
     }
 }
+

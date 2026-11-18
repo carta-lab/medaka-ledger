@@ -213,14 +213,6 @@ extension SchemaV1.Tank {
         (logs ?? []).filter { $0.kind == .waterChange }.map(\.date).max()
     }
 
-    /// 最後に記録した水温。記録が無ければ nil。
-    var latestWaterTemp: Double? {
-        (logs ?? [])
-            .filter { $0.kind == .temperature && $0.waterTempC != nil }
-            .max { $0.date < $1.date }?
-            .waterTempC
-    }
-
     var recentLogs: [MaintenanceLog] {
         (logs ?? []).sorted { $0.date > $1.date }
     }

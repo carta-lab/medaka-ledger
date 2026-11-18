@@ -11,30 +11,33 @@ struct StrainListView: View {
     var body: some View {
         Group {
             if strains.isEmpty {
-                ContentUnavailableView {
-                    Label("系統がありません", systemImage: "list.bullet.rectangle")
-                } description: {
-                    Text("まず系統を登録しましょう")
-                } actions: {
-                    Button("系統を登録する") { model.isCreating = true }
-                        .buttonStyle(LargeButtonStyle())
+                LedgerEmptyState(title: "系統がありません", message: "まず系統を登録しましょう",
+                                 systemImage: "fish", actionTitle: "系統を登録する",
+                                 actionIdentifier: "addFirstStrainButton") {
+                    model.isCreating = true
                 }
             } else {
                 List {
-                    ForEach(strains) { strain in
-                        NavigationLink(value: Route.strain(strain)) {
-                            StrainRow(strain: strain)
+                    Group {
+                        EntryHeading(title: "つながる系統", subtitle: "受け継いだ表現と、次の世代を残す。",
+                                     systemImage: "fish")
+                        ForEach(strains) { strain in
+                            NavigationLink(value: Route.strain(strain)) {
+                                StrainRow(strain: strain)
+                            }
+                            .accessibilityIdentifier("strainRow.\(strain.breedName)")
                         }
-                        .accessibilityIdentifier("strainRow.\(strain.breedName)")
+                        .onMove { source, destination in
+                            model.move(strains, from: source, to: destination, in: modelContext)
+                        }
                     }
-                    .onMove { source, destination in
-                        model.move(strains, from: source, to: destination, in: modelContext)
-                    }
+                    .ledgerRow()
                 }
             }
         }
         .themedBackground()
         .navigationTitle("系統")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 if strains.count > 1 {
@@ -72,13 +75,13 @@ struct StrainRow: View {
         let tally = Aggregations.tally(counts: strain.activeCohorts.map(\.count))
         HStack(spacing: 12) {
             if let photo = strain.coverPhoto {
-                PhotoThumbnail(photo: photo, size: 48)
+                PhotoThumbnail(photo: photo, size: 64)
             } else {
-                MedakaIcon(look: strain.look, size: 48, scalesWithText: false)
+                MedakaIcon(look: strain.look, size: 64, scalesWithText: false)
             }
             rowText(strain: strain, tally: tally)
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 8)
     }
 
     private func rowText(strain: Strain, tally: CohortTally) -> some View {
@@ -89,13 +92,13 @@ struct StrainRow: View {
                 Text(verbatim: strain.traitTags.prefix(5).joined(separator: "・"))
                     .font(.subheadline)
                     .foregroundStyle(Theme.accent)
-                    .lineLimit(1)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Text(verbatim: StrainText.tally(tally))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 8)
     }
 }
 
@@ -110,3 +113,4 @@ enum StrainText {
         return String(localized: "飼育中の群 \(cohorts)・\(fish)匹")
     }
 }
+

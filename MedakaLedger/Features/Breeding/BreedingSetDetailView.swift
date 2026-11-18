@@ -20,51 +20,55 @@ struct BreedingSetDetailView: View {
 
     private var content: some View {
         List {
-            Section("親") {
-                parentRow("雄", cohort: breedingSet.sireCohort)
-                parentRow("雌", cohort: breedingSet.damCohort)
-                InfoRow(title: "雄雌の匹数", value: String(localized: "雄\(breedingSet.maleCount.formatted())・雌\(breedingSet.femaleCount.formatted())"))
-                InfoRow(title: "容器", value: breedingSet.tank?.name ?? String(localized: "容器未設定"))
-                InfoRow(title: "期間", value: periodText)
-                InfoRow(title: "子の系統", value: breedingSet.offspringStrain?.displayName ?? String(localized: "最初の孵化記録で決めます"))
-                if !breedingSet.note.isEmpty {
-                    Text(verbatim: breedingSet.note)
-                        .font(.subheadline)
+            Group {
+                EntryHeading(title: "親魚と採卵", subtitle: "親から子へ、記録をたどる。", systemImage: "arrow.triangle.branch")
+                Section("親") {
+                    parentRow("雄", cohort: breedingSet.sireCohort)
+                    parentRow("雌", cohort: breedingSet.damCohort)
+                    InfoRow(title: "雄雌の匹数", value: String(localized: "雄\(breedingSet.maleCount.formatted())・雌\(breedingSet.femaleCount.formatted())"))
+                    InfoRow(title: "容器", value: breedingSet.tank?.name ?? String(localized: "容器未設定"))
+                    InfoRow(title: "期間", value: periodText)
+                    InfoRow(title: "子の系統", value: breedingSet.offspringStrain?.displayName ?? String(localized: "最初の孵化記録で決めます"))
+                    if !breedingSet.note.isEmpty {
+                        Text(verbatim: breedingSet.note)
+                            .font(.subheadline)
+                    }
                 }
-            }
 
-            Section {
-                let entries = BatchPredictionInfo.sortedByRemaining(breedingSet.sortedBatches, settings: settings)
-                if entries.isEmpty {
-                    Text("採卵ロットはまだありません")
-                        .foregroundStyle(.secondary)
-                }
-                ForEach(entries) { entry in
-                    batchRow(entry.batch, info: entry.info)
-                }
-            } header: {
-                Text("採卵ロット")
-            } footer: {
-                if breedingSet.sortedBatches.contains(where: { $0.status == .hatched }) {
-                    Text("孵化済みのロットをタップすると、遅れて孵った分を記録できます。")
-                }
-            }
-
-            if breedingSet.isActive {
                 Section {
-                    Button {
-                        model.isRecordingBatch = true
-                    } label: {
-                        Label("採卵を記録", systemImage: "plus.circle")
+                    let entries = BatchPredictionInfo.sortedByRemaining(breedingSet.sortedBatches, settings: settings)
+                    if entries.isEmpty {
+                        Text("採卵ロットはまだありません")
+                            .foregroundStyle(.secondary)
                     }
-                    .accessibilityIdentifier("recordEggBatchButton")
-                    Button(role: .destructive) {
-                        model.isConfirmingEnd = true
-                    } label: {
-                        Label("終了する", systemImage: "stop.circle")
+                    ForEach(entries) { entry in
+                        batchRow(entry.batch, info: entry.info)
+                    }
+                } header: {
+                    Text("採卵ロット")
+                } footer: {
+                    if breedingSet.sortedBatches.contains(where: { $0.status == .hatched }) {
+                        Text("孵化済みのロットをタップすると、遅れて孵った分を記録できます。")
+                    }
+                }
+
+                if breedingSet.isActive {
+                    Section {
+                        Button {
+                            model.isRecordingBatch = true
+                        } label: {
+                            Label("採卵を記録", systemImage: "plus.circle")
+                        }
+                        .accessibilityIdentifier("recordEggBatchButton")
+                        Button(role: .destructive) {
+                            model.isConfirmingEnd = true
+                        } label: {
+                            Label("終了する", systemImage: "stop.circle")
+                        }
                     }
                 }
             }
+            .ledgerRow()
         }
         .themedBackground()
         .navigationTitle(breedingSet.displayName)
@@ -143,3 +147,4 @@ struct BreedingSetDetailView: View {
         return String(localized: "\(start)〜\(CohortText.date(endedAt))")
     }
 }
+

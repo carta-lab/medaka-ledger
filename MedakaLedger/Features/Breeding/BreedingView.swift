@@ -13,33 +13,39 @@ struct BreedingView: View {
     var body: some View {
         Group {
             if activeSets.isEmpty && endedSets.isEmpty {
-                ContentUnavailableView {
-                    Label("親魚セットがありません", systemImage: "arrow.triangle.branch")
-                } description: {
-                    Text("まず親魚セットを組みましょう")
-                } actions: {
-                    Button("親魚セットを組む") { model.isCreating = true }
-                        .buttonStyle(LargeButtonStyle())
-                        .accessibilityIdentifier("createBreedingSetButton")
+                LedgerEmptyState(title: "親魚セットがありません", message: "まず親魚セットを組みましょう",
+                                 systemImage: "arrow.triangle.branch", actionTitle: "親魚セットを組む",
+                                 actionIdentifier: "createBreedingSetButton") {
+                    model.isCreating = true
                 }
             } else {
                 List {
-                    incubatingSection
-                    if !activeSets.isEmpty {
-                        Section("稼働中") {
-                            ForEach(activeSets) { set in row(set) }
+                    Group {
+                        Section {
+                            LedgerIntro(title: "新しい命の記録", subtitle: "親魚から採卵、孵化までをひとつに。",
+                                        systemImage: "arrow.triangle.branch",
+                                        summary: String(localized: "親魚セット \(activeSets.count.formatted())組・育卵中 \(incubating.count.formatted())ロット"))
+                                .listRowBackground(Color.clear)
+                        }
+                        incubatingSection
+                        if !activeSets.isEmpty {
+                            Section("稼働中") {
+                                ForEach(activeSets) { set in row(set) }
+                            }
+                        }
+                        if !endedSets.isEmpty {
+                            Section("終了") {
+                                ForEach(endedSets) { set in row(set) }
+                            }
                         }
                     }
-                    if !endedSets.isEmpty {
-                        Section("終了") {
-                            ForEach(endedSets) { set in row(set) }
-                        }
-                    }
+                    .ledgerRow()
                 }
             }
         }
         .themedBackground()
         .navigationTitle("繁殖")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -70,6 +76,7 @@ struct BreedingView: View {
                         EggBatchRow(batch: entry.batch, info: entry.info)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("incubatingBatch.\(entry.batch.id.uuidString)")
                 }
             }
         }
@@ -87,14 +94,14 @@ struct BreedingSetRow: View {
     let set: BreedingSet
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(verbatim: set.displayName)
                 .font(.headline)
             Text(verbatim: detail)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 6)
     }
 
     private var detail: String {
@@ -110,3 +117,4 @@ struct BreedingSetRow: View {
         return parts.joined(separator: "・")
     }
 }
+

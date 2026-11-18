@@ -10,9 +10,12 @@ struct ArchivedStrainsView: View {
                 ContentUnavailableView("アーカイブ済みの系統はありません", systemImage: "archivebox")
             } else {
                 List(strains) { strain in
-                    NavigationLink(value: Route.strain(strain)) {
-                        StrainRow(strain: strain)
+                    Group {
+                        NavigationLink(value: Route.strain(strain)) {
+                            StrainRow(strain: strain)
+                        }
                     }
+                    .ledgerRow()
                 }
             }
         }
@@ -20,3 +23,4 @@ struct ArchivedStrainsView: View {
         .navigationTitle("アーカイブ済みの系統")
     }
 }
+
