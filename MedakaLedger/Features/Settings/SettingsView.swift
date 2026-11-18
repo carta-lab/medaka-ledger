@@ -7,7 +7,6 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @Environment(AppSettings.self) private var settings
     @Environment(NotificationScheduler.self) private var scheduler
     @State private var gate = LimitGate()
     @State private var backup = BackupModel()

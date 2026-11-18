@@ -14,10 +14,10 @@ struct BreedingView: View {
         Group {
             if activeSets.isEmpty && endedSets.isEmpty {
                 LedgerEmptyState(title: "親魚セットがありません", message: "まず親魚セットを組みましょう",
-                                 systemImage: "arrow.triangle.branch", actionTitle: "親魚セットを組む") {
+                                 systemImage: "arrow.triangle.branch", actionTitle: "親魚セットを組む",
+                                 actionIdentifier: "createBreedingSetButton") {
                     model.isCreating = true
                 }
-                .accessibilityIdentifier("createBreedingSetButton")
             } else {
                 List {
                     Group {

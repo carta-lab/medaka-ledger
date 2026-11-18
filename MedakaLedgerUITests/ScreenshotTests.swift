@@ -94,7 +94,7 @@ final class ScreenshotTests: XCTestCase {
         let menu = app.buttons["salesMenu"]
         if menu.waitForExistence(timeout: 5) {
             menu.tap()
-            let add = app.buttons["販売を記録"]
+            let add = app.buttons["addSaleMenuItem"]
             if add.waitForExistence(timeout: 5) {
                 add.tap()
                 sleepBriefly()

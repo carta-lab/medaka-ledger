@@ -14,7 +14,8 @@ struct TankListView: View {
         Group {
             if tanks.isEmpty {
                 LedgerEmptyState(title: "容器がありません", message: "まず容器を登録しましょう",
-                                 systemImage: "square.grid.2x2", actionTitle: "容器を登録する") {
+                                 systemImage: "square.grid.2x2", actionTitle: "容器を登録する",
+                                 actionIdentifier: "addFirstTankButton") {
                     model.isCreating = true
                 }
             } else if sections.isEmpty {

@@ -12,13 +12,18 @@ final class RedesignFlowTests: XCTestCase {
         XCTAssertTrue(app.buttons["resumeOnboardingButton"].waitForExistence(timeout: 10))
         capture("50-v2-empty-home")
 
-        for (tab, title) in [
-            ("容器", "容器がありません"), ("系統", "系統がありません"),
-            ("繁殖", "親魚セットがありません"), ("販売", "販売の記録はまだありません"),
+        for (tab, title, action) in [
+            ("容器", "容器がありません", "addFirstTankButton"),
+            ("系統", "系統がありません", "addFirstStrainButton"),
+            ("繁殖", "親魚セットがありません", "createBreedingSetButton"),
+            ("販売", "販売の記録はまだありません", "addFirstSaleButton"),
         ] {
             tap(app.tabBars.buttons[tab])
             XCTAssertTrue(app.staticTexts[title].waitForExistence(timeout: 5))
             capture("51-v2-empty-\(tab)")
+            tap(app.buttons[action])
+            XCTAssertTrue(app.buttons["キャンセル"].waitForExistence(timeout: 5))
+            tap(app.buttons["キャンセル"])
         }
 
         tap(app.tabBars.buttons["容器"])

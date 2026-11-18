@@ -5,6 +5,7 @@ import SwiftUI
 // Proの限定は、年別の集計、CSVの書き出し、出品文。確認が済むまでは出さない（DECISIONS.md G 3-10）。
 
 struct SalesView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.modelContext) private var modelContext
     @Environment(ProStore.self) private var pro
     @Query(sort: \Sale.date, order: .reverse) private var sales: [Sale]
@@ -17,10 +18,10 @@ struct SalesView: View {
         Group {
             if sales.isEmpty {
                 LedgerEmptyState(title: "販売の記録はまだありません", message: "最初の販売を記録しましょう",
-                                 systemImage: "yensign", actionTitle: "販売を記録") {
+                                 systemImage: "yensign", actionTitle: "販売を記録",
+                                 actionIdentifier: "addFirstSaleButton") {
                     model.isAdding = true
                 }
-                .accessibilityIdentifier("addFirstSaleButton")
             } else {
                 list(ledger, byID: byID)
             }
@@ -42,6 +43,7 @@ struct SalesView: View {
                     } label: {
                         Label("販売を記録", systemImage: "plus")
                     }
+                    .accessibilityIdentifier("addSaleMenuItem")
                     Button {
                         gate.requirePro(.salesCSV, pro: pro) { model.isExporting = true }
                     } label: {
@@ -93,13 +95,11 @@ struct SalesView: View {
                 EntryHeading(title: "販売台帳", subtitle: "育てた先の記録を、ひと目で。",
                              systemImage: "yensign")
                 Section {
-                    Picker("期間", selection: $model.period) {
-                        ForEach(SalesPeriod.allCases, id: \.self) { period in
-                            Text(verbatim: period.label).tag(period)
-                        }
+                    if dynamicTypeSize.isAccessibilitySize {
+                        periodPicker.pickerStyle(.menu)
+                    } else {
+                        periodPicker.pickerStyle(.segmented)
                     }
-                    .pickerStyle(.segmented)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                     SalesOverview(summary: ledger.summary)
                 } footer: {
                     Text("集計は売約と発送済の販売です。出品中と取消は入りません。")
@@ -156,6 +156,15 @@ struct SalesView: View {
             .ledgerRow()
         }
         .accessibilityIdentifier("salesList")
+    }
+
+    private var periodPicker: some View {
+        Picker("期間", selection: $model.period) {
+            ForEach(SalesPeriod.allCases, id: \.self) { period in
+                Text(verbatim: period.label).tag(period)
+            }
+        }
+        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
     }
 
     private func row(_ record: SaleRecord, sale: Sale) -> some View {

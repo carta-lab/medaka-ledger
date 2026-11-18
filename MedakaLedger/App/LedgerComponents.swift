@@ -74,6 +74,7 @@ struct LedgerEmptyState: View {
     let message: LocalizedStringKey
     let systemImage: String
     let actionTitle: LocalizedStringKey
+    var actionIdentifier = "ledgerEmptyAction"
     let action: () -> Void
 
     var body: some View {
@@ -81,7 +82,9 @@ struct LedgerEmptyState: View {
             VStack(alignment: .leading, spacing: 24) {
                 WaterLandscape().frame(height: 160).clipShape(.rect(cornerRadius: Theme.cornerRadius))
                 LedgerIntro(title: title, subtitle: message, systemImage: systemImage)
-                Button(actionTitle, action: action).buttonStyle(LargeButtonStyle())
+                Button(actionTitle, action: action)
+                    .buttonStyle(LargeButtonStyle())
+                    .accessibilityIdentifier(actionIdentifier)
             }
             .padding(Theme.screenPadding)
         }

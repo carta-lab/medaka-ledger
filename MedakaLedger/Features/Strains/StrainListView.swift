@@ -12,7 +12,8 @@ struct StrainListView: View {
         Group {
             if strains.isEmpty {
                 LedgerEmptyState(title: "系統がありません", message: "まず系統を登録しましょう",
-                                 systemImage: "fish", actionTitle: "系統を登録する") {
+                                 systemImage: "fish", actionTitle: "系統を登録する",
+                                 actionIdentifier: "addFirstStrainButton") {
                     model.isCreating = true
                 }
             } else {
