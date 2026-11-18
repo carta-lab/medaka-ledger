@@ -94,7 +94,11 @@ struct SalesView: View {
                 }
                 .pickerStyle(.segmented)
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                SalesSummaryRows(summary: ledger.summary)
+                .listRowBackground(Color.clear)
+                SalesSummaryCard(summary: ledger.summary)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
             } footer: {
                 Text("集計は売約と発送済の販売です。出品中と取消は入りません。")
             }
@@ -144,6 +148,8 @@ struct SalesView: View {
                     }
                 } header: {
                     Text(verbatim: "\(SaleText.month(year: section.year, month: section.month))　\(SaleText.yen(section.summary.revenue))")
+                        .font(Typeface.heading(16, relativeTo: .headline))
+                        .textCase(nil)
                 }
             }
         }
@@ -157,6 +163,7 @@ struct SalesView: View {
             SaleRow(record: record, title: sale.titleText)
         }
         .buttonStyle(.plain)
+        .listRowBackground(Theme.surface)
         .swipeActions(edge: .leading) {
             if let next = SaleRules.nextStatus(after: sale.status) {
                 Button {

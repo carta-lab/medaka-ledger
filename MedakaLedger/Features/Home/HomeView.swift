@@ -23,26 +23,28 @@ struct HomeView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 header(isBreedingSeason: isBreedingSeason)
-                if tanks.isEmpty {
-                    gettingStarted
+                VStack(alignment: .leading, spacing: 24) {
+                    if tanks.isEmpty {
+                        gettingStarted
+                    }
+                    if isBreedingSeason {
+                        quickActions
+                        hatchDueSection(model.hatchDue(from: entries))
+                        incubatingSection(entries)
+                    } else {
+                        wintering
+                        quickActions
+                    }
+                    overdueSection
+                    listedSection
+                    recentSection
                 }
-                if isBreedingSeason {
-                    quickActions
-                    hatchDueSection(model.hatchDue(from: entries))
-                    incubatingSection(entries)
-                } else {
-                    wintering
-                    quickActions
-                }
-                overdueSection
-                listedSection
-                recentSection
+                .padding(.horizontal, Theme.screenPadding)
             }
-            .padding(.horizontal, Theme.screenPadding)
             .padding(.bottom, 24)
         }
         .themedBackground()
-        .navigationTitle("ホーム")
+        .navigationTitle("めだか台帳")
         // 日付の見出しを主役にするため、画面の名前は小さく出す
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -88,15 +90,15 @@ struct HomeView: View {
     }
 
     private func header(isBreedingSeason: Bool) -> some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 16) {
             HomeHero(isBreedingSeason: isBreedingSeason)
             HomeLedgerSummary(
                 tankCount: tanks.count,
                 tally: Aggregations.tally(counts: activeCohorts.map(\.count)),
                 incubatingCount: incubating.count
             )
+            .padding(.horizontal, Theme.screenPadding)
         }
-        .padding(.top, 8)
     }
 
     private var gettingStarted: some View {

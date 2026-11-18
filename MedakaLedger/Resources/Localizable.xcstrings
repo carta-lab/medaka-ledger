@@ -172,6 +172,9 @@
     "　": {
       "extractionState": "manual"
     },
+    "　ほか%@群": {
+      "extractionState": "manual"
+    },
     "「%@」の行を消す": {
       "extractionState": "manual"
     },
@@ -319,9 +322,6 @@
     "はじめる": {
       "extractionState": "manual"
     },
-    "ほか%@群": {
-      "extractionState": "manual"
-    },
     "まず容器を登録しましょう": {
       "extractionState": "manual"
     },
@@ -332,6 +332,9 @@
       "extractionState": "manual"
     },
     "まだありません": {
+      "extractionState": "manual"
+    },
+    "めだか台帳": {
       "extractionState": "manual"
     },
     "めだか台帳_%@": {
@@ -1351,6 +1354,9 @@
     "水温（任意。空なら%@℃）": {
       "extractionState": "manual"
     },
+    "水辺と暮らす、日々の記録。": {
+      "extractionState": "manual"
+    },
     "注意事項": {
       "extractionState": "manual"
     },
@@ -1723,6 +1729,9 @@
     "記録と月別の集計": {
       "extractionState": "manual"
     },
+    "記録なし": {
+      "extractionState": "manual"
+    },
     "記録の先": {
       "extractionState": "manual"
     },
@@ -1873,7 +1882,13 @@
     "針子の次が稚魚、次が若魚、産卵できる大きさになったら成魚です。境目は厳密ではありません。": {
       "extractionState": "manual"
     },
+    "閉じています": {
+      "extractionState": "manual"
+    },
     "閉じる": {
+      "extractionState": "manual"
+    },
+    "開いています": {
       "extractionState": "manual"
     },
     "開始 %@": {

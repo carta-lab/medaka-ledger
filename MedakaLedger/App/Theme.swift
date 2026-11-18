@@ -5,7 +5,7 @@ import UIKit
 // 色は全て Assets の色セット（ライトとダークを別に設計）。
 
 enum Theme {
-    static let cornerRadius: CGFloat = 12
+    static let cornerRadius: CGFloat = 16
     static let cardPadding: CGFloat = 12
     static let screenPadding: CGFloat = 16
     static let minButtonHeight: CGFloat = 48
@@ -15,6 +15,8 @@ enum Theme {
     static let background = Color("ThemeBackground")
     static let surface = Color("ThemeSurface")
     static let deep = Color("ThemeDeep")
+    /// 季節の札や系統名の札の地。淡い若草色。
+    static let pill = Color("ThemePill")
     static let warning = Color("ThemeWarning")
     static let caution = Color("ThemeAmber")
     static let done = Color("ThemeDone")
@@ -40,6 +42,10 @@ enum Appearance {
             guard let font = UIFont(name: "HiraMinProN-W6", size: size) else { return nil }
             return UIFontMetrics(forTextStyle: style).scaledFont(for: font)
         }
+        // 期間の切り替えなど、分割ボタンは選んだ側を深い緑で塗る
+        let segmented = UISegmentedControl.appearance()
+        segmented.selectedSegmentTintColor = UIColor(Theme.accent)
+        segmented.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
         let bar = UINavigationBar.appearance()
         if let large = scaled(32, .largeTitle) {
             bar.largeTitleTextAttributes = [.font: large]
