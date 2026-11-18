@@ -5,6 +5,10 @@
 他の文書と食い違う場合は、この文書を優先する。
 番号はレビューの番号（1-x：矛盾、2：未定事項、3-x：技術的な難所）に対応する。
 
+## L. v2.0 全面リデザイン（2026-11-19、依頼者の指示）
+
+全画面を対象とし、無印良品のようなミニマルな構成と日本の水景を組み合わせる。細かな意匠は AI に一任。SwiftUI / SwiftData、既存機能・保存データ・課金仕様を維持する。今回の意匠は J と付録1に優先し、[DESIGN_V2.md](DESIGN_V2.md) に定義する。従来の週単位の制限は今回の全画面改修には適用しない。実装後にビルド・テスト・スクリーンショット付き PR を作り、main のマージは承認後に行う。
+
 ## A. 環境と識別子
 
 | 項目 | 決定 |
@@ -295,3 +299,4 @@ DOMAINの選別の3段階（1回目は1cm前後で体型と奇形、2回目は2c
 | SaleChannel | yahooAuction / ownShop / event / consignment / direct / other | ヤフオク / 自店 / イベント / 委託 / 直接 / その他 |
 | SaleStatus | listed / sold / shipped / cancelled | 出品中 / 売約 / 発送済 / 取消 |
 | MaintenanceKind | waterChange / topUp / cleaning / medication / temperature / other | 水換え / 足し水 / 掃除 / 薬浴 / 水温 / その他 |
+
