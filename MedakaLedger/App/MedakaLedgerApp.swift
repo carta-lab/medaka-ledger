@@ -118,7 +118,7 @@ struct RootView: View {
             Tab("容器", systemImage: "square.grid.2x2", value: AppTab.tanks) {
                 NavigationStack { TankListView().routeDestinations() }
             }
-            Tab("系統", systemImage: "list.bullet.rectangle", value: AppTab.strains) {
+            Tab("系統", systemImage: "fish", value: AppTab.strains) {
                 NavigationStack { StrainListView().routeDestinations() }
             }
             Tab("繁殖", systemImage: "arrow.triangle.branch", value: AppTab.breeding) {
@@ -160,3 +160,4 @@ struct StoreErrorView: View {
         }
     }
 }
+

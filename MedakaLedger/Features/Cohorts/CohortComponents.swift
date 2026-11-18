@@ -7,28 +7,26 @@ struct CohortSummaryRow: View {
     var showsTank: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
                 Text(verbatim: "\(cohort.strainName) \(cohort.generationLabel)")
                     .font(.subheadline.bold())
-                if !cohort.label.isEmpty {
-                    Text(verbatim: cohort.label)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
                 if !cohort.isActive {
                     Text(verbatim: cohort.status.label)
                         .font(.caption)
                         .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
+                        .padding(.vertical, 6)
                         .background(.fill.tertiary, in: .capsule)
                 }
+            }
+            if !cohort.label.isEmpty {
+                Text(verbatim: cohort.label).font(.subheadline).foregroundStyle(Theme.muted)
             }
             Text(verbatim: detailText)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 6)
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.rect)
     }
@@ -53,7 +51,7 @@ struct CohortEventRow: View {
             Image(systemName: event.kind.symbolName)
                 .foregroundStyle(Theme.accent)
                 .frame(width: 24)
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(verbatim: event.kind.label)
                     .font(.subheadline.bold())
                 Text(verbatim: CohortEventText.summary(event))
@@ -69,7 +67,7 @@ struct CohortEventRow: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 6)
     }
 }
 
@@ -129,3 +127,4 @@ enum CohortEventText {
         }
     }
 }
+

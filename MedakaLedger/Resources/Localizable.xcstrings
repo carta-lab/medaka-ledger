@@ -64,6 +64,9 @@
     "%@件": {
       "extractionState": "manual"
     },
+    "%@個の容器": {
+      "extractionState": "manual"
+    },
     "%@個まで": {
       "extractionState": "manual"
     },
@@ -304,6 +307,9 @@
     "その他": {
       "extractionState": "manual"
     },
+    "つながる系統": {
+      "extractionState": "manual"
+    },
     "できませんでした": {
       "extractionState": "manual"
     },
@@ -334,6 +340,12 @@
     "まだありません": {
       "extractionState": "manual"
     },
+    "めだか台帳": {
+      "extractionState": "manual"
+    },
+    "めだか台帳 Pro": {
+      "extractionState": "manual"
+    },
     "めだか台帳_%@": {
       "extractionState": "manual"
     },
@@ -344,6 +356,9 @@
       "extractionState": "manual"
     },
     "めだか台帳へようこそ": {
+      "extractionState": "manual"
+    },
+    "わたしの台帳": {
       "extractionState": "manual"
     },
     "アプリが通信するのは、Proの購入と復元のときに、Apple（App Store）と行うときだけです。支払いの情報はAppleが扱い、開発者は受け取りません。": {
@@ -568,6 +583,9 @@
     "今いる群": {
       "extractionState": "manual"
     },
+    "今いる群と、水辺のお手入れ。": {
+      "extractionState": "manual"
+    },
     "今と同じ容器です。": {
       "extractionState": "manual"
     },
@@ -596,6 +614,9 @@
       "extractionState": "manual"
     },
     "今日で終了": {
+      "extractionState": "manual"
+    },
+    "今日の卵を、次の世代につなげる。": {
       "extractionState": "manual"
     },
     "今月": {
@@ -691,6 +712,9 @@
     "入手個体の群を登録": {
       "extractionState": "manual"
     },
+    "入手個体の記録": {
+      "extractionState": "manual"
+    },
     "入手元": {
       "extractionState": "manual"
     },
@@ -734,6 +758,9 @@
       "extractionState": "manual"
     },
     "写真を撮るためにカメラを使います": {
+      "extractionState": "manual"
+    },
+    "写真を残す": {
       "extractionState": "manual"
     },
     "写真を縮小しています": {
@@ -835,6 +862,9 @@
     "匹数を確かめてください。": {
       "extractionState": "manual"
     },
+    "匹数を記録する群を選んでください。": {
+      "extractionState": "manual"
+    },
     "匹数（数えていなければ空のまま）": {
       "extractionState": "manual"
     },
@@ -868,6 +898,9 @@
     "取消と出品中も含めて、状態の列に書き出します。ExcelやNumbersで開けます。": {
       "extractionState": "manual"
     },
+    "受け継いだ表現と、次の世代を残す。": {
+      "extractionState": "manual"
+    },
     "合計": {
       "extractionState": "manual"
     },
@@ -898,6 +931,9 @@
     "名前": {
       "extractionState": "manual"
     },
+    "名前と置き場所を、いつもの呼び方で。": {
+      "extractionState": "manual"
+    },
     "名前は後から変えられます。空欄の容器は作りません。": {
       "extractionState": "manual"
     },
@@ -908,6 +944,9 @@
       "extractionState": "manual"
     },
     "品種": {
+      "extractionState": "manual"
+    },
+    "品種と入手元、受け継ぎたい表現を。": {
       "extractionState": "manual"
     },
     "品種名": {
@@ -941,6 +980,9 @@
       "extractionState": "manual"
     },
     "増減": {
+      "extractionState": "manual"
+    },
+    "増減を記録": {
       "extractionState": "manual"
     },
     "売上": {
@@ -982,6 +1024,9 @@
     "孵化したばかりの、体長5ミリ前後の稚魚です。": {
       "extractionState": "manual"
     },
+    "孵化の記録": {
+      "extractionState": "manual"
+    },
     "孵化を記録": {
       "extractionState": "manual"
     },
@@ -995,6 +1040,9 @@
       "extractionState": "manual"
     },
     "孵化予定日": {
+      "extractionState": "manual"
+    },
+    "孵化予定日、水換え、産卵期、選別の通知を設定します。": {
       "extractionState": "manual"
     },
     "孵化予定日の朝にお知らせするため、次に通知の許可を求めます。": {
@@ -1042,10 +1090,16 @@
     "容器、系統、群、採卵、選別、販売、作業記録、写真、購入者メモは、この端末の中にだけ保存します。開発者のサーバーには送りません。アカウントもありません。": {
       "extractionState": "manual"
     },
+    "容器、系統、群に、その日の姿を。": {
+      "extractionState": "manual"
+    },
     "容器がありません": {
       "extractionState": "manual"
     },
     "容器がありません。先に容器を登録しましょう。": {
+      "extractionState": "manual"
+    },
+    "容器と作業を選んで、日々の変化を残す。": {
       "extractionState": "manual"
     },
     "容器と系統を登録すると、群の記録をつけられます。": {
@@ -1055,6 +1109,12 @@
       "extractionState": "manual"
     },
     "容器の名前": {
+      "extractionState": "manual"
+    },
+    "容器の情報": {
+      "extractionState": "manual"
+    },
+    "容器の記録": {
       "extractionState": "manual"
     },
     "容器は%@個まで登録できます。": {
@@ -1168,6 +1228,9 @@
     "採卵のために組んだ雄と雌の組み合わせです。同じ系統どうしでも、異なる系統の交配でも作れます。": {
       "extractionState": "manual"
     },
+    "採卵の記録": {
+      "extractionState": "manual"
+    },
     "採卵を記録": {
       "extractionState": "manual"
     },
@@ -1195,6 +1258,9 @@
     "数量": {
       "extractionState": "manual"
     },
+    "数量、金額、相手先をひとつに。": {
+      "extractionState": "manual"
+    },
     "数量か金額が大きすぎます。数量は100万まで、金額は1兆円までです。": {
       "extractionState": "manual"
     },
@@ -1202,6 +1268,9 @@
       "extractionState": "manual"
     },
     "数量は1以上で入れてください。": {
+      "extractionState": "manual"
+    },
+    "新しい命の記録": {
       "extractionState": "manual"
     },
     "新しい系統": {
@@ -1235,6 +1304,9 @@
       "extractionState": "manual"
     },
     "書き出す件数": {
+      "extractionState": "manual"
+    },
+    "書き出す期間を選んでください。": {
       "extractionState": "manual"
     },
     "書き出せませんでした": {
@@ -1300,6 +1372,9 @@
     "残し数": {
       "extractionState": "manual"
     },
+    "残す数と弾く数、その理由を残す。": {
+      "extractionState": "manual"
+    },
     "段階": {
       "extractionState": "manual"
     },
@@ -1351,6 +1426,15 @@
     "水温（任意。空なら%@℃）": {
       "extractionState": "manual"
     },
+    "水辺と暮らす、日々の記録。": {
+      "extractionState": "manual"
+    },
+    "水辺のお手入れ": {
+      "extractionState": "manual"
+    },
+    "水辺の様子を、置き場所ごとに。": {
+      "extractionState": "manual"
+    },
     "注意事項": {
       "extractionState": "manual"
     },
@@ -1385,6 +1469,9 @@
       "extractionState": "manual"
     },
     "理由": {
+      "extractionState": "manual"
+    },
+    "生まれた針子と、育てる容器を残す。": {
       "extractionState": "manual"
     },
     "産卵期": {
@@ -1498,7 +1585,13 @@
     "系統で絞り込む": {
       "extractionState": "manual"
     },
+    "系統と容器をつなぎ、最初の群を残す。": {
+      "extractionState": "manual"
+    },
     "系統と群": {
+      "extractionState": "manual"
+    },
+    "系統の情報": {
       "extractionState": "manual"
     },
     "系統は%@本まで登録できます。": {
@@ -1624,7 +1717,16 @@
     "群を選ぶと、親魚セットをたどって、雄側と雌側の祖先を木で表示します。": {
       "extractionState": "manual"
     },
+    "育ち方に合わせて、記録の目安を整える。": {
+      "extractionState": "manual"
+    },
     "育った子の中から良い個体を残し、残りを弾くことです。残した数と弾いた数を記録します。": {
+      "extractionState": "manual"
+    },
+    "育てた先の記録を、ひと目で。": {
+      "extractionState": "manual"
+    },
+    "育てる楽しみを、もっと広く。": {
       "extractionState": "manual"
     },
     "育卵中": {
@@ -1681,10 +1783,22 @@
     "親から子、孫へと世代を重ねることです。入手した世代が「入手」、その子がF1、孫がF2です。": {
       "extractionState": "manual"
     },
+    "親から子へ、記録をたどる。": {
+      "extractionState": "manual"
+    },
     "親の群が見つかりません。": {
       "extractionState": "manual"
     },
+    "親魚から採卵、孵化までをひとつに。": {
+      "extractionState": "manual"
+    },
+    "親魚と採卵": {
+      "extractionState": "manual"
+    },
     "親魚セット": {
+      "extractionState": "manual"
+    },
+    "親魚セット %@組・育卵中 %@ロット": {
       "extractionState": "manual"
     },
     "親魚セットから孵化": {
@@ -1711,6 +1825,9 @@
     "計数修正": {
       "extractionState": "manual"
     },
+    "記録から文を組み立て、必要な行を選ぶ。": {
+      "extractionState": "manual"
+    },
     "記録する": {
       "extractionState": "manual"
     },
@@ -1733,6 +1850,9 @@
       "extractionState": "manual"
     },
     "記録は端末の中だけ": {
+      "extractionState": "manual"
+    },
+    "記録を守り、飼育に合わせて整える。": {
       "extractionState": "manual"
     },
     "設定": {
@@ -1760,6 +1880,9 @@
       "extractionState": "manual"
     },
     "販売の編集": {
+      "extractionState": "manual"
+    },
+    "販売の記録": {
       "extractionState": "manual"
     },
     "販売の記録はまだありません": {
@@ -1852,6 +1975,9 @@
     "選別の目安日を知らせる": {
       "extractionState": "manual"
     },
+    "選別の記録": {
+      "extractionState": "manual"
+    },
     "選別を記録": {
       "extractionState": "manual"
     },
@@ -1894,6 +2020,9 @@
     "雄と雌の群をこの容器へ移す": {
       "extractionState": "manual"
     },
+    "雄と雌の群を選び、採卵を始める準備を。": {
+      "extractionState": "manual"
+    },
     "雄の匹数": {
       "extractionState": "manual"
     },
@@ -1930,6 +2059,12 @@
     "飛び出し": {
       "extractionState": "manual"
     },
+    "飼育と通知": {
+      "extractionState": "manual"
+    },
+    "飼育と通知の設定": {
+      "extractionState": "manual"
+    },
     "飼育中": {
       "extractionState": "manual"
     },
@@ -1954,13 +2089,22 @@
     "飼育中の群はありません": {
       "extractionState": "manual"
     },
+    "飼育中の群はありません。系統の詳細から、入手個体の群を登録しましょう。": {
+      "extractionState": "manual"
+    },
     "飼育中の群を選んでください。": {
+      "extractionState": "manual"
+    },
+    "飼育容器": {
       "extractionState": "manual"
     },
     "餌用": {
       "extractionState": "manual"
     },
     "（循環）": {
+      "extractionState": "manual"
+    },
+    "＋は未計数の群を含みます": {
       "extractionState": "manual"
     }
   },

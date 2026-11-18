@@ -44,7 +44,7 @@ struct LineageView: View {
                         Text(verbatim: String(localized: "世代が多いため、\(tree.depth.formatted())世代前までを表示しています"))
                             .font(.subheadline)
                             .frame(maxWidth: .infinity, minHeight: Theme.minButtonHeight)
-                            .background(.bar)
+                            .background(Theme.surface)
                     } else if tree.hasTruncation, pro.status == .free {
                         Button {
                             gate.present(reason: .feature(.fullLineage))
@@ -52,7 +52,7 @@ struct LineageView: View {
                             Label("Proで全世代を表示", systemImage: "lock")
                                 .font(.subheadline)
                                 .frame(maxWidth: .infinity, minHeight: Theme.minButtonHeight)
-                                .background(.bar)
+                                .background(Theme.surface)
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("lineageProButton")
@@ -97,7 +97,7 @@ private struct LineageBranch: View {
     @State private var sireWidth: CGFloat = 0
     @State private var damWidth: CGFloat = 0
 
-    private static let gap: CGFloat = 8
+    private static let gap: CGFloat = 12
 
     var body: some View {
         VStack(spacing: 0) {
@@ -122,7 +122,7 @@ private struct LineageBranch: View {
     @ViewBuilder
     private func parent(_ parent: LineageNode?, role: LocalizedStringKey, isSire: Bool) -> some View {
         if let parent {
-            VStack(spacing: 4) {
+            VStack(spacing: 8) {
                 Text(role)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -170,13 +170,14 @@ private struct LineageConnector: Shape {
 
 /// ノード1つ。系統名、世代、孵化日、代表写真。タップで群詳細へ。
 private struct LineageNodeCard: View {
+    @ScaledMetric(relativeTo: .caption) private var nodeWidth: CGFloat = 100
     let node: LineageNode
     let cohort: Cohort?
     let isRoot: Bool
 
     var body: some View {
         // 狭い画面でも横に並べられるよう、縦に積んだ細いノードにする
-        let card = VStack(spacing: 4) {
+        let card = VStack(spacing: 8) {
             if let photo = cohort?.coverPhoto {
                 PhotoThumbnail(photo: photo, size: 40)
             } else if let strain = cohort?.strain {
@@ -185,20 +186,20 @@ private struct LineageNodeCard: View {
             Text(verbatim: node.info.strainName)
                 .font(.caption.bold())
                 .multilineTextAlignment(.center)
-                .lineLimit(4)
+                .fixedSize(horizontal: false, vertical: true)
             Text(verbatim: detail)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
-        .padding(8)
+        .padding(12)
         // 祖先を2世代まで出すと4つ並ぶので、狭い画面に収まる幅にする（文字が大きいときは縦に伸びる）
-        .frame(width: 80)
+        .frame(width: nodeWidth)
         .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius))
         .overlay {
             // 縁の色は系統の色。交配で色の違う系統が混ざる様子が、図の上で見える
             RoundedRectangle(cornerRadius: Theme.cornerRadius)
-                .stroke(isRoot ? Theme.accent : outline, lineWidth: isRoot ? 3 : 1.5)
+                .stroke(isRoot ? Theme.accent : outline, lineWidth: isRoot ? 2 : 1)
         }
 
         if let cohort {
@@ -222,3 +223,4 @@ private struct LineageNodeCard: View {
         return lines.joined(separator: "\n")
     }
 }
+

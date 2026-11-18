@@ -66,15 +66,19 @@ struct TankLogsView: View {
 
     var body: some View {
         List {
-            let logs = tank.recentLogs
-            if logs.isEmpty {
-                Text("作業記録はまだありません")
-                    .foregroundStyle(.secondary)
+            Group {
+                let logs = tank.recentLogs
+                if logs.isEmpty {
+                    Text("作業記録はまだありません")
+                        .foregroundStyle(.secondary)
+                }
+                MaintenanceLogRows(logs: logs)
             }
-            MaintenanceLogRows(logs: logs)
+            .ledgerRow()
         }
         .themedBackground()
         .navigationTitle(Text(verbatim: String(localized: "\(tank.name)の作業記録")))
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+

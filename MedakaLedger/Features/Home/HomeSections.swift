@@ -18,6 +18,7 @@ extension HomeView {
                     .buttonStyle(.plain)
                 }
             }
+            .cardBackground()
         }
     }
 
@@ -43,6 +44,7 @@ extension HomeView {
                 .buttonStyle(.plain)
             }
         }
+        .cardBackground()
     }
 
     var overdueSection: some View {
@@ -68,6 +70,7 @@ extension HomeView {
                 .buttonStyle(.plain)
             }
         }
+        .cardBackground()
     }
 
     /// 出品中の販売（SCREENS.md 2）。タップで販売の編集。
@@ -93,6 +96,7 @@ extension HomeView {
                 .buttonStyle(.plain)
             }
         }
+        .cardBackground()
     }
 
     var recentSection: some View {
@@ -115,6 +119,7 @@ extension HomeView {
                 }
             }
         }
+        .cardBackground()
     }
 }
 
@@ -138,7 +143,8 @@ struct RecentRecordRow: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 10)
         .contentShape(.rect)
     }
 }
+

@@ -18,36 +18,40 @@ struct StrainEditView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    TextField("品種名（例 楊貴妃）", text: $model.breedName)
-                        .accessibilityIdentifier("breedNameField")
-                    SuggestionChips(suggestions: model.breedSuggestions(from: allStrains)) { name in
-                        model.breedName = name
+                Group {
+                    EntryHeading(title: "系統の情報", subtitle: "品種と入手元、受け継ぎたい表現を。", systemImage: "fish")
+                    Section {
+                        TextField("品種名（例 楊貴妃）", text: $model.breedName)
+                            .accessibilityIdentifier("breedNameField")
+                        SuggestionChips(suggestions: model.breedSuggestions(from: allStrains)) { name in
+                            model.breedName = name
+                        }
+                        TextField("系統名・呼び名（任意）", text: $model.lineName)
+                        TextField("入手元・作出者", text: $model.source)
+                    } footer: {
+                        Text("品種名を入れると保存できます。系統名は「〇〇めだか2026春購入」のように、同じ品種の中で見分ける呼び名です。")
                     }
-                    TextField("系統名・呼び名（任意）", text: $model.lineName)
-                    TextField("入手元・作出者", text: $model.source)
-                } footer: {
-                    Text("品種名を入れると保存できます。系統名は「〇〇めだか2026春購入」のように、同じ品種の中で見分ける呼び名です。")
-                }
 
-                Section {
-                    Toggle("入手日を記録する", isOn: $model.hasAcquiredAt)
-                    if model.hasAcquiredAt {
-                        DatePicker("入手日", selection: $model.acquiredAt, displayedComponents: .date)
+                    Section {
+                        Toggle("入手日を記録する", isOn: $model.hasAcquiredAt)
+                        if model.hasAcquiredAt {
+                            DatePicker("入手日", selection: $model.acquiredAt, displayedComponents: .date)
+                        }
+                    }
+
+                    Section("表現タグ") {
+                        TraitTagPicker(
+                            selected: $model.traitTags,
+                            candidates: Aggregations.tagCandidates(defaults: TraitTagCatalog.defaults, used: allStrains.map(\.traitTags))
+                        )
+                    }
+
+                    Section("メモ") {
+                        TextField("メモ", text: $model.note, axis: .vertical)
+                            .lineLimit(2...6)
                     }
                 }
-
-                Section("表現タグ") {
-                    TraitTagPicker(
-                        selected: $model.traitTags,
-                        candidates: Aggregations.tagCandidates(defaults: TraitTagCatalog.defaults, used: allStrains.map(\.traitTags))
-                    )
-                }
-
-                Section("メモ") {
-                    TextField("メモ", text: $model.note, axis: .vertical)
-                        .lineLimit(2...6)
-                }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle(model.isNew ? "系統を登録" : "系統を編集")
@@ -141,3 +145,4 @@ struct TraitTagPicker: View {
         customTag = ""
     }
 }
+

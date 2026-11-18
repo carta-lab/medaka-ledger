@@ -23,7 +23,10 @@ struct OperationForm<Content: View>: View {
     var body: some View {
         NavigationStack {
             Form {
-                content()
+                Group {
+                    content()
+                }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle(title)
@@ -164,3 +167,4 @@ struct SplitCohortSheet: View {
         }
     }
 }
+

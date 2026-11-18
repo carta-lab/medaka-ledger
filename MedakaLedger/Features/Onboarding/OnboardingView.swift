@@ -55,7 +55,7 @@ struct OnboardingView: View {
             ForEach(OnboardingModel.Page.allCases, id: \.rawValue) { page in
                 Capsule()
                     .fill(page == model.page ? Theme.accent : Color.secondary.opacity(0.3))
-                    .frame(width: page == model.page ? 24 : 8, height: 8)
+                    .frame(width: 32, height: 3)
             }
         }
         .padding(.top, 12)
@@ -67,7 +67,8 @@ struct OnboardingView: View {
 
     private var introPage: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 24) {
+                WaterLandscape().frame(height: 190).clipShape(.rect(cornerRadius: Theme.cornerRadius))
                 Text("容器、系統、世代、採卵、販売を、つなげて記録します。")
                     .font(Typeface.heading(22, relativeTo: .title3))
                 VStack(alignment: .leading, spacing: 12) {
@@ -102,70 +103,76 @@ struct OnboardingView: View {
     private var tanksPage: some View {
         @Bindable var model = model
         return Form {
-            Section {
-                ForEach(model.tankNames.indices, id: \.self) { index in
-                    TextField("名前", text: $model.tankNames[index])
-                        .accessibilityIdentifier("onboardingTankName\(index)")
-                }
-            } header: {
-                Text("容器の名前")
-            } footer: {
-                Text("名前は後から変えられます。空欄の容器は作りません。")
-            }
-            Section {
-                Picker("種類", selection: $model.kind) {
-                    ForEach(TankKind.allCases, id: \.self) { kind in
-                        Label(kind.label, systemImage: kind.symbolName).tag(kind)
+            Group {
+                Section {
+                    ForEach(model.tankNames.indices, id: \.self) { index in
+                        TextField("名前", text: $model.tankNames[index])
+                            .accessibilityIdentifier("onboardingTankName\(index)")
                     }
+                } header: {
+                    Text("容器の名前")
+                } footer: {
+                    Text("名前は後から変えられます。空欄の容器は作りません。")
                 }
-                Picker("置き場所", selection: $model.placement) {
-                    ForEach(Placement.allCases, id: \.self) { placement in
-                        Text(verbatim: placement.label).tag(placement)
+                Section {
+                    Picker("種類", selection: $model.kind) {
+                        ForEach(TankKind.allCases, id: \.self) { kind in
+                            Label(kind.label, systemImage: kind.symbolName).tag(kind)
+                        }
                     }
+                    Picker("置き場所", selection: $model.placement) {
+                        ForEach(Placement.allCases, id: \.self) { placement in
+                            Text(verbatim: placement.label).tag(placement)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                } header: {
+                    Text("3個に共通")
                 }
-                .pickerStyle(.segmented)
-            } header: {
-                Text("3個に共通")
             }
+            .ledgerRow()
         }
     }
 
     private var strainPage: some View {
         @Bindable var model = model
         return Form {
-            Section {
-                TextField("品種名（例 楊貴妃）", text: $model.breedName)
-                    .accessibilityIdentifier("onboardingBreedName")
-                TextField("入手元・作出者", text: $model.source)
-            } header: {
-                Text("系統")
-            } footer: {
-                Text("品種名を入れると、系統を作れます。")
-            }
-            Section {
-                IntField("匹数", value: $model.count)
-                Picker("容器", selection: $model.tank) {
-                    Text("容器未設定").tag(Tank?.none)
-                    ForEach(tanks) { tank in
-                        Text(verbatim: tank.name).tag(Optional(tank))
+            Group {
+                Section {
+                    TextField("品種名（例 楊貴妃）", text: $model.breedName)
+                        .accessibilityIdentifier("onboardingBreedName")
+                    TextField("入手元・作出者", text: $model.source)
+                } header: {
+                    Text("系統")
+                } footer: {
+                    Text("品種名を入れると、系統を作れます。")
+                }
+                Section {
+                    IntField("匹数", value: $model.count)
+                    Picker("容器", selection: $model.tank) {
+                        Text("容器未設定").tag(Tank?.none)
+                        ForEach(tanks) { tank in
+                            Text(verbatim: tank.name).tag(Optional(tank))
+                        }
                     }
+                } header: {
+                    Text("入手した個体")
+                } footer: {
+                    Text("匹数を入れると、この系統の最初の群（入手個体）も作ります。匹数は概数で構いません。")
                 }
-            } header: {
-                Text("入手した個体")
-            } footer: {
-                Text("匹数を入れると、この系統の最初の群（入手個体）も作ります。匹数は概数で構いません。")
-            }
-            Section {
-                Button {
-                    seedSamples()
-                } label: {
-                    Label("サンプルデータを入れて試す", systemImage: "wand.and.stars")
+                Section {
+                    Button {
+                        seedSamples()
+                    } label: {
+                        Label("サンプルデータを入れて試す", systemImage: "wand.and.stars")
+                    }
+                    .disabled(isSeeding)
+                    .accessibilityIdentifier("onboardingSeedSamples")
+                } footer: {
+                    Text("使い方を試すためのデータです。あとから設定で全削除できます。")
                 }
-                .disabled(isSeeding)
-                .accessibilityIdentifier("onboardingSeedSamples")
-            } footer: {
-                Text("使い方を試すためのデータです。あとから設定で全削除できます。")
             }
+            .ledgerRow()
         }
     }
 
@@ -183,7 +190,8 @@ struct OnboardingView: View {
         }
         .padding(.horizontal, Theme.screenPadding)
         .padding(.vertical, 8)
-        .background(.bar)
+        .background(Theme.background)
+        .overlay(alignment: .top) { Rectangle().fill(Theme.rule).frame(height: 0.5) }
     }
 
     private var primaryTitle: LocalizedStringKey {
@@ -248,3 +256,4 @@ struct OnboardingView: View {
         }
     }
 }
+

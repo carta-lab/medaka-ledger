@@ -16,22 +16,25 @@ struct SalesView: View {
         let byID = Dictionary(sales.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         Group {
             if sales.isEmpty {
-                ContentUnavailableView {
-                    Label("販売の記録はまだありません", systemImage: "yensign.circle")
-                } description: {
-                    Text("最初の販売を記録しましょう")
-                } actions: {
-                    Button("販売を記録") { model.isAdding = true }
-                        .buttonStyle(LargeButtonStyle())
-                        .accessibilityIdentifier("addFirstSaleButton")
+                LedgerEmptyState(title: "販売の記録はまだありません", message: "最初の販売を記録しましょう",
+                                 systemImage: "yensign", actionTitle: "販売を記録") {
+                    model.isAdding = true
                 }
+                .accessibilityIdentifier("addFirstSaleButton")
             } else {
                 list(ledger, byID: byID)
             }
         }
         .themedBackground()
         .navigationTitle("販売")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { model.isAdding = true } label: {
+                    Label("販売を記録", systemImage: "plus")
+                }
+                .accessibilityIdentifier("addSaleButton")
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button {
@@ -52,7 +55,7 @@ struct SalesView: View {
                     }
                     .accessibilityIdentifier("listingMenuItem")
                 } label: {
-                    Label("メニュー", systemImage: "plus.circle")
+                    Label("メニュー", systemImage: "ellipsis.circle")
                 }
                 .accessibilityIdentifier("salesMenu")
             }
@@ -86,66 +89,71 @@ struct SalesView: View {
 
     private func list(_ ledger: SalesModel.Ledger, byID: [UUID: Sale]) -> some View {
         List {
-            Section {
-                Picker("期間", selection: $model.period) {
-                    ForEach(SalesPeriod.allCases, id: \.self) { period in
-                        Text(verbatim: period.label).tag(period)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                SalesSummaryRows(summary: ledger.summary)
-            } footer: {
-                Text("集計は売約と発送済の販売です。出品中と取消は入りません。")
-            }
-
-            if model.period == .all, pro.status == .free {
+            Group {
+                EntryHeading(title: "販売台帳", subtitle: "育てた先の記録を、ひと目で。",
+                             systemImage: "yensign")
                 Section {
-                    Button {
-                        gate.present(reason: .feature(.yearlySummary))
-                    } label: {
-                        Label("年別の集計はProで見られます", systemImage: "lock")
+                    Picker("期間", selection: $model.period) {
+                        ForEach(SalesPeriod.allCases, id: \.self) { period in
+                            Text(verbatim: period.label).tag(period)
+                        }
                     }
-                    .accessibilityIdentifier("yearlySummaryProButton")
+                    .pickerStyle(.segmented)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    SalesOverview(summary: ledger.summary)
+                } footer: {
+                    Text("集計は売約と発送済の販売です。出品中と取消は入りません。")
                 }
-            }
 
-            if model.period == .all, pro.isPro {
-                let years = SalesAggregations.yearSummaries(ledger.records, calendar: .current)
-                if !years.isEmpty {
-                    Section("年別") {
-                        ForEach(years) { year in
-                            LabeledContent(String(localized: "\(year.year.formatted(.number.grouping(.never)))年")) {
-                                VStack(alignment: .trailing) {
-                                    Text(verbatim: SaleText.yen(year.summary.revenue))
-                                    Text(verbatim: String(localized: "純額 \(SaleText.yen(year.summary.net))"))
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                if model.period == .all, pro.status == .free {
+                    Section {
+                        Button {
+                            gate.present(reason: .feature(.yearlySummary))
+                        } label: {
+                            Label("年別の集計はProで見られます", systemImage: "lock")
+                        }
+                        .accessibilityIdentifier("yearlySummaryProButton")
+                    }
+                }
+
+                if model.period == .all, pro.isPro {
+                    let years = SalesAggregations.yearSummaries(ledger.records, calendar: .current)
+                    if !years.isEmpty {
+                        Section("年別") {
+                            ForEach(years) { year in
+                                LabeledContent(String(localized: "\(year.year.formatted(.number.grouping(.never)))年")) {
+                                    VStack(alignment: .trailing) {
+                                        Text(verbatim: SaleText.yen(year.summary.revenue))
+                                        Text(verbatim: String(localized: "純額 \(SaleText.yen(year.summary.net))"))
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            if ledger.sections.isEmpty {
-                Section {
-                    Text("この期間の販売はありません。期間を切り替えるか、販売を記録しましょう。")
-                        .foregroundStyle(.secondary)
-                }
-            }
-
-            ForEach(ledger.sections) { section in
-                Section {
-                    ForEach(section.records) { record in
-                        if let sale = byID[record.id] {
-                            row(record, sale: sale)
-                        }
+                if ledger.sections.isEmpty {
+                    Section {
+                        Text("この期間の販売はありません。期間を切り替えるか、販売を記録しましょう。")
+                            .foregroundStyle(.secondary)
                     }
-                } header: {
-                    Text(verbatim: "\(SaleText.month(year: section.year, month: section.month))　\(SaleText.yen(section.summary.revenue))")
+                }
+
+                ForEach(ledger.sections) { section in
+                    Section {
+                        ForEach(section.records) { record in
+                            if let sale = byID[record.id] {
+                                row(record, sale: sale)
+                            }
+                        }
+                    } header: {
+                        Text(verbatim: "\(SaleText.month(year: section.year, month: section.month))　\(SaleText.yen(section.summary.revenue))")
+                    }
                 }
             }
+            .ledgerRow()
         }
         .accessibilityIdentifier("salesList")
     }
@@ -184,3 +192,4 @@ struct SalesView: View {
         }
     }
 }
+

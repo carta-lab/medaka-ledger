@@ -59,29 +59,39 @@ struct EggBatchRow: View {
     let info: BatchPredictionInfo
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(verbatim: batch.title)
-                    .font(.subheadline.bold())
-                Text(verbatim: detail)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 10) {
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    title
+                    Spacer(minLength: 8)
+                    status
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    title
+                    status
+                }
             }
-            Spacer(minLength: 0)
-            if batch.status == .incubating {
-                Text(verbatim: info.remainingText)
-                    .font(.subheadline.bold())
-                    .foregroundStyle(info.isOverdue ? Theme.warning : (info.remainingDays.map { $0 <= 1 } == true ? Theme.accent : .primary))
-            } else {
-                Text(verbatim: batch.status.label)
-                    .font(.caption)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 2)
-                    .background(.fill.tertiary, in: .capsule)
-            }
+            Text(verbatim: detail)
+                .font(.subheadline)
+                .foregroundStyle(Theme.muted)
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 6)
+        .frame(maxWidth: .infinity, minHeight: Theme.minButtonHeight, alignment: .leading)
         .contentShape(.rect)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var title: some View {
+        Text(verbatim: batch.title).font(.subheadline.weight(.medium))
+    }
+
+    private var status: some View {
+        LedgerStatus(
+            text: batch.status == .incubating ? info.remainingText : batch.status.label,
+            color: info.isOverdue && batch.status == .incubating ? Theme.warning : Theme.accent,
+            systemImage: batch.status == .incubating ? "circle.dotted" : "checkmark"
+        )
     }
 
     private var detail: String {
@@ -106,3 +116,4 @@ struct EggBatchRow: View {
         batch.eggCount.map { String(localized: "卵 \($0.formatted())個") }
     }
 }
+

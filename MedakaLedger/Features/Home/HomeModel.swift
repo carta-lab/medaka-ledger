@@ -20,7 +20,7 @@ struct OverdueTank: Identifiable {
 @Observable
 final class HomeModel {
     enum Sheet: String, Identifiable {
-        case eggBatch, waterChange, temperature, photo, settings
+        case eggBatch, waterChange, temperature, photo, settings, count
         var id: String { rawValue }
     }
 
@@ -110,3 +110,4 @@ final class HomeModel {
         return Aggregations.mergeRecent([eventRecords, batchRecords, logRecords, saleRecords], date: { $0.date }, limit: 5)
     }
 }
+
