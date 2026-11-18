@@ -17,11 +17,15 @@ struct SaleSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                targetSection
-                itemSection
-                amountSection
-                statusSection
-                memoSection
+                Group {
+                    EntryHeading(title: "販売の記録", subtitle: "数量、金額、相手先をひとつに。", systemImage: "yensign")
+                    targetSection
+                    itemSection
+                    amountSection
+                    statusSection
+                    memoSection
+                }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle(model.isEditing ? "販売の編集" : "販売を記録")
@@ -180,3 +184,4 @@ struct SaleSheet: View {
         }
     }
 }
+

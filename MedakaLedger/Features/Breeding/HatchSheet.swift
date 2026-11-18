@@ -19,51 +19,55 @@ struct HatchSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    InfoRow(title: "ロット", value: model.batch.title)
-                    DatePicker("孵化日", selection: $model.hatchedAt, displayedComponents: .date)
-                    IntField("孵化数（概数、任意）", value: $model.hatchedCount)
-                }
-
-                if model.needsChildStrain {
-                    childStrainSection
-                }
-
-                if !model.existingCohorts.isEmpty {
+                Group {
+                    EntryHeading(title: "孵化の記録", subtitle: "生まれた針子と、育てる容器を残す。", systemImage: "sparkle")
                     Section {
-                        Picker("記録の先", selection: $model.addTo) {
-                            Text("新しい群にする").tag(Cohort?.none)
-                            ForEach(model.existingCohorts) { cohort in
-                                Text(verbatim: "\(cohort.generationLabel) \(cohort.label)・\(cohort.countText)")
-                                    .tag(Optional(cohort))
+                        InfoRow(title: "ロット", value: model.batch.title)
+                        DatePicker("孵化日", selection: $model.hatchedAt, displayedComponents: .date)
+                        IntField("孵化数（概数、任意）", value: $model.hatchedCount)
+                    }
+
+                    if model.needsChildStrain {
+                        childStrainSection
+                    }
+
+                    if !model.existingCohorts.isEmpty {
+                        Section {
+                            Picker("記録の先", selection: $model.addTo) {
+                                Text("新しい群にする").tag(Cohort?.none)
+                                ForEach(model.existingCohorts) { cohort in
+                                    Text(verbatim: "\(cohort.generationLabel) \(cohort.label)・\(cohort.countText)")
+                                        .tag(Optional(cohort))
+                                }
                             }
+                        } footer: {
+                            Text("早く孵った分と遅れた分は、同じ群に足すこともできます。")
                         }
-                    } footer: {
-                        Text("早く孵った分と遅れた分は、同じ群に足すこともできます。")
+                    }
+
+                    if model.addTo == nil {
+                        Section {
+                            Picker("容器", selection: $model.tank) {
+                                Text("選んでください").tag(Tank?.none)
+                                ForEach(tanks) { tank in
+                                    Text(verbatim: tank.name).tag(Optional(tank))
+                                }
+                            }
+                            .accessibilityIdentifier("hatchTankPicker")
+                            TextField("ラベル（任意）", text: $model.label)
+                        } header: {
+                            Text("針子の容器")
+                        } footer: {
+                            Text("針子の容器を選ぶと保存できます。")
+                        }
+                    }
+
+                    Section {
+                        TextField("メモ", text: $model.note, axis: .vertical)
+                            .lineLimit(2...6)
                     }
                 }
-
-                if model.addTo == nil {
-                    Section {
-                        Picker("容器", selection: $model.tank) {
-                            Text("選んでください").tag(Tank?.none)
-                            ForEach(tanks) { tank in
-                                Text(verbatim: tank.name).tag(Optional(tank))
-                            }
-                        }
-                        .accessibilityIdentifier("hatchTankPicker")
-                        TextField("ラベル（任意）", text: $model.label)
-                    } header: {
-                        Text("針子の容器")
-                    } footer: {
-                        Text("針子の容器を選ぶと保存できます。")
-                    }
-                }
-
-                Section {
-                    TextField("メモ", text: $model.note, axis: .vertical)
-                        .lineLimit(2...6)
-                }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle("孵化を記録")
@@ -118,3 +122,4 @@ struct HatchSheet: View {
         }
     }
 }
+

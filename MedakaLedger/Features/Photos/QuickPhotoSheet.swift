@@ -16,58 +16,62 @@ struct QuickPhotoSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    ForEach(model.photos) { photo in
-                        HStack {
-                            if let image = UIImage(data: photo.thumbnailData) {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 56, height: 56)
-                                    .clipShape(.rect(cornerRadius: 8))
+                Group {
+                    EntryHeading(title: "写真を残す", subtitle: "容器、系統、群に、その日の姿を。", systemImage: "camera")
+                    Section {
+                        ForEach(model.photos) { photo in
+                            HStack {
+                                if let image = UIImage(data: photo.thumbnailData) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 56, height: 56)
+                                        .clipShape(.rect(cornerRadius: 8))
+                                }
+                                Spacer()
+                                Button(role: .destructive) {
+                                    model.photos.removeAll { $0.id == photo.id }
+                                } label: {
+                                    Label("外す", systemImage: "minus.circle")
+                                }
+                                .buttonStyle(.borderless)
                             }
-                            Spacer()
-                            Button(role: .destructive) {
-                                model.photos.removeAll { $0.id == photo.id }
-                            } label: {
-                                Label("外す", systemImage: "minus.circle")
-                            }
-                            .buttonStyle(.borderless)
                         }
+                        PhotoAdder { model.photos.append(contentsOf: $0) }
+                    } header: {
+                        Text("写真")
                     }
-                    PhotoAdder { model.photos.append(contentsOf: $0) }
-                } header: {
-                    Text("写真")
-                }
 
-                Section {
-                    Picker("付け先", selection: $model.targetKind) {
-                        Text("群").tag(QuickPhotoModel.TargetKind.cohort)
-                        Text("容器").tag(QuickPhotoModel.TargetKind.tank)
-                    }
-                    .pickerStyle(.segmented)
-                    switch model.targetKind {
-                    case .cohort:
-                        Picker("群", selection: $model.cohort) {
-                            Text("選んでください").tag(Cohort?.none)
-                            ForEach(cohorts) { cohort in
-                                Text(verbatim: "\(cohort.strainName) \(cohort.generationLabel)・\(cohort.tankName)")
-                                    .tag(Optional(cohort))
+                    Section {
+                        Picker("付け先", selection: $model.targetKind) {
+                            Text("群").tag(QuickPhotoModel.TargetKind.cohort)
+                            Text("容器").tag(QuickPhotoModel.TargetKind.tank)
+                        }
+                        .pickerStyle(.segmented)
+                        switch model.targetKind {
+                        case .cohort:
+                            Picker("群", selection: $model.cohort) {
+                                Text("選んでください").tag(Cohort?.none)
+                                ForEach(cohorts) { cohort in
+                                    Text(verbatim: "\(cohort.strainName) \(cohort.generationLabel)・\(cohort.tankName)")
+                                        .tag(Optional(cohort))
+                                }
+                            }
+                        case .tank:
+                            Picker("容器", selection: $model.tank) {
+                                Text("選んでください").tag(Tank?.none)
+                                ForEach(tanks) { tank in
+                                    Text(verbatim: tank.name).tag(Optional(tank))
+                                }
                             }
                         }
-                    case .tank:
-                        Picker("容器", selection: $model.tank) {
-                            Text("選んでください").tag(Tank?.none)
-                            ForEach(tanks) { tank in
-                                Text(verbatim: tank.name).tag(Optional(tank))
-                            }
-                        }
+                    } header: {
+                        Text("付け先")
+                    } footer: {
+                        Text("写真を選んで、付け先を選ぶと保存できます。")
                     }
-                } header: {
-                    Text("付け先")
-                } footer: {
-                    Text("写真を選んで、付け先を選ぶと保存できます。")
                 }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle("写真を追加")
@@ -90,3 +94,4 @@ struct QuickPhotoSheet: View {
         }
     }
 }
+

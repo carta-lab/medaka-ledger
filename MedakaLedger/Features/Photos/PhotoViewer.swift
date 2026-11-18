@@ -5,6 +5,7 @@ import UIKit
 // 写真の全画面表示（SCREENS.md 10）。左右にスワイプ。日付と説明の編集、端末の写真ライブラリへ保存、削除。
 
 struct PhotoViewer: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     let photos: [Photo]
@@ -32,7 +33,7 @@ struct PhotoViewer: View {
                     .tabViewStyle(.page(indexDisplayMode: remaining.count > 1 ? .automatic : .never))
                 }
             }
-            .background(Color.black)
+            .themedBackground()
             .navigationTitle(Text(verbatim: current.map { CohortText.date($0.capturedAt) } ?? ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -71,7 +72,10 @@ struct PhotoViewer: View {
         VStack(spacing: 10) {
             PhotoCaptionField(photo: photo)
             PhotoDateField(photo: photo)
-            HStack(spacing: 8) {
+            let layout = dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(spacing: 8))
+                : AnyLayout(HStackLayout(spacing: 8))
+            layout {
                 Button {
                     model.setCover(photo, in: modelContext)
                 } label: {
@@ -94,7 +98,7 @@ struct PhotoViewer: View {
         }
         .padding(.horizontal, Theme.screenPadding)
         .padding(.vertical, 8)
-        .background(.bar)
+        .background(Theme.background)
     }
 
     private func deleteCurrent() {
@@ -143,3 +147,4 @@ private struct PhotoDateField: View {
         DatePicker("撮影日", selection: $photo.capturedAt, in: ...Date(), displayedComponents: .date)
     }
 }
+

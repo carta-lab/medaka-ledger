@@ -29,18 +29,22 @@ struct GlossaryView: View {
 
     var body: some View {
         List(entries) { entry in
-            VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: entry.term)
-                    .font(.headline)
-                Text(verbatim: entry.meaning)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+            Group {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(verbatim: entry.term)
+                        .font(.headline)
+                    Text(verbatim: entry.meaning)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.vertical, 2)
+                .accessibilityElement(children: .combine)
             }
-            .padding(.vertical, 2)
-            .accessibilityElement(children: .combine)
+            .ledgerRow()
         }
         .themedBackground()
         .navigationTitle("用語の説明")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+

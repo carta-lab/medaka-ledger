@@ -18,44 +18,48 @@ struct CohortCreateView: View {
 
     var body: some View {
         Form {
-            Section {
-                InfoRow(title: "系統", value: model.strain.displayName)
-                InfoRow(title: "世代", value: CohortText.generation(0))
-            } footer: {
-                if isAfterStrainCreation {
-                    Text("続けて、入手した個体を群として登録できます。あとで系統の画面から登録することもできます。")
-                }
-            }
-
-            Section {
-                IntField("匹数（数えていなければ空のまま）", value: $model.count)
-                    .accessibilityIdentifier("cohortCountField")
-                IntField("うち雄（任意）", value: $model.maleCount)
-                IntField("うち雌（任意）", value: $model.femaleCount)
-            } header: {
-                Text("匹数")
-            }
-
-            Section {
-                Picker("容器", selection: $model.tank) {
-                    Text("容器未設定").tag(Tank?.none)
-                    ForEach(tanks) { tank in
-                        Text(verbatim: tank.name).tag(Optional(tank))
+            Group {
+                    EntryHeading(title: "入手個体の記録", subtitle: "系統と容器をつなぎ、最初の群を残す。", systemImage: "fish")
+                Section {
+                    InfoRow(title: "系統", value: model.strain.displayName)
+                    InfoRow(title: "世代", value: CohortText.generation(0))
+                } footer: {
+                    if isAfterStrainCreation {
+                        Text("続けて、入手した個体を群として登録できます。あとで系統の画面から登録することもできます。")
                     }
                 }
-                DatePicker("入手日", selection: $model.acquiredAt, displayedComponents: .date)
-                Picker("段階", selection: $model.stage) {
-                    ForEach(GrowthStage.allCases, id: \.self) { stage in
-                        Text(verbatim: stage.label).tag(stage)
+
+                Section {
+                    IntField("匹数（数えていなければ空のまま）", value: $model.count)
+                        .accessibilityIdentifier("cohortCountField")
+                    IntField("うち雄（任意）", value: $model.maleCount)
+                    IntField("うち雌（任意）", value: $model.femaleCount)
+                } header: {
+                    Text("匹数")
+                }
+
+                Section {
+                    Picker("容器", selection: $model.tank) {
+                        Text("容器未設定").tag(Tank?.none)
+                        ForEach(tanks) { tank in
+                            Text(verbatim: tank.name).tag(Optional(tank))
+                        }
+                    }
+                    DatePicker("入手日", selection: $model.acquiredAt, displayedComponents: .date)
+                    Picker("段階", selection: $model.stage) {
+                        ForEach(GrowthStage.allCases, id: \.self) { stage in
+                            Text(verbatim: stage.label).tag(stage)
+                        }
                     }
                 }
-            }
 
-            Section {
-                TextField("ラベル（例 親魚候補）", text: $model.label)
-                TextField("メモ", text: $model.note, axis: .vertical)
-                    .lineLimit(2...6)
+                Section {
+                    TextField("ラベル（例 親魚候補）", text: $model.label)
+                    TextField("メモ", text: $model.note, axis: .vertical)
+                        .lineLimit(2...6)
+                }
             }
+            .ledgerRow()
         }
         .themedBackground()
         .navigationTitle("入手個体の群を登録")
@@ -80,3 +84,4 @@ struct CohortCreateView: View {
         }
     }
 }
+

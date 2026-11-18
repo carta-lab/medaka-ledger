@@ -15,22 +15,25 @@ struct DebugMenuView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section {
-                    Button("サンプルデータを入れる") {
-                        run { worker in try await worker.seed() }
+                Group {
+                    Section {
+                        Button("サンプルデータを入れる") {
+                            run { worker in try await worker.seed() }
+                        }
+                        .accessibilityIdentifier("seedSampleButton")
+                        Button("サンプルデータを全削除") {
+                            run { worker in try await worker.deleteSamples() }
+                        }
+                    } footer: {
+                        Text("サンプルは容器6、系統2、群7です。Freeの上限には数えません。")
                     }
-                    .accessibilityIdentifier("seedSampleButton")
-                    Button("サンプルデータを全削除") {
-                        run { worker in try await worker.deleteSamples() }
+                    Section {
+                        Button("すべてのデータを削除", role: .destructive) {
+                            isConfirmingDeleteAll = true
+                        }
                     }
-                } footer: {
-                    Text("サンプルは容器6、系統2、群7です。Freeの上限には数えません。")
                 }
-                Section {
-                    Button("すべてのデータを削除", role: .destructive) {
-                        isConfirmingDeleteAll = true
-                    }
-                }
+                .ledgerRow()
             }
             .disabled(isWorking)
             .overlay {
@@ -74,3 +77,4 @@ struct DebugMenuView: View {
     }
 }
 #endif
+

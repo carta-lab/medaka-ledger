@@ -13,23 +13,23 @@ struct TankListView: View {
         let sections = model.sections(for: tanks)
         Group {
             if tanks.isEmpty {
-                ContentUnavailableView {
-                    Label("容器がありません", systemImage: "square.grid.2x2")
-                } description: {
-                    Text("まず容器を登録しましょう")
-                } actions: {
-                    Button("容器を登録する") { model.isCreating = true }
-                        .buttonStyle(LargeButtonStyle())
+                LedgerEmptyState(title: "容器がありません", message: "まず容器を登録しましょう",
+                                 systemImage: "square.grid.2x2", actionTitle: "容器を登録する",
+                                 actionIdentifier: "addFirstTankButton") {
+                    model.isCreating = true
                 }
             } else if sections.isEmpty {
                 ContentUnavailableView.search(text: model.searchText)
             } else {
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 20) {
+                    LazyVStack(alignment: .leading, spacing: 24) {
+                        LedgerIntro(title: "飼育容器", subtitle: "水辺の様子を、置き場所ごとに。",
+                                    systemImage: "square.grid.2x2",
+                                    summary: String(localized: "\(tanks.count.formatted())個の容器"))
                         ForEach(sections) { section in
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(verbatim: section.title)
-                                    .font(Typeface.heading(18, relativeTo: .headline))
+                                    .font(.subheadline.weight(.medium))
                                     .foregroundStyle(section.isUnset ? .secondary : .primary)
                                 LazyVGrid(columns: columns, spacing: 12) {
                                     ForEach(section.items) { tank in
@@ -50,6 +50,7 @@ struct TankListView: View {
         }
         .themedBackground()
         .navigationTitle("容器")
+        .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $model.searchText, prompt: Text("容器名・系統名で探す"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -101,47 +102,46 @@ struct TankCard: View {
     var body: some View {
         let cohorts = tank.activeCohorts
         let water = TankWaterStatus(tank: tank, settings: settings)
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 6) {
-                Image(systemName: tank.kind.symbolName)
-                    .foregroundStyle(Theme.accent)
-                Text(verbatim: tank.name)
-                    .font(.headline)
-                    .lineLimit(1)
-                Spacer(minLength: 0)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                LedgerSymbol(systemImage: tank.kind.symbolName)
+                Spacer(minLength: 4)
                 Image(systemName: tank.placement.symbolName)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.muted)
                     .accessibilityLabel(Text(verbatim: tank.placement.label))
             }
+            Text(verbatim: tank.name)
+                .font(.title3.weight(.medium))
+                .fixedSize(horizontal: false, vertical: true)
             if cohorts.isEmpty {
-                Text("空き")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                Text("空き").font(.subheadline).foregroundStyle(Theme.muted)
             } else {
                 ForEach(cohorts.prefix(2)) { cohort in
-                    Text(verbatim: "\(cohort.strainName) \(cohort.generationLabel) \(cohort.countText)")
-                        .font(.subheadline)
-                        .lineLimit(2)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(verbatim: cohort.strainName).font(.subheadline)
+                        Text(verbatim: "\(cohort.generationLabel) · \(cohort.countText)")
+                            .font(.caption).foregroundStyle(Theme.muted)
+                    }
                 }
                 if cohorts.count > 2 {
                     Text("ほか\(String(cohorts.count - 2))群")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(.caption).foregroundStyle(Theme.muted)
                 }
             }
-            Spacer(minLength: 4)
+            Spacer(minLength: 0)
+            Rectangle().fill(Theme.rule).frame(height: 1)
             Label {
                 Text(verbatim: water.text)
             } icon: {
-                Image(systemName: "drop")
+                Image(systemName: water.isOverdue ? "exclamationmark.circle" : "drop")
             }
             .font(.caption)
-            .foregroundStyle(water.isOverdue ? Theme.warning : .secondary)
-            .fontWeight(water.isOverdue ? .bold : .regular)
+            .foregroundStyle(water.isOverdue ? Theme.warning : Theme.muted)
         }
-        .frame(maxWidth: .infinity, minHeight: 88, alignment: .topLeading)
+        .frame(maxWidth: .infinity, minHeight: 180, alignment: .topLeading)
         .cardBackground()
         .contentShape(.rect)
+        .accessibilityElement(children: .combine)
     }
 }

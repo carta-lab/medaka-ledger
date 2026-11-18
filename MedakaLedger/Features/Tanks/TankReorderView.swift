@@ -14,18 +14,21 @@ struct TankReorderView: View {
         let sections = Aggregations.sectionsByLocation(tanks, location: { $0.location }, unsetTitle: String(localized: "場所未設定"))
         NavigationStack {
             List {
-                ForEach(Array(sections.enumerated()), id: \.element.id) { index, section in
-                    Section {
-                        ForEach(section.items) { tank in
-                            Label(tank.name, systemImage: tank.kind.symbolName)
+                Group {
+                    ForEach(Array(sections.enumerated()), id: \.element.id) { index, section in
+                        Section {
+                            ForEach(section.items) { tank in
+                                Label(tank.name, systemImage: tank.kind.symbolName)
+                            }
+                            .onMove { source, destination in
+                                move(in: sections, sectionIndex: index, from: source, to: destination)
+                            }
+                        } header: {
+                            Text(verbatim: section.title)
                         }
-                        .onMove { source, destination in
-                            move(in: sections, sectionIndex: index, from: source, to: destination)
-                        }
-                    } header: {
-                        Text(verbatim: section.title)
                     }
                 }
+                .ledgerRow()
             }
             .environment(\.editMode, .constant(.active))
             .themedBackground()
@@ -66,3 +69,4 @@ struct TankReorderView: View {
         }
     }
 }
+

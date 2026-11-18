@@ -94,7 +94,7 @@ final class ScreenshotTests: XCTestCase {
         let menu = app.buttons["salesMenu"]
         if menu.waitForExistence(timeout: 5) {
             menu.tap()
-            let add = app.buttons["販売を記録"]
+            let add = app.buttons["addSaleMenuItem"]
             if add.waitForExistence(timeout: 5) {
                 add.tap()
                 sleepBriefly()
@@ -278,5 +278,17 @@ final class ScreenshotTests: XCTestCase {
                 snapshot("\(prefix)-群詳細")
             }
         }
+        tapTab(app, "繁殖")
+        snapshot("\(prefix)-繁殖")
+        tapTab(app, "販売")
+        snapshot("\(prefix)-販売")
+        tapTab(app, "ホーム")
+        let settings = app.buttons["settingsButton"]
+        XCTAssertTrue(settings.waitForExistence(timeout: 5))
+        settings.tap()
+        sleepBriefly()
+        snapshot("\(prefix)-設定")
+
     }
 }
+

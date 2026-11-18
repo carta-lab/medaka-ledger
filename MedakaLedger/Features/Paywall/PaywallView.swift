@@ -15,48 +15,60 @@ struct PaywallView: View {
     var body: some View {
         NavigationStack {
             List {
-                if let message = reason.message {
+                Group {
                     Section {
-                        Text(verbatim: message)
-                            .font(Typeface.heading(17, relativeTo: .headline))
-                    }
-                }
-                Section {
-                    Text("Proは買い切りです。購入すると、ずっと使えます。")
-                        .font(.subheadline)
-                }
-                Section("FreeとProの違い") {
-                    ForEach(PaywallRow.all) { row in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(verbatim: row.title)
-                                .font(.subheadline.bold())
-                            HStack(alignment: .firstTextBaseline) {
-                                Text("Free")
-                                    .font(.caption.bold())
-                                    .foregroundStyle(.secondary)
-                                Text(verbatim: row.free)
-                                    .font(.subheadline)
-                            }
-                            HStack(alignment: .firstTextBaseline) {
-                                Text("Pro")
-                                    .font(.caption.bold())
-                                    .foregroundStyle(Theme.accent)
-                                Text(verbatim: row.pro)
-                                    .font(.subheadline)
-                            }
+                        VStack(alignment: .leading, spacing: 16) {
+                            WaterLandscape().frame(height: 116).clipShape(.rect(cornerRadius: Theme.cornerRadius))
+                            Text("育てる楽しみを、もっと広く。")
+                                .font(Typeface.heading(25, relativeTo: .title2))
+                            Text("めだか台帳 Pro").font(.caption.weight(.medium)).foregroundStyle(Theme.accent)
                         }
-                        .padding(.vertical, 2)
-                        .accessibilityElement(children: .combine)
+                        .padding(.vertical, 8)
+                    }
+                    if let message = reason.message {
+                        Section {
+                            Text(verbatim: message)
+                                .font(Typeface.heading(17, relativeTo: .headline))
+                        }
+                    }
+                    Section {
+                        Text("Proは買い切りです。購入すると、ずっと使えます。")
+                            .font(.subheadline)
+                    }
+                    Section("FreeとProの違い") {
+                        ForEach(PaywallRow.all) { row in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(verbatim: row.title)
+                                    .font(.subheadline.bold())
+                                HStack(alignment: .firstTextBaseline) {
+                                    Text("Free")
+                                        .font(.caption.bold())
+                                        .foregroundStyle(.secondary)
+                                    Text(verbatim: row.free)
+                                        .font(.subheadline)
+                                }
+                                HStack(alignment: .firstTextBaseline) {
+                                    Text("Pro")
+                                        .font(.caption.bold())
+                                        .foregroundStyle(Theme.accent)
+                                    Text(verbatim: row.pro)
+                                        .font(.subheadline)
+                                }
+                            }
+                            .padding(.vertical, 2)
+                            .accessibilityElement(children: .combine)
+                        }
+                    }
+                    Section {
+                        if let url = termsURL {
+                            Link("利用規約", destination: url)
+                        }
+                        NavigationLink("プライバシーポリシー") {
+                            PrivacyPolicyView()
+                        }
                     }
                 }
-                Section {
-                    if let url = termsURL {
-                        Link("利用規約", destination: url)
-                    }
-                    NavigationLink("プライバシーポリシー") {
-                        PrivacyPolicyView()
-                    }
-                }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle("Pro")
@@ -120,7 +132,8 @@ struct PaywallView: View {
         .padding(.horizontal, Theme.screenPadding)
         .padding(.vertical, 8)
         .frame(maxWidth: .infinity)
-        .background(.bar)
+        .background(Theme.background)
+        .overlay(alignment: .top) { Rectangle().fill(Theme.rule).frame(height: 0.5) }
     }
 
     // MARK: - 結果
@@ -158,3 +171,4 @@ struct PaywallView: View {
         }
     }
 }
+

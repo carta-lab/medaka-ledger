@@ -43,13 +43,17 @@ struct SalesExportSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    DatePicker("開始日", selection: $start, displayedComponents: .date)
-                    DatePicker("終了日", selection: $end, displayedComponents: .date)
-                    InfoRow(title: "書き出す件数", value: String(localized: "\(selected.count.formatted())件"))
-                } footer: {
-                    Text("取消と出品中も含めて、状態の列に書き出します。ExcelやNumbersで開けます。")
+                Group {
+                    EntryHeading(title: "販売CSV", subtitle: "書き出す期間を選んでください。", systemImage: "square.and.arrow.up")
+                    Section {
+                        DatePicker("開始日", selection: $start, displayedComponents: .date)
+                        DatePicker("終了日", selection: $end, displayedComponents: .date)
+                        InfoRow(title: "書き出す件数", value: String(localized: "\(selected.count.formatted())件"))
+                    } footer: {
+                        Text("取消と出品中も含めて、状態の列に書き出します。ExcelやNumbersで開けます。")
+                    }
                 }
+                .ledgerRow()
             }
             .themedBackground()
             .navigationTitle("販売CSV")
@@ -78,3 +82,4 @@ struct SalesExportSheet: View {
         return "販売台帳_\(CSVExporter.isoDate(start, calendar: calendar))_\(CSVExporter.isoDate(end, calendar: calendar))"
     }
 }
+

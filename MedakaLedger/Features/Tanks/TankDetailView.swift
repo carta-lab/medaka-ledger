@@ -13,70 +13,75 @@ struct TankDetailView: View {
         let cohorts = tank.activeCohorts
         let water = TankWaterStatus(tank: tank, settings: settings)
         List {
-            Section {
-                InfoRow(title: "種類", value: tank.kind.label)
-                InfoRow(title: "置き場所", value: placementText)
-                LabeledContent("最終水換え") {
-                    Text(verbatim: water.text)
-                        .foregroundStyle(water.isOverdue ? Theme.warning : .secondary)
-                        .fontWeight(water.isOverdue ? .bold : .regular)
+            Group {
+                EntryHeading(title: "容器の記録", subtitle: "今いる群と、水辺のお手入れ。", systemImage: tank.kind.symbolName)
+                Section {
+                    InfoRow(title: "種類", value: tank.kind.label)
+                    InfoRow(title: "置き場所", value: placementText)
+                    LabeledContent("最終水換え") {
+                        Text(verbatim: water.text)
+                            .foregroundStyle(water.isOverdue ? Theme.warning : .secondary)
+                            .fontWeight(water.isOverdue ? .bold : .regular)
+                    }
+                    if let capacity = tank.capacityLiters {
+                        InfoRow(title: "容量", value: "\(NumberParsing.text(from: capacity)) L")
+                    }
+                    if !tank.note.isEmpty {
+                        Text(verbatim: tank.note)
+                            .font(.subheadline)
+                    }
+                    if tank.isArchived {
+                        Label("アーカイブ済み", systemImage: "archivebox")
+                            .foregroundStyle(.secondary)
+                    }
                 }
-                if let capacity = tank.capacityLiters {
-                    InfoRow(title: "容量", value: "\(NumberParsing.text(from: capacity)) L")
-                }
-                if !tank.note.isEmpty {
-                    Text(verbatim: tank.note)
-                        .font(.subheadline)
-                }
-                if tank.isArchived {
-                    Label("アーカイブ済み", systemImage: "archivebox")
-                        .foregroundStyle(.secondary)
-                }
-            }
 
-            Section("今いる群") {
-                if cohorts.isEmpty {
-                    Text("この容器に群はいません")
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(cohorts) { cohort in
-                        NavigationLink(value: Route.cohort(cohort)) {
-                            CohortSummaryRow(cohort: cohort, showsTank: false)
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button("移動") { model.movingCohort = cohort }
-                                .tint(Theme.accent)
+                Section("今いる群") {
+                    if cohorts.isEmpty {
+                        Text("この容器に群はいません")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(cohorts) { cohort in
+                            NavigationLink(value: Route.cohort(cohort)) {
+                                CohortSummaryRow(cohort: cohort, showsTank: false)
+                            }
+                            .swipeActions(edge: .trailing) {
+                                Button("移動") { model.movingCohort = cohort }
+                                    .tint(Theme.accent)
+                            }
                         }
                     }
                 }
-            }
 
-            PhotoSection(owner: .tank(tank))
+                PhotoSection(owner: .tank(tank))
 
-            Section {
-                let logs = tank.recentLogs
-                if logs.isEmpty {
-                    Text("作業記録はまだありません")
-                        .foregroundStyle(.secondary)
-                }
-                MaintenanceLogRows(logs: Array(logs.prefix(10)))
-                if logs.count > 10 {
-                    NavigationLink(value: Route.tankLogs(tank)) {
-                        Text("すべて見る")
+                Section {
+                    let logs = tank.recentLogs
+                    if logs.isEmpty {
+                        Text("作業記録はまだありません")
+                            .foregroundStyle(.secondary)
                     }
+                    MaintenanceLogRows(logs: Array(logs.prefix(10)))
+                    if logs.count > 10 {
+                        NavigationLink(value: Route.tankLogs(tank)) {
+                            Text("すべて見る")
+                        }
+                    }
+                    Button {
+                        model.isRecordingMaintenance = true
+                    } label: {
+                        Label("この容器の記録", systemImage: "plus.circle")
+                    }
+                    .accessibilityIdentifier("recordMaintenanceButton")
+                } header: {
+                    Text("作業記録")
                 }
-                Button {
-                    model.isRecordingMaintenance = true
-                } label: {
-                    Label("この容器の記録", systemImage: "plus.circle")
-                }
-                .accessibilityIdentifier("recordMaintenanceButton")
-            } header: {
-                Text("作業記録")
             }
+            .ledgerRow()
         }
         .themedBackground()
         .navigationTitle(tank.name)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -125,3 +130,4 @@ struct TankDetailView: View {
         tank.location.isEmpty ? tank.placement.label : "\(tank.placement.label)・\(tank.location)"
     }
 }
+

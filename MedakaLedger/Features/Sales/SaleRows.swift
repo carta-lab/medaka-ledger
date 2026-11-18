@@ -7,23 +7,23 @@ struct SaleRow: View {
     let title: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(verbatim: title)
-                    .font(.headline)
-                Spacer(minLength: 8)
-                SaleStatusBadge(status: record.status)
-            }
-            HStack(alignment: .firstTextBaseline) {
-                Text(verbatim: "\(CohortText.shortDate(record.date))　\(SaleText.quantity(unit: record.unit, quantity: record.quantity))　\(record.channel.label)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Spacer(minLength: 8)
-                Text(verbatim: SaleText.yen(record.totalPrice))
-                    .font(.subheadline.bold())
+        VStack(alignment: .leading, spacing: 10) {
+            Text(verbatim: title).font(.headline.weight(.medium))
+            Text(verbatim: "\(CohortText.shortDate(record.date)) · \(SaleText.quantity(unit: record.unit, quantity: record.quantity)) · \(record.channel.label)")
+                .font(.caption).foregroundStyle(Theme.muted)
+            ViewThatFits(in: .horizontal) {
+                HStack {
+                    SaleStatusBadge(status: record.status)
+                    Spacer(minLength: 8)
+                    Text(verbatim: SaleText.yen(record.totalPrice)).font(.body.weight(.medium)).monospacedDigit()
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    SaleStatusBadge(status: record.status)
+                    Text(verbatim: SaleText.yen(record.totalPrice)).font(.body.weight(.medium)).monospacedDigit()
+                }
             }
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 8)
         .accessibilityElement(children: .combine)
     }
 }
@@ -32,12 +32,7 @@ struct SaleStatusBadge: View {
     let status: SaleStatus
 
     var body: some View {
-        Text(verbatim: status.label)
-            .font(.caption.bold())
-            .padding(.horizontal, 8)
-            .padding(.vertical, 2)
-            .foregroundStyle(foreground)
-            .background(background, in: .capsule)
+        LedgerStatus(text: status.label, color: foreground)
     }
 
     private var foreground: Color {
@@ -49,9 +44,6 @@ struct SaleStatusBadge: View {
         }
     }
 
-    private var background: Color {
-        foreground.opacity(0.15)
-    }
 }
 
 /// 売上、手数料、送料、純額、件数。
@@ -80,3 +72,4 @@ extension SalesPeriod {
         }
     }
 }
+

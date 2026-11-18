@@ -5,6 +5,7 @@ import SwiftUI
 // 操作は移動、分割、増減、選別、販売、段階の変更、統合、出来事の削除、群の削除。
 
 struct CohortDetailView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(ProStore.self) private var pro
@@ -22,16 +23,19 @@ struct CohortDetailView: View {
 
     private var content: some View {
         List {
-            summarySection
-            if cohort.isActive {
-                actionSection
+            Group {
+                summarySection
+                if cohort.isActive {
+                    actionSection
+                }
+                Section("親") {
+                    Text(cohort.originBatch == nil ? LocalizedStringKey("入手個体") : LocalizedStringKey("親魚セットから孵化"))
+                        .foregroundStyle(.secondary)
+                }
+                PhotoSection(owner: .cohort(cohort))
+                CohortTimelineSection(cohort: cohort, model: model)
             }
-            Section("親") {
-                Text(cohort.originBatch == nil ? LocalizedStringKey("入手個体") : LocalizedStringKey("親魚セットから孵化"))
-                    .foregroundStyle(.secondary)
-            }
-            PhotoSection(owner: .cohort(cohort))
-            CohortTimelineSection(cohort: cohort, model: model)
+            .ledgerRow()
         }
         .themedBackground()
         .navigationTitle(cohort.strainName)
@@ -147,7 +151,7 @@ struct CohortDetailView: View {
 
     private var summarySection: some View {
         Section {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 8) {
                     Text(verbatim: cohort.generationLabel)
                         .font(Typeface.heading(24, relativeTo: .title2))
@@ -165,7 +169,8 @@ struct CohortDetailView: View {
                     }
                 }
                 Text(verbatim: cohort.countText)
-                    .font(Typeface.heading(40, relativeTo: .largeTitle))
+                    .font(.largeTitle.weight(.light))
+                    .monospacedDigit()
                     .accessibilityIdentifier("cohortCount")
                 if let sex = cohort.sexText {
                     Text(verbatim: sex)
@@ -193,15 +198,12 @@ struct CohortDetailView: View {
 
     private var actionSection: some View {
         Section {
-            VStack(spacing: 8) {
-                HStack(spacing: 8) {
-                    actionButton("移動", systemImage: "arrow.right", sheet: .move)
-                    actionButton("分割", systemImage: "arrow.triangle.branch", sheet: .split)
-                }
-                HStack(spacing: 8) {
-                    actionButton("増減", systemImage: "plusminus", sheet: .count)
-                    actionButton("選別", systemImage: "line.3.horizontal.decrease.circle", sheet: .selection)
-                }
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10),
+                                     count: dynamicTypeSize.isAccessibilitySize ? 1 : 2), spacing: 10) {
+                actionButton("移動", systemImage: "arrow.right", sheet: .move)
+                actionButton("分割", systemImage: "arrow.triangle.branch", sheet: .split)
+                actionButton("増減", systemImage: "plusminus", sheet: .count)
+                actionButton("選別", systemImage: "line.3.horizontal.decrease.circle", sheet: .selection)
                 actionButton("販売", systemImage: "yensign.circle", sheet: .sale)
             }
             .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
@@ -214,13 +216,10 @@ struct CohortDetailView: View {
         Button {
             model.open(sheet, cohort: cohort)
         } label: {
-            VStack(spacing: 4) {
-                Image(systemName: systemImage)
-                Text(title)
-                    .font(.subheadline)
-            }
+            Label(title, systemImage: systemImage)
         }
-        .buttonStyle(LargeButtonStyle(prominent: false))
+        .buttonStyle(InkActionStyle())
         .accessibilityIdentifier("cohortAction.\(sheet.rawValue)")
     }
 }
+
