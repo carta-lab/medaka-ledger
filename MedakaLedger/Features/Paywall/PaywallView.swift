@@ -77,6 +77,7 @@ struct PaywallView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("閉じる") { dismiss() }
+                        .accessibilityIdentifier("paywallCloseButton")
                 }
             }
             .task { await pro.loadProductIfNeeded() }

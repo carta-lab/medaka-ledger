@@ -49,7 +49,7 @@ struct HomeHero: View {
     }
 }
 
-/// 数字は記録の要約。未計数をゼロと誤認させない。
+/// 数字は記録の要約。未計数をゼロと誤認させない。白い札に、縦の細い線で区切って並べる。
 @MainActor
 struct HomeLedgerSummary: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -57,14 +57,33 @@ struct HomeLedgerSummary: View {
     let tally: CohortTally
     let incubatingCount: Int
 
+    private var metrics: [(title: LocalizedStringKey, value: String, unit: LocalizedStringKey)] {
+        [
+            ("容器", tankCount.formatted(), "個"),
+            ("飼育中の群", tally.cohortCount.formatted(), "群"),
+            ("匹数", tally.fishCount.formatted() + (tally.hasUncounted ? "+" : ""), "匹"),
+            ("育卵中", incubatingCount.formatted(), "ロット"),
+        ]
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), alignment: .leading),
-                                     count: dynamicTypeSize.isAccessibilitySize ? 2 : 4), spacing: 18) {
-                metric("容器", value: tankCount.formatted(), unit: "個")
-                metric("飼育中の群", value: tally.cohortCount.formatted(), unit: "群")
-                metric("匹数", value: tally.fishCount.formatted() + (tally.hasUncounted ? "+" : ""), unit: "匹")
-                metric("育卵中", value: incubatingCount.formatted(), unit: "ロット")
+            if dynamicTypeSize.isAccessibilitySize {
+                LazyVGrid(columns: [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)], spacing: 18) {
+                    ForEach(Array(metrics.enumerated()), id: \.offset) { _, item in
+                        metric(item.title, value: item.value, unit: item.unit)
+                    }
+                }
+            } else {
+                HStack(spacing: 0) {
+                    ForEach(Array(metrics.enumerated()), id: \.offset) { index, item in
+                        if index > 0 {
+                            Rectangle().fill(Theme.rule).frame(width: 1, height: 44)
+                        }
+                        metric(item.title, value: item.value, unit: item.unit)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
             }
             if tally.hasUncounted {
                 Text("＋は未計数の群を含みます")
@@ -72,19 +91,22 @@ struct HomeLedgerSummary: View {
                     .foregroundStyle(Theme.muted)
             }
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 16)
+        .padding(.horizontal, 8)
+        .frame(maxWidth: .infinity)
+        .background(Theme.surface, in: .rect(cornerRadius: Theme.cornerRadius))
         .accessibilityElement(children: .combine)
     }
 
     private func metric(_ title: LocalizedStringKey, value: String, unit: LocalizedStringKey) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title).font(.caption2).foregroundStyle(Theme.muted)
+        VStack(spacing: 6) {
+            Text(title).font(.caption2).foregroundStyle(Theme.muted).lineLimit(1)
             ViewThatFits(in: .horizontal) {
-                HStack(alignment: .firstTextBaseline, spacing: 3) {
+                HStack(alignment: .firstTextBaseline, spacing: 2) {
                     number(value)
                     Text(unit).font(.caption2).foregroundStyle(Theme.muted)
                 }
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(spacing: 2) {
                     number(value)
                     Text(unit).font(.caption2).foregroundStyle(Theme.muted)
                 }
@@ -93,7 +115,7 @@ struct HomeLedgerSummary: View {
     }
 
     private func number(_ value: String) -> some View {
-        Text(verbatim: value).font(.title2.weight(.light)).monospacedDigit()
+        Text(verbatim: value).font(Typeface.heading(26, relativeTo: .title2)).monospacedDigit().lineLimit(1)
     }
 }
 

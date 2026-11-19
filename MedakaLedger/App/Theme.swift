@@ -15,6 +15,8 @@ enum Theme {
     static let caution = Color("ThemeAmber")
     static let done = Color("ThemeDone")
     static let stamp = Color("ThemeStamp")
+    /// 系統名や季節の札の地。淡い若草色。
+    static let pill = Color("ThemePill")
     static let ink = Color("ThemeInk")
     static let muted = Color("ThemeMuted")
     static let onAccent = Color("ThemeOnAccent")
@@ -45,6 +47,10 @@ enum Appearance {
         navigation.titleTextAttributes = [
             .font: UIFont.preferredFont(forTextStyle: .headline), .foregroundColor: ink,
         ]
+        // 期間の切り替えなど、分割ボタンは選んだ側を深い緑で塗る
+        let segmented = UISegmentedControl.appearance()
+        segmented.selectedSegmentTintColor = UIColor(named: "AccentColor")
+        segmented.setTitleTextAttributes([.foregroundColor: UIColor(named: "ThemeOnAccent") ?? .white], for: .selected)
         let bar = UINavigationBar.appearance()
         bar.standardAppearance = navigation
         bar.scrollEdgeAppearance = navigation

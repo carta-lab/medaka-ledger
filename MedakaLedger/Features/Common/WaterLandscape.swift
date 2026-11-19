@@ -18,7 +18,7 @@ struct WaterLandscape: View {
             context.fill(Path(CGRect(origin: .zero, size: size)), with: .color(sky))
             context.fill(
                 Path(ellipseIn: CGRect(x: w * 0.20, y: h * 0.13, width: h * 0.18, height: h * 0.18)),
-                with: .color(light.opacity(0.85))
+                with: .color(Color(red: 0.97, green: 0.80, blue: 0.50).opacity(0.95))
             )
 
             // 遠景の山。輪郭を段階的に薄くして空気の層を作る。
@@ -109,10 +109,10 @@ struct WaterLandscape: View {
             let leaves: [(CGFloat, CGFloat, CGFloat)] = [(0.77, 0.86, 0.045), (0.85, 0.91, 0.028), (0.71, 0.94, 0.022)]
             for (x, y, radius) in leaves {
                 let rect = CGRect(x: w * x, y: h * y, width: w * radius, height: w * radius * 0.4)
-                context.fill(Path(ellipseIn: rect), with: .color(bank.opacity(0.72)))
+                context.fill(Path(ellipseIn: rect), with: .color(Color(red: 0.55, green: 0.72, blue: 0.38).opacity(0.9)))
             }
-            fish(in: context, at: CGPoint(x: w * 0.46, y: h * 0.82), length: w * 0.042, angle: -0.2, color: Theme.stamp)
-            fish(in: context, at: CGPoint(x: w * 0.55, y: h * 0.87), length: w * 0.033, angle: 0.4, color: reed.opacity(0.8))
+            fish(in: context, at: CGPoint(x: w * 0.46, y: h * 0.82), length: w * 0.042, angle: -0.2, color: Color(red: 0.93, green: 0.50, blue: 0.20))
+            fish(in: context, at: CGPoint(x: w * 0.55, y: h * 0.87), length: w * 0.033, angle: 0.4, color: Color(red: 0.90, green: 0.40, blue: 0.18))
         }
         .accessibilityHidden(true)
     }
