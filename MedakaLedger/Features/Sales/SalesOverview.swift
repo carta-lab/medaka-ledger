@@ -11,7 +11,8 @@ struct SalesOverview: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text("売上").font(.subheadline).foregroundStyle(Theme.muted)
                 Text(verbatim: SaleText.yen(summary.revenue))
-                    .font(.largeTitle.weight(.light))
+                    .font(Typeface.heading(40, relativeTo: .largeTitle))
+                    .foregroundStyle(Theme.accent)
                     .monospacedDigit()
                     .fixedSize(horizontal: false, vertical: true)
                 Text(verbatim: String(localized: "\(summary.count.formatted())件"))
@@ -34,7 +35,7 @@ struct SalesOverview: View {
     private func amount(_ title: LocalizedStringKey, _ amount: Int) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title).font(.caption).foregroundStyle(Theme.muted)
-            Text(verbatim: SaleText.yen(amount)).font(.subheadline.weight(.medium)).monospacedDigit()
+            Text(verbatim: SaleText.yen(amount)).font(Typeface.heading(18, relativeTo: .headline)).monospacedDigit()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
