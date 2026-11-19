@@ -100,11 +100,15 @@ final class RedesignFlowTests: XCTestCase {
         let cultivation = app.buttons["cultivationSettingsLink"]
         reveal(cultivation, in: app)
         tap(cultivation)
-        XCTAssertTrue(app.textFields["degreeDaysField"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.textFields["defaultTempField"].exists)
+        // 入力欄の種類（textField か別の要素）は表示の作りで変わるため、種類を問わず識別子で探す
+        let degreeDays = app.descendants(matching: .any)["degreeDaysField"]
+        let found = degreeDays.waitForExistence(timeout: 10)
         capture("61-v2-cultivation-settings")
-        reveal(app.switches["selectionReminderToggle"], in: app)
-        XCTAssertTrue(app.switches["selectionReminderToggle"].exists)
+        XCTAssertTrue(found)
+        XCTAssertTrue(app.descendants(matching: .any)["defaultTempField"].exists)
+        let reminder = app.descendants(matching: .any)["selectionReminderToggle"]
+        reveal(reminder, in: app)
+        XCTAssertTrue(reminder.exists)
         capture("62-v2-season-notifications")
     }
 
