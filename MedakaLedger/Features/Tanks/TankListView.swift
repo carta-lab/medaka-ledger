@@ -138,7 +138,7 @@ struct TankCard: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             if let first = cohorts.first {
-                Text(verbatim: first.strainName)
+                Text(verbatim: first.strain?.breedName ?? first.strainName)
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(Theme.accent)
                     .lineLimit(1)
