@@ -164,8 +164,14 @@ final class RedesignFlowTests: XCTestCase {
     private func reveal(_ element: XCUIElement, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
         let window = app.windows.firstMatch.frame
         let safe = CGRect(x: window.minX, y: window.minY + 140, width: window.width, height: window.height - 300)
+        var lastY: CGFloat = -1
         for _ in 0..<12 {
-            if element.exists && element.isHittable && safe.contains(CGPoint(x: element.frame.midX, y: element.frame.midY)) { return }
+            guard element.exists else { app.swipeUp(); continue }
+            let y = element.frame.midY
+            if element.isHittable && safe.contains(CGPoint(x: element.frame.midX, y: y)) { return }
+            // これ以上動かない（一番下）なら、押せる位置にあればそれで足りる
+            if abs(y - lastY) < 1 && element.isHittable { return }
+            lastY = y
             app.swipeUp()
         }
         XCTAssertTrue(element.exists && element.isHittable, file: file, line: line)
