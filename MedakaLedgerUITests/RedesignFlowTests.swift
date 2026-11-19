@@ -98,7 +98,7 @@ final class RedesignFlowTests: XCTestCase {
         XCTAssertTrue(app.buttons["importBackup"].exists)
         capture("60-v2-backup")
         let cultivation = app.buttons["cultivationSettingsLink"]
-        reveal(cultivation, in: app)
+        revealInView(cultivation, in: app)
         tap(cultivation)
         // 入力欄の種類（textField か別の要素）は表示の作りで変わるため、種類を問わず識別子で探す
         let degreeDays = app.descendants(matching: .any)["degreeDaysField"]
@@ -107,7 +107,7 @@ final class RedesignFlowTests: XCTestCase {
         XCTAssertTrue(found)
         XCTAssertTrue(app.descendants(matching: .any)["defaultTempField"].exists)
         let reminder = app.descendants(matching: .any)["selectionReminderToggle"]
-        reveal(reminder, in: app)
+        revealInView(reminder, in: app)
         XCTAssertTrue(reminder.exists)
         capture("62-v2-season-notifications")
     }
@@ -158,20 +158,23 @@ final class RedesignFlowTests: XCTestCase {
         element.tap()
     }
 
-    /// 画面の中ほど（上の操作帯と下のタブバーに隠れない範囲）に入るまでスクロールする。
-    /// isHittable だけでは、タブバーの下に重なった要素も押せると判定されるため、位置も見る。
     @MainActor
     private func reveal(_ element: XCUIElement, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        for _ in 0..<8 {
+            if element.exists && element.isHittable { return }
+            app.swipeUp()
+        }
+        XCTAssertTrue(element.exists && element.isHittable, file: file, line: line)
+    }
+
+    /// 画面の中ほど（上の操作帯と下のタブバーに隠れない範囲）に入るまでスクロールする。
+    /// 長い設定の画面では、isHittable だけだと、画面の外やタブバーの下の要素を押してしまう。
+    @MainActor
+    private func revealInView(_ element: XCUIElement, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
         let window = app.windows.firstMatch.frame
         let safe = CGRect(x: window.minX, y: window.minY + 140, width: window.width, height: window.height - 300)
-        var lastY: CGFloat = -1
         for _ in 0..<12 {
-            guard element.exists else { app.swipeUp(); continue }
-            let y = element.frame.midY
-            if element.isHittable && safe.contains(CGPoint(x: element.frame.midX, y: y)) { return }
-            // これ以上動かない（一番下）なら、押せる位置にあればそれで足りる
-            if abs(y - lastY) < 1 && element.isHittable { return }
-            lastY = y
+            if element.exists && element.isHittable && safe.contains(CGPoint(x: element.frame.midX, y: element.frame.midY)) { return }
             app.swipeUp()
         }
         XCTAssertTrue(element.exists && element.isHittable, file: file, line: line)
