@@ -158,10 +158,14 @@ final class RedesignFlowTests: XCTestCase {
         element.tap()
     }
 
+    /// 画面の中ほど（上の操作帯と下のタブバーに隠れない範囲）に入るまでスクロールする。
+    /// isHittable だけでは、タブバーの下に重なった要素も押せると判定されるため、位置も見る。
     @MainActor
     private func reveal(_ element: XCUIElement, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
-        for _ in 0..<8 {
-            if element.exists && element.isHittable { return }
+        let window = app.windows.firstMatch.frame
+        let safe = CGRect(x: window.minX, y: window.minY + 140, width: window.width, height: window.height - 300)
+        for _ in 0..<12 {
+            if element.exists && element.isHittable && safe.contains(CGPoint(x: element.frame.midX, y: element.frame.midY)) { return }
             app.swipeUp()
         }
         XCTAssertTrue(element.exists && element.isHittable, file: file, line: line)
