@@ -91,7 +91,7 @@ final class RedesignFlowTests: XCTestCase {
         XCTAssertTrue(app.buttons["purchaseProButton"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["restoreProButton"].exists)
         capture("59-v2-pro")
-        tap(app.buttons["閉じる"])
+        tap(app.buttons["paywallCloseButton"])
 
         reveal(app.buttons["exportBackupWithPhotos"], in: app)
         XCTAssertTrue(app.buttons["exportBackupWithPhotos"].isEnabled)
